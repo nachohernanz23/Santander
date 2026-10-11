@@ -116,6 +116,7 @@ function tarjeta(id) {
       <h3>${esc(s.n)}</h3>
       <div class="meta"><span>${ZONAS[s.z]}</span><span>🚗 ${esc(s.t)}</span><span>⏱ ${esc(s.dur)}</span></div>
       <p>${esc(s.d)}</p>
+      ${s.extra ? `<p style="font-size:14px;color:var(--muted)">💡 ${esc(s.extra)}</p>` : ""}
       <div class="veredicto"><span class="estrellas" aria-label="${s.val} de 5">${estrellas(s.val)}</span> <b>${VALORACION[s.val]}.</b> ${esc(s.por)}</div>
       ${htmlFamilia(id)}
       ${filas.length ? `<ul class="practico-lista">${filas.join("")}</ul>` : ""}
@@ -623,7 +624,7 @@ function pintarRestos() {
     if (!["todas", "nuestros", "familia"].includes(filtroR.zona) && (u || r.zona !== filtroR.zona)) return false;
     if (filtroR.dia && !u && (!(DIA_ZONAS[filtroR.dia] || []).includes(r.zona) || cierraDia(r, filtroR.dia))) return false;
     const pm = u ? precioNum(r.precio) : r.pm;
-    if (pm && pm > filtroR.precio) return false;
+    if (pm && pm > filtroR.precio && !famDe(id).length) return false;
     return !q || norm([r.n, r.pueblo, r.barrio, r.lugar, r.tipo, r.pedir, r.texto].join(" ")).includes(q);
   });
   const clave = {
