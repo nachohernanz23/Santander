@@ -4,7 +4,7 @@
 Web para que un grupo de amigos decida qué hacer en un viaje por Cantabria del 12 al 18 de octubre de 2026. Tiene el plan día a día (horarios, mareas, avisos, ruta en Maps), todos los sitios con fotos, nota de Google, valoración propia, precios, reservas y mareas, votación y comentarios compartidos, mapa, lista de reservas compartida y página de mareas e info. El dueño es Nacho, que habla en español: responde siempre en español.
 
 ## Contexto del viaje
-- **Grupo:** 4 amigos del 11 (domingo noche) al 18 de octubre. Pedro y Fran solo de martes a viernes: llegan el martes a media tarde en coche desde Alicante (unas 8 h) y se van el viernes. Caste es uno de los 4.
+- **Grupo:** Rufe, Caste, Moreno y Niggi suben el domingo 11 por la noche. Pedre y Fran llegan el martes a media tarde en coche desde Alicante (unas 8 h). El viernes se vuelven juntos Pedre, Fran y Niggi; Rufe, Caste y Moreno se quedan hasta el domingo 18. Son 4 el lunes, 6 de martes a viernes y 3 el fin de semana.
 - **Casas:** calle Lealtad, en el centro de Santander, junto al Centro Botín (base principal), y otra en Arenas de Iguña (Valle de Iguña), para dormir alguna noche.
 - **Transporte:** tienen coche.
 - **Gustos:** playa, montaña, una ruta de monte moderada (están en forma, pero nada extremo), comer y beber por los pueblos, y un día en Bilbao.
@@ -17,11 +17,11 @@ Web para que un grupo de amigos decida qué hacer en un viaje por Cantabria del 
 ## Itinerario actual
 Está en `js/datos.js` (`DIAS`). Resumen:
 - **Lun 12 (festivo):** dunas de Liencres, Urros y la Arnía con la bajamar de las 12:08 (coef. 85), Santillana, Comillas y atardecer en San Vicente u Oyambre.
-- **Mar 13:** por la mañana, Monte Buciero y anchoas en Santoña. Las escaleras del Faro del Caballo están CERRADAS desde dic-2025. Por la tarde los 6 en Santander.
+- **Mar 13:** por la mañana, los 4, Monte Buciero y anchoas en Santoña. Las escaleras del Faro del Caballo están CERRADAS desde dic-2025. Por la tarde los 6 en Santander.
 - **Mié 14:** Fuente Dé, ruta a Horcados Rojos y Potes. Plan B si cierra el teleférico: Ruta del Cares.
 - **Jue 15:** Gaztelugatxe (sin reserva ese día), Bermeo y Bilbao (San Mamés, Guggenheim, pintxos).
-- **Vie 16:** El Soplao y El Castillo o Altamira; por la tarde, a Arenas de Iguña.
-- **Sáb 17:** Bárcena Mayor, cocido y Vega de Pas.
+- **Vie 16:** se van Pedre, Fran y Niggi. El Soplao y El Castillo o Altamira; por la tarde, a Arenas de Iguña.
+- **Sáb 17 (3):** Bárcena Mayor, cocido y Vega de Pas.
 - **Dom 18:** vuelta.
 
 ## Datos comprobados el 11-oct-2026

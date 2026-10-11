@@ -277,7 +277,7 @@ function renderSemana() {
     return `<button class="dia-btn${d.f === hoy ? " hoy" : ""}" data-ir="${d.k}">
       <div class="d">${d.d}</div><div class="n">${d.n}</div>
       <div class="wx" aria-hidden="true">${wx}</div><div class="p${(m ? m.lluvia : parseInt(d.p)) >= 60 ? " alta" : ""}">${p}</div>
-      <div class="gente" aria-label="${d.gente} personas">${gente(d.gente)}</div>
+      <div class="gente" aria-label="${d.gente} personas" title="${esc(d.quien || "")}">${gente(d.gente)}</div>
       <div class="t">${esc(d.t)}</div></button>`;
   }).join("");
   if (METEO) $("#fuente-meteo").textContent = `Previsión de Open-Meteo actualizada ${hace(METEO.ts)}. Cada día, en la zona donde estaréis`;
@@ -333,7 +333,7 @@ function renderPlan() {
       const ruta = rutaDia(d);
       return `<section class="dia" id="dia-${d.k}">
       <div class="dia-cab"><div class="num">${d.n}</div><h2>${d.d}: ${esc(d.t)}</h2>
-        <div class="sub"><span>${typeof d.gente === "number" ? d.gente : d.gente.replace("→", " → ")} personas</span><span>☀ Sale a las ${mm.sol[0]}, se pone a las ${mm.sol[1]}</span></div></div>
+        <div class="sub"><span>👥 ${typeof d.gente === "number" ? d.gente : d.gente.replace("→", " → ")} personas${d.quien ? ": " + esc(d.quien) : ""}</span><span>☀ Sale a las ${mm.sol[0]}, se pone a las ${mm.sol[1]}</span></div></div>
       <div class="dia-info">
         <div>
           <div class="meteo-linea" data-meteo="${d.k}">${lineaMeteo(d, i)}</div>
