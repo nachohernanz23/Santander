@@ -157,7 +157,8 @@ function pintarComs(id) {
 }
 function htmlCom(c, sobre = false) {
   return `<div class="com">${av(c.autor)}<div class="txt"><span class="quien">${esc(c.autor)}</span><span class="cuando">${hace(c.ts)}</span>${c.autor === yo() ? `<button class="borrar" data-borrar="${esc(c.c)}">borrar</button>` : ""}
-    ${sobre ? `<div class="sobre">sobre <a href="#" ${S[c.id] ? "data-ir-sitio" : "data-ir-resto"}="${esc(c.id)}">${esc(nombreDe(c.id))}</a></div>` : ""}<div>${esc(c.texto)}</div></div></div>`;
+    ${sobre ? (planDe(c.id) ? `<div class="sobre">sobre el <a href="#" data-ir-dia="${planDe(c.id).d.k}">plan ${esc(planDe(c.id).p.letra)} del ${esc(planDe(c.id).d.d.toLowerCase())}</a></div>`
+      : `<div class="sobre">sobre <a href="#" ${S[c.id] ? "data-ir-sitio" : "data-ir-resto"}="${esc(c.id)}">${esc(nombreDe(c.id))}</a></div>`) : ""}<div>${esc(c.texto)}</div></div></div>`;
 }
 
 // ---------- Actualizar todo lo que depende de votos ----------
@@ -170,10 +171,11 @@ function actualizar() {
   $$("[data-fav]").forEach(e => {
     const r = resumen(e.dataset.fav), fav = n >= 2 && r.si.length * 2 > n;
     e.hidden = !fav; if (fav) e.textContent = `❤ Gusta a ${r.si.length} de ${n}`;
-    e.closest(".sitio, .resto").classList.toggle("top", fav);
+    e.closest(".sitio, .resto, .plan").classList.toggle("top", fav);
   });
   $$("[data-fuimos]").forEach(b => { const f = tareas()["f-" + b.dataset.fuimos]; b.setAttribute("aria-pressed", !!f); b.textContent = f ? `✔ Ya fuimos (lo marcó ${f.por})` : "Marcar que ya fuimos"; });
-  [...Object.keys(S), ...idsRestos()].forEach(pintarComs);
+  [...Object.keys(S), ...idsRestos(), ...idsPlanes()].forEach(pintarComs);
+  $$("[data-ganador]").forEach(pintarGanador);
   pintarYo(); renderGrupo(); renderReservas(); recolorearMapa();
 }
 function pintarYo() {
@@ -301,7 +303,9 @@ function renderSemana() {
 }
 function lineaMeteo(d, i) {
   const m = meteoDia(i);
-  let t = m ? `${WX(m.code)[0]} <b>${WX(m.code)[1]}</b> · ${Math.round(m.max)}° / ${Math.round(m.min)}° · lluvia ${m.lluvia}% · viento ${Math.round(m.viento)} km/h (rachas ${Math.round(m.rachas)})`
+  const cielo = n => n == null ? "" : n < 30 ? "☀️ sol" : n < 70 ? "⛅ nubes y claros" : "☁️ nublado";
+  let t = m ? `${WX(m.code)[0]} <b>${WX(m.code)[1]}</b> · ${Math.round(m.max)}° / ${Math.round(m.min)}° · lluvia ${m.lluvia}% · viento ${Math.round(m.viento)} km/h (rachas ${Math.round(m.rachas)})` +
+      (m.nm != null ? `<br>Por la mañana ${cielo(m.nm)} · por la tarde ${cielo(m.nt)}` : "")
     : `${d.wx} ${esc(d.p)} <span style="color:var(--muted)">(AEMET, 11-oct)</span>`;
   if (d.monte && METEO && METEO.monte && METEO.monte[i]) {
     const a = METEO.monte[i];
@@ -311,10 +315,13 @@ function lineaMeteo(d, i) {
   return t;
 }
 async function cargarMeteo() {
-  if (METEO && Date.now() - METEO.ts < 30 * 60000) return;
-  const base = "https://api.open-meteo.com/v1/forecast?daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&timezone=Europe%2FMadrid&start_date=2026-10-12&end_date=2026-10-18";
+  if (METEO && METEO.dias && METEO.dias[0] && "nm" in METEO.dias[0] && Date.now() - METEO.ts < 30 * 60000) return;
+  const base = "https://api.open-meteo.com/v1/forecast?daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&hourly=cloud_cover&timezone=Europe%2FMadrid&start_date=2026-10-12&end_date=2026-10-18";
+  // Nubosidad media de una franja horaria del día i (las horas vienen seguidas, 24 por día)
+  const nubes = (j, i, h0, h1) => { const v = (j.hourly && j.hourly.cloud_cover || []).slice(i * 24 + h0, i * 24 + h1 + 1).filter(x => x != null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
   const leer = (j, i) => ({ code: j.daily.weather_code[i], max: j.daily.temperature_2m_max[i], min: j.daily.temperature_2m_min[i],
-    lluvia: j.daily.precipitation_probability_max[i] ?? 0, viento: j.daily.wind_speed_10m_max[i], rachas: j.daily.wind_gusts_10m_max[i] });
+    lluvia: j.daily.precipitation_probability_max[i] ?? 0, viento: j.daily.wind_speed_10m_max[i], rachas: j.daily.wind_gusts_10m_max[i],
+    nm: nubes(j, i, 9, 13), nt: nubes(j, i, 14, 19) });
   try {
     const lat = DIAS.map(d => d.meteo[0]).join(","), lon = DIAS.map(d => d.meteo[1]).join(",");
     const r = await fetch(`${base}&latitude=${lat}&longitude=${lon}`); if (!r.ok) throw 0;
@@ -329,13 +336,44 @@ async function cargarMeteo() {
   } catch (e) { /* se queda la previsión guardada o la de AEMET */ }
 }
 
+// ---------- Planes alternativos de un día ----------
+const planesDe = k => (typeof PLANES !== "undefined" && PLANES[k]) || [];
+const idsPlanes = () => (typeof PLANES === "undefined" ? [] : Object.values(PLANES).flat().map(p => p.id));
+const planDe = id => { for (const d of DIAS) { const p = planesDe(d.k).find(x => x.id === id); if (p) return { d, p }; } return null; };
+function htmlPlanes(d) {
+  const P = planesDe(d.k);
+  if (!P.length) return "";
+  return `<div class="sub-h">¿Qué plan hacemos? Votad 👍 el que os apetece</div>
+    <div class="planes">${P.map(p => `<article class="plan${p.rec ? " rec" : ""}" data-card="${p.id}">
+      <div class="plan-cab"><span class="letra">${esc(p.letra)}</span><div><h3>${esc(p.n)}</h3>
+        <div class="meta"><span>⚡ Ritmo ${esc(p.ritmo.toLowerCase())}</span><span>🚗 ${esc(p.coche)}</span></div></div></div>
+      ${p.rec ? `<span class="rec-badge">⭐ Nuestra recomendación</span>` : ""}
+      <span class="fav-r" data-fav="${p.id}" hidden></span>
+      <p>${esc(p.lema)}</p>
+      <ol class="plan-horario">${p.horario.map(([h, t]) => `<li><b>${esc(h)}</b><span>${esc(t)}</span></li>`).join("")}</ol>
+      <ul class="pros">${p.pros.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+      <ul class="contras">${p.contras.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+      <div class="plan-links">📍 ${p.sitios.map(id => `<a href="#" data-ir-sitio="${id}">${esc(S[id].n)}</a>`).join(" · ")}</div>
+      <div class="plan-links">🍽 ${p.comer.map(id => `<a href="#" data-ir-resto="${id}">${esc(RESTAURANTES[id].n)}</a>`).join(" · ")}</div>
+      <a class="btn peq sec" style="align-self:flex-start" href="${rutaDia(d, p.sitios)}" target="_blank" rel="noopener">🗺 Ruta de este plan en Maps</a>
+      ${htmlVotoComs(p.id, "el plan " + p.letra)}
+    </article>`).join("")}</div>`;
+}
+function pintarGanador(el) {
+  const P = planesDe(el.dataset.ganador).map(p => ({ p, r: resumen(p.id) })).sort((a, b) => b.r.score - a.r.score);
+  if (!P.length || !P[0].r.total) { el.innerHTML = `Todavía nadie ha votado plan. ${yo() ? "" : "Di quién eres y vota."}`; return; }
+  const empate = P[1] && P[1].r.score === P[0].r.score;
+  el.innerHTML = empate ? `🤝 Empate entre el plan ${P[0].p.letra} y el ${P[1].p.letra}: falta que vote alguien más.`
+    : `🏆 Va ganando el <b>plan ${P[0].p.letra}</b>: ${esc(P[0].p.n)} <small>(👍${P[0].r.si.length}${P[0].r.quiza.length ? " 🤔" + P[0].r.quiza.length : ""}${P[0].r.no.length ? " 👎" + P[0].r.no.length : ""})</small>`;
+}
+
 // ---------- Plan por días ----------
 function ordenarPorGrupo(ids) {
   return ids.map((id, i) => [id, resumen(id).score, i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map(x => x[0]);
 }
-function rutaDia(d) {
+function rutaDia(d, ids = d.items) {
   const casa = (d.k === "sab" || d.k === "dom") ? VIAJE.casas[1] : VIAJE.casas[0];
-  const pts = d.items.filter(id => S[id].c && id !== "arenas" && id !== "cocido").map(id => S[id].c.join(","));
+  const pts = ids.filter(id => S[id] && S[id].c && id !== "arenas" && id !== "cocido").map(id => S[id].c.join(","));
   if (!pts.length) return "";
   const u = new URL("https://www.google.com/maps/dir/");
   u.searchParams.set("api", "1"); u.searchParams.set("origin", casa.q); u.searchParams.set("destination", casa.q);
@@ -358,13 +396,16 @@ function renderPlan() {
           ${d.avisos && d.avisos.length ? `<ul class="avisos">${d.avisos.map(a => `<li>${esc(a)}</li>`).join("")}</ul>` : ""}
           ${htmlFamilia("dia:" + d.k)}
         </div>
-        <div class="agenda"><h3>Horario orientativo</h3>
+        ${planesDe(d.k).length ? `<div class="agenda"><h3>Elegid el plan del día</h3>
+          <p style="margin:0 0 10px;font-family:Archivo,sans-serif;font-size:14.5px">Debajo tenéis ${planesDe(d.k).length} planes completos con horario, pros y contras. Votad el que os apetece y comentad; aquí se ve cuál va ganando.</p>
+          <div class="ganador" data-ganador="${d.k}"></div>` : `<div class="agenda"><h3>Horario orientativo</h3>
           <ol>${d.horario.map(([h, t]) => `<li><b>${esc(h)}</b><span>${esc(t)}</span></li>`).join("")}</ol>
-          ${ruta ? `<div class="acciones"><a class="btn peq" href="${ruta}" target="_blank" rel="noopener">🗺 Ruta del día en Google Maps</a></div>` : ""}
-          ${comerDia(d)}
+          ${ruta ? `<div class="acciones"><a class="btn peq" href="${ruta}" target="_blank" rel="noopener">🗺 Ruta del día en Google Maps</a></div>` : ""}`}
+          ${planesDe(d.k).length ? "" : comerDia(d)}
         </div>
       </div>
-      ${d.items.length ? `<div class="grid">${ordenarPorGrupo(d.items).map(tarjeta).join("")}</div>` : ""}
+      ${htmlPlanes(d)}
+      ${d.items.length ? `${planesDe(d.k).length ? `<div class="sub-h">Los sitios de estos planes</div>` : ""}<div class="grid">${ordenarPorGrupo(d.items).map(tarjeta).join("")}</div>` : ""}
       ${d.alt.length ? `<div class="sub-h">Alternativas para este día</div><div class="grid">${ordenarPorGrupo(d.alt).map(tarjeta).join("")}</div>` : ""}
     </section>`;
     }).join("");
@@ -426,7 +467,8 @@ function renderGrupo() {
   const coms = [...remoto.comentarios].sort((a, b) => b.ts - a.ts).slice(0, 40);
   const porDia = DIAS.filter(d => d.items.length).map(d => {
     const top = ordenarPorGrupo([...d.items, ...d.alt]).filter(id => resumen(id).score > 0).slice(0, 4);
-    return `<li><b>${d.d} ${d.n}:</b> ${top.length ? top.map(id => `<a href="#" data-ir-sitio="${id}">${esc(S[id].n)}</a>`).join(", ") : "<span style='color:var(--muted)'>sin votos aún</span>"}</li>`;
+    const gp = planesDe(d.k).map(p => ({ p, r: resumen(p.id) })).filter(x => x.r.total).sort((a, b) => b.r.score - a.r.score)[0];
+    return `<li><b>${d.d} ${d.n}:</b> ${gp ? `<a href="#" data-ir-dia="${d.k}">plan ${esc(gp.p.letra)}</a> (👍${gp.r.si.length}) · ` : ""}${top.length ? top.map(id => `<a href="#" data-ir-sitio="${id}">${esc(S[id].n)}</a>`).join(", ") : "<span style='color:var(--muted)'>sin votos aún</span>"}</li>`;
   }).join("");
   el.innerHTML = `
     ${online === false ? `<p class="nota">No hay conexión con el servidor: aquí solo ves tus votos. Cuando vuelva la conexión se suben solos.</p>` : ""}

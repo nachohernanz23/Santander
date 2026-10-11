@@ -311,7 +311,7 @@ const S = {
 const DIAS = [
   { k: "lun", d: "Lunes", n: 12, f: "2026-10-12", wx: "☀️", p: "0–5% lluvia", gente: 4, quien: "Rufe, Caste, Moreno y Niggi", t: "Costa Quebrada y costa occidental", sol: true,
     meteo: [43.46, -3.80], marea: "santander",
-    nota: "Día seco y festivo. La bajamar es a las 12:08 con coeficiente 85: el mejor momento de la semana para la Costa Quebrada.",
+    nota: "Festivo. Previsión del domingo por la noche: nublado hasta la 1 y luego sol pleno hasta la noche, 21–22 °C, sin lluvia y casi sin viento. La bajamar es a las 12:08 con coeficiente 85: el mejor momento de toda la semana para la Costa Quebrada. Abajo tenéis tres planes completos para votar.",
     avisos: ["Festivo: Altamira y las cuevas de El Castillo están cerradas; El Soplao y el Guggenheim abren.",
       "El Capricho de Gaudí: mejor comprar la entrada con hora.",
       "Llegad a la Arnía antes de las 11: en festivo el aparcamiento se llena.",
@@ -378,6 +378,48 @@ const DIAS = [
     horario: [["10:30", "Recoger la casa de Arenas"], ["12:00", "Algo de camino: Liérganes, Cabárceno o Altamira"], ["Tarde", "Vuelta"]],
     items: [], alt: ["cabarceno", "lierganes", "altamira"] }
 ];
+
+// Planes alternativos para un día: el grupo vota cuál hace. "rec" marca nuestra recomendación.
+const PLANES = {
+  lun: [
+    { id: "p-lun-b", letra: "B", n: "Costa Quebrada sin prisa, Santillana y atardecer en el faro", rec: true,
+      lema: "Lo mejor del día, a buen ritmo y sin pasarse de coche el primer día.",
+      ritmo: "Medio", coche: "≈ 1 h 30 en total",
+      horario: [["10:00", "Salida de casa (20 min)"], ["10:30", "Dunas de Liencres y playa de Valdearenas, mientras baja la marea"],
+        ["11:15", "Senda de los acantilados: Portio → Urros → la Arnía. Bajar a la rasa de la Arnía con la bajamar (12:08)"],
+        ["13:45", "Comer al lado: El Cazurro (en la misma Arnía) o Burdo (Liencres, lo recomienda María)"],
+        ["16:00", "Santillana del Mar con el sol de la tarde y menos gente que a mediodía"],
+        ["18:30", "Vuelta a Santander (30 min)"], ["19:05", "Faro de Cabo Mayor para la puesta de sol (19:37, cielo despejado)"],
+        ["21:00", "Rabas y cena en Peña Herbosa (Bodega Fuente Dé, La Pirula o Solórzano abren el lunes)"]],
+      pros: ["La Costa Quebrada con la mejor marea de la semana y tiempo de sobra para bajar a las rocas",
+        "Comida a 5 minutos, sin conducir con hambre", "Santillana por la tarde: más luz y menos turistas que a mediodía en festivo",
+        "Atardecer despejado a 10 min de casa y cena pronto: llegasteis anoche"],
+      contras: ["No veis Comillas ni San Vicente hoy: quedan para el viernes, que están a 20–25 min de El Soplao"],
+      sitios: ["liencres", "urros", "arnia", "santillana", "cabomayor"], comer: ["r-el-cazurro", "r-burdo", "r-bodega-fuente-de", "r-la-pirula"] },
+    { id: "p-lun-a", letra: "A", n: "Ruta completa por la costa occidental",
+      lema: "El plan original: verlo todo de una vez aprovechando el buen tiempo.",
+      ritmo: "Intenso", coche: "≈ 2 h 15 en total",
+      horario: [["9:45", "Salida de casa"], ["10:15", "Dunas de Liencres"], ["11:00", "Urros y la Arnía con la bajamar (12:08)"],
+        ["14:00", "Comer en Santillana del Mar (Conde o El Bisonte Rojo; Gran Duque cierra) y pasear"],
+        ["16:30", "Comillas: El Capricho de Gaudí (mejor con entrada comprada) y el casco"],
+        ["18:45", "Atardecer en San Vicente de la Barquera u Oyambre (19:37)"], ["20:30", "Vuelta a Santander (55 min)"]],
+      pros: ["Os quitáis toda la costa occidental en un día de sol", "San Vicente al atardecer con los Picos de fondo es de postal"],
+      contras: ["Mucho coche y muchas paradas cortas: todo con prisa", "Santillana a la hora de comer en festivo, a tope de gente",
+        "Llegáis a casa sobre las 21:30 el primer día, después del viaje"],
+      sitios: ["liencres", "urros", "arnia", "santillana", "comillas", "sanvicente", "oyambre"], comer: ["r-conde-restaurante", "r-el-bisonte-rojo", "r-gurea"] },
+    { id: "p-lun-c", letra: "C", n: "Costa Quebrada y tarde de playa",
+      lema: "Primer día tranquilo: la Arnía con la marea, comida larga y playa al sol.",
+      ritmo: "Relajado", coche: "≈ 50 min en total",
+      horario: [["10:30", "Salida de casa sin madrugar"], ["11:00", "Urros y la Arnía con la bajamar (12:08)"],
+        ["13:30", "Comer tranquilos en Liencres (Burdo o El Cazurro)"],
+        ["16:00", "Playa de Valdearenas (Liencres) o el Sardinero: sol, siesta y baño para valientes, que el agua estará fresca"],
+        ["19:05", "Atardecer en el faro de Cabo Mayor (19:37)"], ["21:00", "Rabas por Peña Herbosa"]],
+      pros: ["Descansáis del viaje", "Aprovecháis la tarde de sol para playa, que el resto de la semana viene peor"],
+      contras: ["Os dejáis Santillana, Comillas y San Vicente (Santillana se puede meter el viernes con Altamira)",
+        "En la Costa Quebrada no hay baño: corrientes peligrosas. Para bañarse, el Sardinero"],
+      sitios: ["urros", "arnia", "liencres", "sardinero", "cabomayor"], comer: ["r-burdo", "r-el-cazurro", "r-la-pirula", "r-vermuteria-solorzano"] }
+  ]
+};
 
 // Tareas compartidas: cualquiera las marca y se ve quién lo hizo.
 const TAREAS = [

@@ -253,6 +253,25 @@ h2.sec{font-size:24px;font-weight:750;font-stretch:86%;margin:34px 0 12px}
 h2.sec:first-child{margin-top:0}
 footer{font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted);padding:22px 0 50px;border-top:1px solid var(--line)}
 
+/* ---------- Planes de un día ---------- */
+.planes{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px;margin-bottom:8px}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--sombra)}
+.plan.rec{border:2px solid var(--sol)}
+.plan.top{border-color:var(--monte);box-shadow:0 0 0 3px color-mix(in srgb,var(--monte) 35%,transparent),var(--sombra)}
+.plan-cab{display:flex;gap:12px;align-items:flex-start}
+.plan-cab h3{margin:0 0 3px;font-size:19px;font-weight:750;font-stretch:86%;line-height:1.15}
+.letra{flex:none;width:42px;height:42px;border-radius:10px;background:var(--mar);color:var(--btn-ink);font:800 24px "Archivo",sans-serif;display:grid;place-items:center}
+.rec-badge{align-self:flex-start;font:700 12.5px "Archivo",sans-serif;background:var(--sol);color:#1E2B34;padding:3px 9px;border-radius:5px}
+.plan p{margin:0;font-size:15px}
+.plan-horario{list-style:none;margin:0;padding:0;font:14px/1.4 "Archivo",sans-serif}
+.plan-horario li{display:grid;grid-template-columns:48px 1fr;gap:6px;padding:4px 0;border-top:1px dashed var(--line)}
+.plan-horario b{color:var(--mar);font-variant-numeric:tabular-nums}
+.pros,.contras{list-style:none;margin:0;padding:0;font:14px/1.4 "Archivo",sans-serif;display:grid;gap:3px}
+.pros li::before{content:"✔ ";color:var(--monte);font-weight:800}
+.contras li::before{content:"✖ ";color:var(--rojo);font-weight:800}
+.plan-links{font:13.5px/1.5 "Archivo",sans-serif}
+.ganador{font:15px/1.4 "Archivo",sans-serif;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+
 /* ---------- Restaurantes ---------- */
 .resto{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sombra);position:relative}
 .resto.propio{border-left:4px solid #8E44AD}
@@ -422,10 +441,10 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/generado.js?v=6"></script>
-<script src="js/datos.js?v=6"></script>
-<script src="js/notas.js?v=6"></script>
-<script src="js/restaurantes.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
+<script src="js/generado.js?v=8"></script>
+<script src="js/datos.js?v=8"></script>
+<script src="js/notas.js?v=8"></script>
+<script src="js/restaurantes.js?v=8"></script>
+<script src="js/app.js?v=8"></script>
 </body>
 </html>

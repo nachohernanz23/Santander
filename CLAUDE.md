@@ -24,6 +24,10 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - **Sáb 17 (3):** Bárcena Mayor, cocido y Vega de Pas.
 - **Dom 18:** vuelta.
 
+## Planes alternativos por día
+- `PLANES` en `js/datos.js`: para un día, varios planes completos (letra, horario, ritmo, coche, pros, contras, sitios y restaurantes). El grupo los vota con ids `p-<día>-<letra>` y la web muestra cuál va ganando. `rec: true` marca nuestra recomendación.
+- Lunes 12: B (recomendado: Costa Quebrada sin prisa, comida en Liencres, Santillana por la tarde y atardecer en Cabo Mayor), A (ruta completa original) y C (Costa Quebrada y tarde de playa).
+
 ## Datos comprobados el 11-oct-2026
 - Precios, horarios y reservas: en `S[id].info` (webs oficiales). Lunes 12 cerrados: Altamira y El Castillo (abren El Soplao y el Guggenheim). Gaztelugatxe pide reserva el 12, 17 y 18.
 - Notas de Google: `js/notas.js`.
