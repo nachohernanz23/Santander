@@ -358,34 +358,6 @@ const TAREAS = [
   { id: "c-compra", t: "Compra para la casa (desayunos y bocadillos del miércoles)", cuando: "Lunes o martes" }
 ];
 
-// Dónde comer: sugerencias conocidas. Mirad la nota en Maps antes de ir.
-const COMER = [
-  { z: "Santander", l: [
-    ["Casa Lita", "Pintxos frente a la bahía, en el Paseo de Pereda", "Casa Lita Santander"],
-    ["La Conveniente", "Bodega con raciones y música en directo", "La Conveniente Santander"],
-    ["Bodega del Riojano", "Clásico del Río de la Pila", "Bodega del Riojano Santander"],
-    ["Las Hijas de Cañadío", "Raciones en la plaza de Cañadío", "Las Hijas de Cañadío Santander"],
-    ["Rabas por Peña Herbosa", "Ruta de bares de rabas", "rabas Peña Herbosa Santander"] ] },
-  { z: "Santoña", l: [
-    ["Anchoas de Santoña", "Conserveras con tienda y degustación", "conservera anchoas Santoña tienda"],
-    ["Restaurantes del puerto", "Pescado y anchoas", "restaurantes puerto Santoña"] ] },
-  { z: "Liébana", l: [
-    ["Casa Cayo (Potes)", "Cocido lebaniego, de los clásicos", "Casa Cayo Potes"],
-    ["Orujo y quesucos", "Tiendas del casco de Potes", "orujo Potes tienda"] ] },
-  { z: "Bilbao y Bermeo", l: [
-    ["Gure Toki", "Pintxos de autor en la Plaza Nueva", "Gure Toki Bilbao"],
-    ["Sorginzulo", "Pintxos clásicos en la Plaza Nueva", "Sorginzulo Bilbao"],
-    ["Café Bar Bilbao", "Pintxos en la Plaza Nueva desde 1911", "Café Bar Bilbao Plaza Nueva"],
-    ["Puerto de Bermeo", "Pescado a la brasa", "restaurante puerto Bermeo"] ] },
-  { z: "Costa occidental", l: [
-    ["Santillana del Mar", "Comer en el pueblo: mirad la nota antes", "restaurantes Santillana del Mar"],
-    ["San Vicente de la Barquera", "Marisco y pescado en el puerto", "restaurantes San Vicente de la Barquera puerto"] ] },
-  { z: "Interior", l: [
-    ["Cocido montañés en Iguña", "Para el sábado", "cocido montañés Arenas de Iguña"],
-    ["Bárcena Mayor", "Casas de comidas del pueblo", "restaurantes Bárcena Mayor"],
-    ["Sobaos y quesadas pasiegas", "Vega de Pas y Selaya", "sobaos pasiegos Vega de Pas"] ] }
-];
-
 const PLATOS = [
   ["Rabas", "Calamar rebozado en tiras. El aperitivo de Santander."],
   ["Anchoas de Santoña", "En salazón y en aceite, las mejores de España."],

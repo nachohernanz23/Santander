@@ -1,4 +1,4 @@
-// Backend mínimo de la web del viaje: votos, comentarios y tareas compartidas.
+// Backend mínimo de la web del viaje: votos, comentarios, tareas y restaurantes compartidos.
 // Sin dependencias. Guarda todo en un JSON (DATA_DIR/estado.json).
 // Caddy le pasa /api/*; los archivos estáticos los sirve Caddy directamente.
 "use strict";
@@ -12,10 +12,10 @@ const FILE = path.join(DATA_DIR, "estado.json");
 
 const VOTOS_OK = new Set(["si", "quiza", "no"]);
 const ID_OK = /^[a-z0-9-]{1,40}$/;
-const MAX_PERSONAS = 30, MAX_COMENTARIOS = 3000, MAX_TEXTO = 800;
+const MAX_PERSONAS = 30, MAX_COMENTARIOS = 3000, MAX_TEXTO = 800, MAX_RESTAURANTES = 300;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
-let estado = { votos: {}, comentarios: [], tareas: {}, rev: 0 };
+let estado = { votos: {}, comentarios: [], tareas: {}, restaurantes: [], rev: 0 };
 try { estado = Object.assign(estado, JSON.parse(fs.readFileSync(FILE, "utf8"))); } catch (e) {}
 
 let guardando = null;
@@ -34,6 +34,8 @@ function limpiarNombre(n) {
   n = n.normalize("NFC").replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, 24);
   return n;
 }
+
+function texto(v, max) { return typeof v === "string" ? v.replace(/[\u0000-\u001f]/g, " ").trim().slice(0, max) : ""; }
 
 function responder(res, code, obj) {
   res.writeHead(code, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
@@ -80,6 +82,32 @@ const acciones = {
     const nombre = limpiarNombre(b.nombre);
     if (!nombre || !ID_OK.test(b.id || "")) return [400, "datos no válidos"];
     if (b.hecho) estado.tareas[b.id] = { por: nombre, ts: Date.now() }; else delete estado.tareas[b.id];
+    return [200];
+  },
+  // { nombre, r: { n, lugar, tipo, precio, nota, resenas, maps, recomienda, texto } }  añade un restaurante
+  restaurante(b) {
+    const nombre = limpiarNombre(b.nombre), r = b.r || {};
+    const n = texto(r.n, 60);
+    if (!nombre || !n) return [400, "falta el nombre del restaurante"];
+    if (estado.restaurantes.length >= MAX_RESTAURANTES) return [400, "demasiados restaurantes"];
+    const maps = texto(r.maps, 400);
+    const nota = Number(r.nota), resenas = parseInt(r.resenas, 10);
+    estado.restaurantes.push({
+      id: "u-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      n, lugar: texto(r.lugar, 60), tipo: texto(r.tipo, 60), precio: texto(r.precio, 20),
+      nota: nota >= 1 && nota <= 5 ? Math.round(nota * 10) / 10 : null,
+      resenas: resenas > 0 ? Math.min(resenas, 10000000) : null,
+      maps: /^https:\/\//.test(maps) ? maps : "", recomienda: texto(r.recomienda, 60), texto: texto(r.texto, 400),
+      autor: nombre, ts: Date.now()
+    });
+    return [200];
+  },
+  // { nombre, id }  solo quien lo añadió puede borrarlo
+  borrarRestaurante(b) {
+    const nombre = limpiarNombre(b.nombre);
+    const i = estado.restaurantes.findIndex(x => x.id === b.id && x.autor === nombre);
+    if (i < 0) return [404, "no encontrado"];
+    estado.restaurantes.splice(i, 1);
     return [200];
   },
   // { nombre }  borra todos los votos de esa persona

@@ -253,6 +253,30 @@ h2.sec{font-size:24px;font-weight:750;font-stretch:86%;margin:34px 0 12px}
 h2.sec:first-child{margin-top:0}
 footer{font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted);padding:22px 0 50px;border-top:1px solid var(--line)}
 
+/* ---------- Restaurantes ---------- */
+.resto{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sombra);position:relative}
+.resto.propio{border-left:4px solid #8E44AD}
+.resto.top{border-color:color-mix(in srgb,var(--monte) 60%,var(--line));box-shadow:0 0 0 2px color-mix(in srgb,var(--monte) 35%,transparent),var(--sombra)}
+.r-cab{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.r-cab h3{margin:0;font-size:20px;font-weight:750;font-stretch:86%;line-height:1.15}
+.r-cab .ins.g{border:1px solid var(--line);background:var(--surface2);color:var(--ink)}
+.resto p{margin:0;font-size:15px}
+.r-pedir{font-family:"Archivo",sans-serif;font-size:14px;background:var(--surface2);border-radius:8px;padding:7px 10px}
+.r-quien{font-family:"Archivo",sans-serif;font-size:13px;color:#8E44AD}
+.resto .fav-r{font:700 12px "Archivo",sans-serif;color:#fff;background:var(--monte);padding:2px 8px;border-radius:5px;align-self:flex-start}
+.fuimos{appearance:none;border:1px dashed var(--line);background:none;border-radius:8px;padding:7px;font-size:13.5px;font-weight:650;color:var(--muted);cursor:pointer}
+.fuimos[aria-pressed="true"]{border-style:solid;border-color:var(--monte);color:var(--monte);background:color-mix(in srgb,var(--monte) 10%,transparent)}
+.enlaces .borrar{appearance:none;border:0;background:none;color:var(--rojo);font-weight:650;cursor:pointer;padding:0;font-size:14px}
+.anadir{margin-bottom:20px}
+.anadir summary{cursor:pointer;font:700 16px "Archivo",sans-serif}
+.form-resto{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 14px;margin-top:14px;font-family:"Archivo",sans-serif;font-size:13.5px;font-weight:650}
+.form-resto .ancho{grid-column:1/-1}
+.form-resto input,.form-resto textarea{display:block;width:100%;margin-top:4px;font:15px "Archivo",sans-serif;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.comer-dia{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+.comer-dia ul{list-style:none;margin:0 0 8px;padding:0;font-family:"Archivo",sans-serif;font-size:14px}
+.comer-dia li{padding:3px 0}
+.comer-dia small{color:var(--muted)}
+
 /* ---------- Diálogos ---------- */
 dialog{border:0;border-radius:14px;padding:0;background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);max-width:min(440px,calc(100vw - 32px))}
 dialog::backdrop{background:rgba(5,14,18,.6);backdrop-filter:blur(3px)}
@@ -304,6 +328,7 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
   <div class="wrap" role="tablist">
     <button role="tab" aria-selected="true" data-tab="plan">Plan por días</button>
     <button role="tab" aria-selected="false" data-tab="ideas">Todos los sitios</button>
+    <button role="tab" aria-selected="false" data-tab="restaurantes">Restaurantes</button>
     <button role="tab" aria-selected="false" data-tab="grupo">Votación del grupo</button>
     <button role="tab" aria-selected="false" data-tab="mapa">Mapa</button>
     <button role="tab" aria-selected="false" data-tab="reservas">Reservas<span class="count" id="cnt-tareas">0</span></button>
@@ -328,13 +353,40 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
     <div class="filtros" id="filtros"></div>
     <div class="grid" id="ideas-grid"></div>
   </section>
+  <section class="panel" id="p-restaurantes" hidden>
+    <p class="intro">Los mejores calidad-precio que hemos encontrado: nota de Google de 4 o más, con muchas reseñas y como mucho 40 € por persona. Votad los que os apetecen, comentad y añadid los vuestros o los que os recomienden.</p>
+    <details class="caja anadir" id="anadir-resto">
+      <summary>➕ Añadir un restaurante (vuestro o que os recomienden)</summary>
+      <form id="form-resto" class="form-resto" autocomplete="off">
+        <label>Nombre del restaurante *<input name="n" required maxlength="60"></label>
+        <label>Pueblo o zona<input name="lugar" maxlength="60" placeholder="Santander, Potes…"></label>
+        <label>Tipo de comida<input name="tipo" maxlength="60" placeholder="Cocido, marisco, raciones…"></label>
+        <label>Precio por persona<input name="precio" maxlength="20" placeholder="20–30 €"></label>
+        <label>Nota en Google<input name="nota" inputmode="decimal" maxlength="4" placeholder="4,5"></label>
+        <label>Nº de reseñas en Google<input name="resenas" inputmode="numeric" maxlength="8" placeholder="1200"></label>
+        <label class="ancho">Enlace de Google Maps<input name="maps" type="url" maxlength="400" placeholder="https://maps.app.goo.gl/…"></label>
+        <label>¿Quién lo recomienda?<input name="recomienda" maxlength="60" placeholder="Mi tía, un amigo de allí…"></label>
+        <label class="ancho">Comentario<textarea name="texto" maxlength="400" rows="2" placeholder="Qué pedir, si hay que reservar…"></textarea></label>
+        <div class="ancho" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn" type="submit">Añadir a la lista</button><small style="color:var(--muted)">Para el enlace: en Google Maps, Compartir → Copiar enlace.</small></div>
+      </form>
+    </details>
+    <div class="herramientas">
+      <input type="search" id="buscar-r" placeholder="Buscar: rabas, cocido, Potes…" aria-label="Buscar restaurante">
+      <select id="dia-r" aria-label="Día"></select>
+      <select id="precio-r" aria-label="Precio máximo"><option value="40">Hasta 40 €</option><option value="30">Hasta 30 €</option><option value="20">Hasta 20 €</option></select>
+      <select id="orden-r" aria-label="Ordenar"><option value="nota">Ordenar: mejor nota</option><option value="grupo">Ordenar: votos del grupo</option><option value="barato">Ordenar: más baratos</option><option value="resenas">Ordenar: más reseñas</option></select>
+      <span class="resultado-n" id="resultado-r"></span>
+    </div>
+    <div class="filtros" id="filtros-r"></div>
+    <div class="grid" id="restos-grid"></div>
+  </section>
   <section class="panel" id="p-grupo" hidden></section>
   <section class="panel" id="p-mapa" hidden>
     <p class="intro">Todos los sitios y las dos casas. El color indica cuánto gusta al grupo; pulsa un punto para ver la ficha.</p>
     <div id="mapa"></div>
     <div class="leyenda-mapa">
       <span><i style="background:#2F6B3E"></i>Gusta al grupo</span><span><i style="background:#B7862B"></i>Dudas</span>
-      <span><i style="background:#C8102E"></i>No apetece</span><span><i style="background:#7C8B93"></i>Sin votos</span><span><i style="background:#0F4C5C"></i>Casas</span>
+      <span><i style="background:#C8102E"></i>No apetece</span><span><i style="background:#7C8B93"></i>Sin votos</span><span><i style="background:#0F4C5C"></i>Casas</span><span><i style="background:#8E44AD;width:9px;height:9px"></i>Restaurantes</span>
     </div>
   </section>
   <section class="panel" id="p-reservas" hidden></section>
@@ -371,6 +423,7 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 <script src="js/generado.js?v=3"></script>
 <script src="js/datos.js?v=3"></script>
 <script src="js/notas.js?v=3"></script>
+<script src="js/restaurantes.js?v=3"></script>
 <script src="js/app.js?v=3"></script>
 </body>
 </html>

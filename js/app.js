@@ -118,17 +118,20 @@ function tarjeta(id) {
         ${i.url ? `<a href="${esc(i.url)}" target="_blank" rel="noopener">Web oficial</a>` : ""}
         <a href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(s.q)}" target="_blank" rel="noopener">Más fotos</a>
       </div>
-      <div class="grupo" data-grupo="${id}"></div>
-      <div class="voto" role="group" aria-label="¿Te apetece ${esc(s.n)}?">
+      ${htmlVotoComs(id, s.n)}
+    </div>
+  </article>`;
+}
+function htmlVotoComs(id, nombre) {
+  return `<div class="grupo" data-grupo="${id}"></div>
+      <div class="voto" role="group" aria-label="¿Te apetece ${esc(nombre)}?">
         ${[["si", "👍 Me apetece"], ["quiza", "🤔 Quizá"], ["no", "👎 Paso"]].map(([k, l]) => `<button type="button" data-id="${id}" data-v="${k}" aria-pressed="false">${l}</button>`).join("")}
       </div>
       <details class="coms" data-coms="${id}">
         <summary>💬 Comentarios (<span data-ncom="${id}">0</span>)</summary>
         <div class="lista"></div>
-        <form class="form-com" data-id="${id}"><input name="t" maxlength="800" placeholder="Escribe un comentario…" aria-label="Comentario sobre ${esc(s.n)}" autocomplete="off"><button class="btn peq" type="submit">Enviar</button></form>
-      </details>
-    </div>
-  </article>`;
+        <form class="form-com" data-id="${id}"><input name="t" maxlength="800" placeholder="Escribe un comentario…" aria-label="Comentario sobre ${esc(nombre)}" autocomplete="off"><button class="btn peq" type="submit">Enviar</button></form>
+      </details>`;
 }
 function pintarGrupo(el) {
   const id = el.dataset.grupo, r = resumen(id);
@@ -144,20 +147,23 @@ function pintarComs(id) {
 }
 function htmlCom(c, sobre = false) {
   return `<div class="com">${av(c.autor)}<div class="txt"><span class="quien">${esc(c.autor)}</span><span class="cuando">${hace(c.ts)}</span>${c.autor === yo() ? `<button class="borrar" data-borrar="${esc(c.c)}">borrar</button>` : ""}
-    ${sobre ? `<div class="sobre">sobre <a href="#" data-ir-sitio="${c.id}">${esc(S[c.id] ? S[c.id].n : c.id)}</a></div>` : ""}<div>${esc(c.texto)}</div></div></div>`;
+    ${sobre ? `<div class="sobre">sobre <a href="#" ${S[c.id] ? "data-ir-sitio" : "data-ir-resto"}="${esc(c.id)}">${esc(nombreDe(c.id))}</a></div>` : ""}<div>${esc(c.texto)}</div></div></div>`;
 }
 
 // ---------- Actualizar todo lo que depende de votos ----------
 function actualizar() {
+  const firma = restosUsuario().map(r => r.id).join();
+  if (firma !== firmaR) { firmaR = firma; pintarRestos(); return; }
   $$("[data-grupo]").forEach(pintarGrupo);
   $$(".voto button").forEach(b => b.setAttribute("aria-pressed", miVoto(b.dataset.id) === b.dataset.v));
   const n = votantes().length;
   $$("[data-fav]").forEach(e => {
     const r = resumen(e.dataset.fav), fav = n >= 2 && r.si.length * 2 > n;
     e.hidden = !fav; if (fav) e.textContent = `❤ Gusta a ${r.si.length} de ${n}`;
-    e.closest(".sitio").classList.toggle("top", fav);
+    e.closest(".sitio, .resto").classList.toggle("top", fav);
   });
-  Object.keys(S).forEach(pintarComs);
+  $$("[data-fuimos]").forEach(b => { const f = tareas()["f-" + b.dataset.fuimos]; b.setAttribute("aria-pressed", !!f); b.textContent = f ? `✔ Ya fuimos (lo marcó ${f.por})` : "Marcar que ya fuimos"; });
+  [...Object.keys(S), ...idsRestos()].forEach(pintarComs);
   pintarYo(); renderGrupo(); renderReservas(); recolorearMapa();
 }
 function pintarYo() {
@@ -344,6 +350,7 @@ function renderPlan() {
         <div class="agenda"><h3>Horario orientativo</h3>
           <ol>${d.horario.map(([h, t]) => `<li><b>${esc(h)}</b><span>${esc(t)}</span></li>`).join("")}</ol>
           ${ruta ? `<div class="acciones"><a class="btn peq" href="${ruta}" target="_blank" rel="noopener">🗺 Ruta del día en Google Maps</a></div>` : ""}
+          ${comerDia(d)}
         </div>
       </div>
       ${d.items.length ? `<div class="grid">${ordenarPorGrupo(d.items).map(tarjeta).join("")}</div>` : ""}
@@ -433,6 +440,10 @@ function renderGrupo() {
       <div>
         <h2 class="sec">Lo que más gusta cada día</h2>
         <ul style="font-family:Archivo,sans-serif;padding-left:18px;line-height:1.5">${porDia}</ul>
+        <h2 class="sec">Restaurantes que más gustan</h2>
+        ${(() => { const top = idsRestos().filter(id => resumen(id).score > 0).sort((a, b) => resumen(b).score - resumen(a).score).slice(0, 8);
+          return top.length ? `<ol style="font-family:Archivo,sans-serif;padding-left:22px;line-height:1.6">${top.map(id => { const r = resumen(id), x = resto(id); return `<li><a href="#" data-ir-resto="${id}">${esc(x.n)}</a> <small style="color:var(--muted)">${esc(x.pueblo || x.lugar || "")} · 👍${r.si.length}${r.quiza.length ? " 🤔" + r.quiza.length : ""}</small></li>`; }).join("")}</ol>`
+            : `<p style="color:var(--muted)">Todavía nadie ha votado restaurantes.</p>`; })()}
         <h2 class="sec">Últimos comentarios</h2>
         <div class="feed">${coms.length ? coms.map(c => htmlCom(c, true)).join("") : `<p style="color:var(--muted)">Todavía no hay comentarios. Se escriben desde cada sitio.</p>`}</div>
       </div>
@@ -461,6 +472,11 @@ async function abrirMapa() {
     const f = FOTOS[id], g = NOTAS[id];
     marcadores[id] = L.circleMarker(s.c, { radius: 5 + s.val * 1.6, color: "#fff", weight: 2, fillColor: colorMapa(id), fillOpacity: .92 })
       .addTo(mapa).bindPopup(() => `${f ? `<img src="img/${f[0].f}-m.webp" alt="">` : ""}<b>${esc(s.n)}</b><br><span style="color:#D9A21B">${"★".repeat(s.val)}</span> ${VALORACION[s.val]}${g ? ` · Google ${fmtNota(g.nota)}` : ""}<br>🚗 ${esc(s.t)} · ⏱ ${esc(s.dur)}<br><a href="#" data-ir-sitio="${id}">Ver ficha y votar</a>`);
+  }
+  for (const [id, r] of Object.entries(RESTAURANTES)) {
+    if (r.lat == null || r.lon == null) continue;
+    L.circleMarker([r.lat, r.lon], { radius: 6, color: "#fff", weight: 1.5, fillColor: "#8E44AD", fillOpacity: .9 })
+      .addTo(mapa).bindPopup(`<b>🍽 ${esc(r.n)}</b><br>${esc(r.pueblo)} · ${esc(r.tipo || "")}<br>${r.nota ? `★ ${fmtNota(r.nota)} (${fmtN(r.resenas || 0)}) · ` : ""}${esc(r.precio || "")}<br><a href="#" data-ir-resto="${id}">Ver restaurante y votar</a>`);
   }
   VIAJE.casas.forEach(c => L.circleMarker(c.c, { radius: 11, color: "#fff", weight: 3, fillColor: "#0F4C5C", fillOpacity: 1 }).addTo(mapa).bindPopup(`<b>🏠 ${esc(c.n)}</b><br>${esc(c.d)}`));
   mapa.fitBounds(L.latLngBounds(Object.values(S).filter(s => s.c).map(s => s.c)), { padding: [20, 20] });
@@ -513,8 +529,7 @@ function renderInfo() {
     <h2 class="sec">Qué depende de la marea</h2>
     <div class="cajas">${dependen.map(id => `<div class="caja"><h3><a href="#" data-ir-sitio="${id}">${esc(S[id].n)}</a></h3><p>${esc(S[id].marea.txt)}</p></div>`).join("")}</div>
     <h2 class="sec">Dónde comer</h2>
-    <p class="intro">Sitios conocidos para empezar a mirar. Antes de ir, abrid el enlace y mirad la nota y las reseñas recientes en Google Maps.</p>
-    <div class="cajas">${COMER.map(g => `<div class="caja"><h3>${esc(g.z)}</h3><ul>${g.l.map(([n, d, q]) => `<li><a href="${mapsQ(q)}" target="_blank" rel="noopener"><b>${esc(n)}</b></a>: ${esc(d)}</li>`).join("")}</ul></div>`).join("")}</div>
+    <p class="intro">Está todo en la pestaña <a href="#restaurantes">Restaurantes</a>: los mejores calidad-precio de cada zona, con su nota de Google, y los que vayáis añadiendo.</p>
     <h2 class="sec">Qué probar</h2>
     <div class="cajas"><div class="caja"><ul>${PLATOS.map(([n, d]) => `<li><b>${esc(n)}:</b> ${esc(d)}</li>`).join("")}</ul></div>
       <div class="caja"><h3>Qué llevar</h3><ul><li>Botas de montaña para el miércoles (Horcados Rojos).</li><li>Chubasquero y algo de abrigo: viernes y sábado, lluvia y unos 18 °C.</li><li>Una sudadera para las cuevas (12–14 °C dentro).</li><li>Calzado que agarre para las rocas de la Arnía y los escalones de Gaztelugatxe.</li></ul></div>
@@ -526,6 +541,97 @@ function renderInfo() {
       <p><b>Tiempo:</b> previsión de Open-Meteo, que se actualiza sola al abrir la web; si no carga, la de AEMET del 11 de octubre.</p>
       <details><summary style="cursor:pointer;font-weight:700">Créditos de las fotos (Wikimedia Commons)</summary><ul style="font-size:13px">${creditos}</ul></details>
     </div>`;
+}
+
+// ---------- Restaurantes ----------
+const restosUsuario = () => remoto.restaurantes || [];
+const resto = id => RESTAURANTES[id] || restosUsuario().find(r => r.id === id);
+const idsRestos = () => [...Object.keys(RESTAURANTES), ...restosUsuario().map(r => r.id)];
+const nombreDe = id => { const x = S[id] || resto(id); return x ? x.n : id; };
+const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
+const precioNum = p => { const n = String(p || "").match(/\d+/g); return n ? +n[n.length - 1] : null; };
+let filtroR = { zona: "todas", dia: "", precio: 40, orden: "nota", q: "" };
+let firmaR = "";
+function tarjetaResto(id) {
+  const r = resto(id), u = id.startsWith("u-");
+  const lugar = u ? r.lugar : [r.barrio, r.pueblo].filter(Boolean).join(", ");
+  const maps = u ? (r.maps || mapsQ(`${r.n} ${r.lugar || "Cantabria"}`)) : mapsQ(`${r.n} ${r.pueblo}`);
+  const nota = r.nota ? `<span class="ins g" title="Nota de Google${r.resenas ? " con " + r.resenas + " reseñas" : ""}"><span class="est">★</span> ${fmtNota(r.nota)}${r.resenas ? ` <small>· ${fmtN(r.resenas)}</small>` : ""}</span>` : "";
+  const precio = r.precio ? `${esc(r.precio)}${/€/.test(r.precio) ? "" : " €"}` : "";
+  return `<article class="resto${u ? " propio" : ""}" data-card="${id}">
+    <div class="r-cab"><h3>${esc(r.n)}</h3>${nota}</div>
+    <span class="fav-r" data-fav="${id}" hidden></span>
+    <div class="meta">${lugar ? `<span>📍 ${esc(lugar)}</span>` : ""}${r.tipo ? `<span>🍽 ${esc(r.tipo)}</span>` : ""}${precio ? `<span>💶 ${precio} por persona</span>` : ""}</div>
+    ${u ? `<div class="r-quien">➕ Añadido por <b>${esc(r.autor)}</b>${r.recomienda ? ` · Lo recomienda <b>${esc(r.recomienda)}</b>` : ""}</div>` : ""}
+    ${r.por ? `<p>${esc(r.por)}</p>` : ""}${u && r.texto ? `<p>${esc(r.texto)}</p>` : ""}
+    ${r.pedir ? `<div class="r-pedir"><b>Qué pedir:</b> ${esc(r.pedir)}</div>` : ""}
+    ${r.cierre || r.reserva ? `<ul class="practico-lista">${r.cierre ? `<li><span>🚪</span><span>${esc(r.cierre)}</span></li>` : ""}${r.reserva ? `<li><span>📅</span><span>${esc(r.reserva)}</span></li>` : ""}</ul>` : ""}
+    <div class="enlaces"><a href="${esc(maps)}" target="_blank" rel="noopener">Reseñas en Maps</a>${!u ? `<a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(r.direccion || r.n + " " + r.pueblo)}" target="_blank" rel="noopener">Cómo llegar</a>` : ""}${r.web ? `<a href="${esc(r.web)}" target="_blank" rel="noopener">Web</a>` : ""}${u && r.autor === yo() ? `<button type="button" class="borrar" data-borrar-resto="${id}">Borrar</button>` : ""}</div>
+    ${htmlVotoComs(id, r.n)}
+    <button type="button" class="fuimos" data-fuimos="${id}" aria-pressed="false">Marcar que ya fuimos</button>
+  </article>`;
+}
+function prepararRestos() {
+  $("#dia-r").innerHTML = `<option value="">Cualquier día</option>` + DIAS.map(d => `<option value="${d.k}">${d.d} ${d.n}: ${(DIA_ZONAS[d.k] || []).map(z => ZONAS_R[z]).join(" y ")}</option>`).join("");
+  $("#buscar-r").addEventListener("input", e => { filtroR.q = e.target.value; pintarRestos(); });
+  $("#dia-r").addEventListener("change", e => { filtroR.dia = e.target.value; pintarRestos(); });
+  $("#precio-r").addEventListener("change", e => { filtroR.precio = +e.target.value; pintarRestos(); });
+  $("#orden-r").addEventListener("change", e => { filtroR.orden = e.target.value; pintarRestos(); });
+  $("#form-resto").addEventListener("submit", async e => {
+    e.preventDefault();
+    const f = e.target, v = k => f[k].value.trim();
+    if (!yo()) return pedirNombre(() => f.requestSubmit());
+    if (!online) return toast("Para añadir restaurantes hace falta conexión con el servidor");
+    const r = { n: v("n"), lugar: v("lugar"), tipo: v("tipo"), precio: v("precio"), nota: v("nota").replace(",", "."), resenas: v("resenas").replace(/\D/g, ""), maps: v("maps"), recomienda: v("recomienda"), texto: v("texto") };
+    if (r.maps && !/^https:\/\//.test(r.maps)) return toast("El enlace tiene que empezar por https://");
+    try {
+      remoto = await api("restaurante", { nombre: yo(), r });
+      f.reset(); $("#anadir-resto").open = false;
+      Object.assign(filtroR, { zona: "nuestros", dia: "", q: "" }); $("#buscar-r").value = ""; $("#dia-r").value = "";
+      firmaR = ""; actualizar(); toast(`Añadido: ${r.n}`);
+    } catch (err) { toast("No se ha podido añadir: " + err.message); }
+  });
+}
+function pintarRestos() {
+  const chips = [["todas", "Todos"], ...Object.entries(ZONAS_R), ["nuestros", "➕ Añadidos por nosotros"]];
+  $("#filtros-r").innerHTML = chips.map(([k, v]) => `<button class="chip" data-zr="${k}" aria-pressed="${k === filtroR.zona}">${v}</button>`).join("");
+  $("#dia-r").value = filtroR.dia;
+  const q = norm(filtroR.q);
+  const ids = idsRestos().filter(id => {
+    const r = resto(id), u = id.startsWith("u-");
+    if (filtroR.zona === "nuestros" && !u) return false;
+    if (!["todas", "nuestros"].includes(filtroR.zona) && (u || r.zona !== filtroR.zona)) return false;
+    if (filtroR.dia && !u && !(DIA_ZONAS[filtroR.dia] || []).includes(r.zona)) return false;
+    const pm = u ? precioNum(r.precio) : r.pm;
+    if (pm && pm > filtroR.precio) return false;
+    return !q || norm([r.n, r.pueblo, r.barrio, r.lugar, r.tipo, r.pedir, r.texto].join(" ")).includes(q);
+  });
+  const clave = {
+    nota: id => -((resto(id).nota || 0) * 1e7 + (resto(id).resenas || 0)),
+    grupo: id => -(resumen(id).score * 1e8 + (resto(id).nota || 0) * 1e6),
+    barato: id => (id.startsWith("u-") ? precioNum(resto(id).precio) : resto(id).pm) || 99,
+    resenas: id => -(resto(id).resenas || 0)
+  }[filtroR.orden];
+  ids.sort((a, b) => clave(a) - clave(b));
+  $("#resultado-r").textContent = `${ids.length} restaurantes`;
+  $("#restos-grid").innerHTML = ids.length ? ids.map(tarjetaResto).join("")
+    : `<p class="vacio">${filtroR.zona === "nuestros" ? "Todavía no habéis añadido ninguno. Usad «Añadir un restaurante» de arriba." : "No hay restaurantes con esos filtros."}</p>`;
+  actualizar();
+}
+function comerDia(d) {
+  const zonas = DIA_ZONAS[d.k] || [];
+  const ids = Object.keys(RESTAURANTES).filter(id => zonas.includes(RESTAURANTES[id].zona))
+    .sort((a, b) => resumen(b).score - resumen(a).score || (RESTAURANTES[b].nota - RESTAURANTES[a].nota) || (RESTAURANTES[b].resenas - RESTAURANTES[a].resenas)).slice(0, 4);
+  if (!ids.length) return "";
+  return `<div class="comer-dia"><h3>Dónde comer este día</h3><ul>${ids.map(id => { const r = RESTAURANTES[id];
+    return `<li>🍽 <a href="#" data-ir-resto="${id}"><b>${esc(r.n)}</b></a> <small>${esc(r.pueblo)} · ★ ${fmtNota(r.nota)} · ${esc(r.precio || "")}</small></li>`; }).join("")}</ul>
+    <button class="btn peq sec" data-accion="restos-dia" data-dia="${d.k}">Ver todos los restaurantes de la zona</button></div>`;
+}
+function irAResto(id) {
+  Object.assign(filtroR, { zona: "todas", dia: "", q: "", precio: 40 });
+  $("#buscar-r").value = ""; $("#precio-r").value = "40"; pintarRestos(); abrir("restaurantes");
+  const t = $(`#restos-grid [data-card="${id}"]`);
+  if (t) { t.scrollIntoView({ block: "start" }); t.animate([{ boxShadow: "0 0 0 4px var(--rojo)" }, { boxShadow: "0 0 0 0 transparent" }], { duration: 1600 }); }
 }
 
 // ---------- Galería ----------
@@ -554,7 +660,7 @@ $("#dlg-galeria").addEventListener("keydown", e => { if (e.key === "ArrowLeft") 
 })();
 
 // ---------- Pestañas y navegación ----------
-const TABS = ["plan", "ideas", "grupo", "mapa", "reservas", "info"];
+const TABS = ["plan", "ideas", "restaurantes", "grupo", "mapa", "reservas", "info"];
 function abrir(tab, sinHash) {
   if (!TABS.includes(tab)) tab = "plan";
   $$("nav.tabs [role=tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
@@ -574,6 +680,13 @@ document.addEventListener("click", e => {
   const gb = e.target.closest("[data-galeria]"); if (gb) { abrirGaleria(gb.dataset.galeria); return; }
   const ch = e.target.closest(".chip[data-z]"); if (ch) { filtro = ch.dataset.z; renderFiltros(); pintarIdeas(); return; }
   const is = e.target.closest("[data-ir-sitio]"); if (is) { e.preventDefault(); if (mapa) mapa.closePopup(); irASitio(is.dataset.irSitio); return; }
+  const ir = e.target.closest("[data-ir-resto]"); if (ir) { e.preventDefault(); if (mapa) mapa.closePopup(); irAResto(ir.dataset.irResto); return; }
+  const cz = e.target.closest(".chip[data-zr]"); if (cz) { filtroR.zona = cz.dataset.zr; pintarRestos(); return; }
+  const fu = e.target.closest("[data-fuimos]"); if (fu) { marcarTarea("f-" + fu.dataset.fuimos, fu.getAttribute("aria-pressed") !== "true"); return; }
+  const bz = e.target.closest("[data-borrar-resto]"); if (bz) {
+    if (confirm("¿Borrar este restaurante de la lista?")) api("borrarRestaurante", { nombre: yo(), id: bz.dataset.borrarResto }).then(r => { remoto = r; actualizar(); }).catch(() => toast("No se ha podido borrar"));
+    return;
+  }
   const br = e.target.closest("[data-borrar]"); if (br) {
     if (confirm("¿Borrar este comentario?")) api("borrarComentario", { nombre: yo(), c: br.dataset.borrar }).then(r => { remoto = r; actualizar(); }).catch(() => toast("No se ha podido borrar"));
     return;
@@ -581,6 +694,7 @@ document.addEventListener("click", e => {
   const ac = e.target.closest("[data-accion]"); if (ac) {
     if (ac.dataset.accion === "faltan") { filtro = "sinvoto"; renderFiltros(); pintarIdeas(); abrir("ideas"); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
     if (ac.dataset.accion === "copiar") compartir(textoResumen());
+    if (ac.dataset.accion === "restos-dia") { Object.assign(filtroR, { zona: "todas", dia: ac.dataset.dia, q: "" }); $("#buscar-r").value = ""; pintarRestos(); abrir("restaurantes"); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
   }
 });
 document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches(".rk")) irASitio(e.target.dataset.irSitio); });
@@ -616,7 +730,7 @@ $("#btn-tema").addEventListener("click", () => {
     const c = $("#credito-hero"); c.href = hf.u; c.textContent = `Urros de Liencres · Foto: ${hf.a.slice(0, 30)}`;
   }
   $("#pie").innerHTML = `Fotos de Wikimedia Commons (créditos en «Mareas e info»). Notas de Google Maps, precios y reservas consultados el 11-oct-2026. Mareas de tablademareas.com. Tiempo de Open-Meteo.`;
-  renderSemana(); renderFiltros(); renderPlan(); pintarIdeas(); renderInfo(); renderReservas(); renderGrupo(); pintarYo();
+  renderSemana(); renderFiltros(); prepararRestos(); renderPlan(); pintarIdeas(); pintarRestos(); renderInfo(); renderReservas(); renderGrupo(); pintarYo();
   abrir(location.hash.slice(1) || "plan", true);
   sync(); cargarMeteo();
 })();
