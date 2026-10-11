@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cantabria con los amigos, 12–18 de octubre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1EF; --surface:#FFFFFF; --ink:#22303A; --muted:#5B6A73; --line:#D3DCD8;
+  --mar:#0F4C5C; --monte:#2F5D3A; --rojo:#C8102E; --quiza:#B7862B;
+  --sol:#E9B949; --lluvia:#5C7F96;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10181C; --surface:#18242A; --ink:#E4EBE8; --muted:#9AAAB2; --line:#2A3A42;
+    --mar:#62B6C6; --monte:#86B892; --rojo:#FF5A6E; --quiza:#E2B457; --sol:#F2C75C; --lluvia:#8FB3CA;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10181C; --surface:#18242A; --ink:#E4EBE8; --muted:#9AAAB2; --line:#2A3A42;
+  --mar:#62B6C6; --monte:#86B892; --rojo:#FF5A6E; --quiza:#E2B457; --sol:#F2C75C; --lluvia:#8FB3CA;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Literata",Georgia,serif;font-size:16px;line-height:1.55}
+h1,h2,h3,.ui{font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--mar)}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--mar);outline-offset:2px}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+/* Cabecera */
+header.hero{padding:34px 0 10px}
+.hero h1{font-size:clamp(46px,11vw,104px);line-height:.88;margin:0;font-weight:800;font-stretch:72%;letter-spacing:-.01em;color:var(--mar)}
+.hero p{margin:14px 0 0;max-width:60ch;color:var(--muted)}
+.hero .bases{font-family:"Archivo",sans-serif;font-size:14px;color:var(--ink);margin-top:10px}
+
+/* Franja de la semana: la pieza protagonista */
+.semana{display:grid;grid-template-columns:repeat(7,minmax(118px,1fr));gap:0;margin:26px 0 8px;overflow-x:auto;border-top:3px solid var(--ink);scrollbar-width:thin}
+.dia-btn{appearance:none;background:none;border:0;border-right:1px solid var(--line);text-align:left;padding:12px 12px 14px;cursor:pointer;font-family:"Archivo",sans-serif;min-width:118px}
+.dia-btn:last-child{border-right:0}
+.dia-btn:hover{background:var(--surface)}
+.dia-btn .d{font-size:13px;color:var(--muted)}
+.dia-btn .n{font-size:40px;font-weight:800;font-stretch:70%;line-height:1}
+.dia-btn .wx{font-size:26px;margin-top:6px;line-height:1}
+.dia-btn .p{font-size:13px;margin-top:4px}
+.dia-btn .gente{display:flex;gap:3px;margin-top:10px}
+.dia-btn .gente i{width:9px;height:9px;border-radius:50%;background:var(--monte);display:block}
+.dia-btn .gente i.fuera{background:transparent;border:1.5px solid var(--line)}
+.dia-btn .t{font-size:13px;font-weight:600;margin-top:8px;line-height:1.25}
+.leyenda{font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.leyenda span{display:inline-flex;align-items:center;gap:6px}
+.leyenda i{width:9px;height:9px;border-radius:50%;background:var(--monte);display:inline-block}
+
+/* Pestañas */
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.tabs button{appearance:none;background:none;border:0;padding:14px 12px 12px;font-family:"Archivo",sans-serif;font-weight:600;font-size:15px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;color:var(--muted)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--rojo)}
+nav.tabs .count{display:inline-block;min-width:20px;padding:0 6px;margin-left:6px;border-radius:10px;background:var(--rojo);color:#fff;font-size:12px;text-align:center}
+
+.panel{padding:22px 0 60px}
+.panel[hidden]{display:none}
+
+/* Secciones de día */
+.dia{margin:0 0 46px}
+.dia-cab{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;align-items:end;border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:16px}
+.dia-cab .num{font-family:"Archivo",sans-serif;font-size:64px;font-weight:800;font-stretch:66%;line-height:.85;color:var(--mar);grid-row:span 2}
+.dia-cab h2{margin:0;font-size:26px;font-weight:700;font-stretch:85%;line-height:1.1}
+.dia-cab .sub{font-family:"Archivo",sans-serif;font-size:14px;color:var(--muted)}
+.nota{background:var(--surface);border-left:4px solid var(--lluvia);padding:10px 14px;margin:0 0 16px;font-size:15px;max-width:75ch}
+.nota.sol{border-left-color:var(--sol)}
+.sub-h{font-family:"Archivo",sans-serif;font-size:15px;font-weight:700;margin:22px 0 10px;color:var(--muted)}
+
+/* Tarjetas de sitios */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.sitio{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.foto{aspect-ratio:16/10;background:var(--mar);position:relative;overflow:hidden}
+.foto img{width:100%;height:100%;object-fit:cover}
+.foto .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:12px;font-family:"Archivo",sans-serif;font-weight:800;font-stretch:70%;font-size:30px;line-height:.95;color:rgba(255,255,255,.92)}
+.foto.z-monte{background:var(--monte)} .foto.z-euskadi{background:#3E4F5C} .foto.z-interior{background:#6B5A3E}
+.foto .credito{position:absolute;right:6px;bottom:4px;font:11px "Archivo",sans-serif;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.sitio .cuerpo{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.sitio h3{margin:0;font-size:20px;font-weight:700;font-stretch:88%;line-height:1.15}
+.meta{font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted)}
+.sitio p{margin:0;font-size:15px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:"Archivo",sans-serif;font-size:12px;padding:2px 8px;border-radius:3px;background:var(--bg);border:1px solid var(--line)}
+.tag.lluvia{border-color:var(--lluvia)} .tag.sol{border-color:var(--sol)}
+.enlaces{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:"Archivo",sans-serif;font-size:14px;font-weight:600}
+.voto{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:5px;overflow:hidden;margin-top:auto}
+.voto button{appearance:none;border:0;background:none;padding:9px 4px;font-family:"Archivo",sans-serif;font-size:14px;font-weight:600;cursor:pointer;border-right:1px solid var(--line);color:var(--muted)}
+.voto button:last-child{border-right:0}
+.voto button[aria-pressed="true"][data-v="si"]{background:var(--monte);color:#fff}
+.voto button[aria-pressed="true"][data-v="quiza"]{background:var(--quiza);color:#fff}
+.voto button[aria-pressed="true"][data-v="no"]{background:var(--rojo);color:#fff}
+
+/* Filtros */
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.chip{appearance:none;border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:20px;font-family:"Archivo",sans-serif;font-size:14px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Mi selección */
+.sel label{font-family:"Archivo",sans-serif;font-weight:600;display:block;margin-bottom:6px}
+.sel input{font:16px "Archivo",sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--ink);width:min(320px,100%)}
+.sel ul{margin:6px 0 18px;padding-left:20px}
+.sel li{margin:3px 0}
+.btn{appearance:none;border:0;background:var(--mar);color:#fff;font-family:"Archivo",sans-serif;font-weight:700;font-size:15px;padding:12px 18px;border-radius:5px;cursor:pointer}
+.btn.sec{background:none;color:var(--ink);border:1px solid var(--line)}
+.sel textarea{width:100%;min-height:160px;font:14px/1.4 "Archivo",sans-serif;padding:10px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--ink);margin-top:12px}
+.vacio{color:var(--muted);font-style:italic}
+.practico{max-width:75ch}
+.practico li{margin:6px 0}
+footer{font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted);padding:20px 0 40px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <h1>Cantabria,<br>12–18 oct</h1>
+  <p>Plan para seis amigos con base en Santander. Mira cada día, abre los sitios en Google para ver fotos y reseñas, y marca lo que te apetece. Luego compartes tu selección en el grupo.</p>
+  <div class="bases">Casas: calle Lealtad (Santander, junto al Centro Botín) y Arenas de Iguña (Valle de Iguña). Vamos en coche.</div>
+  <div class="semana" id="semana" aria-label="Semana del viaje"></div>
+  <div class="leyenda"><span><i></i> persona en el viaje</span><span>Previsión AEMET del domingo 11 de octubre</span></div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="plan">Plan por días</button>
+    <button role="tab" aria-selected="false" data-tab="ideas">Banco de ideas</button>
+    <button role="tab" aria-selected="false" data-tab="mia">Mi selección<span class="count" id="cnt">0</span></button>
+    <button role="tab" aria-selected="false" data-tab="info">A tener en cuenta</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="panel" id="p-plan"></section>
+  <section class="panel" id="p-ideas" hidden>
+    <div class="filtros" id="filtros"></div>
+    <div class="grid" id="ideas-grid"></div>
+  </section>
+  <section class="panel sel" id="p-mia" hidden></section>
+  <section class="panel practico" id="p-info" hidden>
+    <ul>
+      <li><strong>Costa Quebrada:</strong> mejor con marea baja, sobre todo la Arnía. Mirad la tabla de mareas de Santander. Son playas con corrientes peligrosas: para pasear, no para bañarse.</li>
+      <li><strong>San Juan de Gaztelugatxe:</strong> en algunas épocas hay que reservar acceso gratuito en la web oficial. Comprobadlo el día antes. Son unos 240 escalones, calzado cómodo.</li>
+      <li><strong>Teleférico de Fuente Dé:</strong> cierra con viento fuerte y con niebla no se ve nada. Mirad el martes por la noche la previsión de montaña de AEMET para Picos y el estado del teleférico.</li>
+      <li><strong>San Mamés:</strong> no hay partido en casa esta semana; el siguiente es el 25 de octubre. Queda el museo y el tour del estadio, mejor reservado.</li>
+      <li><strong>Cuevas (El Soplao, El Castillo):</strong> las visitas son guiadas y con plazas limitadas. Para el viernes o el sábado de lluvia, reservad con antelación.</li>
+      <li><strong>Previsión:</strong> lunes y miércoles salen muy buenos en casi toda Cantabria; martes por la tarde y jueves con chubascos posibles; viernes y sábado lluvia (80%) y bajada de temperaturas. Del domingo todavía no hay datos fiables.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap" id="pie">Fotos de Wikipedia cuando están disponibles. Los votos se guardan en tu navegador; compártelos desde “Mi selección”.</footer>
+
+<script>
+// ---------- Datos ----------
+const DIAS = [
+  {k:"lun", d:"Lunes", n:12, wx:"☀️", p:"0–5% lluvia", gente:4, t:"Costa Quebrada y costa occidental",
+   nota:"Sol en casi toda Cantabria. Es festivo: salid pronto. Por la mañana la Costa Quebrada, a 20 minutos de casa; a mediodía Santillana, por la tarde Comillas y el atardecer en Oyambre o San Vicente.", sol:true,
+   items:["arnia","urros","liencres","santillana","comillas","oyambre","sanvicente"], alt:["altamira"]},
+  {k:"mar", d:"Martes", n:13, wx:"⛅", p:"Tarde 50–60%", gente:"4→6", t:"Mañana por la costa, tarde en Santander",
+   nota:"Mañana sin lluvia: los 4 hacéis la ruta al Faro del Caballo y anchoas en Santoña. Pedro y Fran llegan desde Alicante a media tarde, y la tarde y la noche son para Santander los seis.",
+   items:["faro","magdalena","sardinero","botin","rabas"], alt:["lierganes","somo"]},
+  {k:"mie", d:"Miércoles", n:14, wx:"☀️", p:"0% lluvia", gente:6, t:"Ruta por Picos de Europa",
+   nota:"El mejor día de la semana en Liébana: poco nuboso y unos 29 °C en Potes. Día de montaña con los seis.", sol:true,
+   items:["fuentede","horcados","potes","toribio"], alt:["cares","mogrovejo"]},
+  {k:"jue", d:"Jueves", n:15, wx:"🌥", p:"30–40%", gente:6, t:"Bilbao y Gaztelugatxe",
+   nota:"Nubes y algún chubasco posible. Gaztelugatxe por la mañana y la tarde en Bilbao, con el tour de San Mamés y pintxos.",
+   items:["gaztelugatxe","bermeo","sanmames","guggenheim","cascoviejo"], alt:["castro","mundaka","zumaia"]},
+  {k:"vie", d:"Viernes", n:16, wx:"🌧", p:"80% lluvia", gente:"6→4", t:"Planes a cubierto",
+   nota:"Se van Pedro y Fran y entra la lluvia. Cuevas, museo y buena comida; por la tarde, subida a Arenas de Iguña.",
+   items:["soplao","castillo","altamira"], alt:["cabarceno"]},
+  {k:"sab", d:"Sábado", n:17, wx:"🌧", p:"80% lluvia", gente:4, t:"Valle de Iguña y alrededores",
+   nota:"Lluvia y unos 18 °C, con la cota de nieve a 1.800 m. Comida larga en pueblo y paseo si escampa.",
+   items:["arenas","cocido","barcena","vegapas"], alt:[]},
+  {k:"dom", d:"Domingo", n:18, wx:"·", p:"Sin previsión aún", gente:4, t:"Vuelta",
+   nota:"Bajada a Santander y despedida. Si sale bueno, algo cerca antes de irse.",
+   items:[], alt:["cabarceno","lierganes"]}
+];
+
+const ZONAS = {
+  costa:"Costa occidental", santander:"Santander", oriente:"Costa oriental", liebana:"Picos y Liébana",
+  euskadi:"Euskadi", interior:"Besaya, Saja y Pasiegos", campoo:"Campoo"
+};
+
+const S = {
+  arnia:{n:"Playa de la Arnía",z:"costa",t:"20 min",d:"Lo mejor de la Costa Quebrada: estratos de roca inclinados, calas y acantilados. Con marea baja se pasea por las rocas. No es playa para bañarse.",tags:["sol","paisaje"],w:["Playa de La Arnía","Costa Quebrada"],q:"Playa de la Arnía"},
+  urros:{n:"Urros de Liencres",z:"costa",t:"20 min",d:"Islotes de roca frente a la costa, con un sendero por el borde del acantilado que une varias playas.",tags:["sol","paisaje"],w:["Costa Quebrada"],q:"Urros de Liencres"},
+  liencres:{n:"Dunas de Liencres",z:"costa",t:"20 min",d:"Parque natural de dunas y pinar junto a la playa de Valdearenas, en la desembocadura del Pas.",tags:["playa","paseo"],w:["Parque natural de las Dunas de Liencres"],q:"Dunas de Liencres"},
+  zumaia:{n:"Flysch de Zumaia",z:"euskadi",t:"1 h 45 min",d:"Acantilados con estratos verticales de millones de años en la playa de Itzurun. Espectacular con marea baja, pero lejos: solo si Caste se empeña.",tags:["sol","paisaje"],w:["Flysch de Zumaia","Zumaia","Zumaya"],q:"Playa de Itzurun Zumaia"},
+  getaria:{n:"Getaria",z:"euskadi",t:"1 h 50 min",d:"Pueblo marinero a 10 minutos de Zumaia. Pescado a la parrilla y txakoli de la zona.",tags:["comer"],w:["Guetaria","Getaria"],q:"Getaria"},
+  donostia:{n:"San Sebastián",z:"euskadi",t:"1 h 35 min",d:"Si sobra tarde tras Zumaia: la Concha y pintxos en la Parte Vieja.",tags:["comer","ciudad"],w:["San Sebastián"],q:"Parte Vieja San Sebastián"},
+  santillana:{n:"Santillana del Mar",z:"costa",t:"30 min",d:"Villa medieval de piedra con la colegiata románica. Para ir temprano y sin prisa.",tags:["pueblo","cultura"],w:["Santillana del Mar"],q:"Santillana del Mar"},
+  comillas:{n:"Comillas",z:"costa",t:"45 min",d:"El Capricho de Gaudí, la Universidad Pontificia y un casco muy bonito junto al mar.",tags:["pueblo","cultura"],w:["El Capricho (Comillas)","Comillas"],q:"El Capricho de Gaudí Comillas"},
+  oyambre:{n:"Playa de Oyambre",z:"costa",t:"50 min",d:"Playa abierta dentro del parque natural, entre Comillas y San Vicente.",tags:["playa","sol"],w:["Parque natural de Oyambre","Playa de Oyambre"],q:"Playa de Oyambre"},
+  sanvicente:{n:"San Vicente de la Barquera",z:"costa",t:"55 min",d:"Puerto, castillo y ría con los Picos de fondo en días claros.",tags:["pueblo","comer"],w:["San Vicente de la Barquera"],q:"San Vicente de la Barquera"},
+  magdalena:{n:"Península de la Magdalena",z:"santander",t:"En la ciudad",d:"Palacio, praderas y vistas a la bahía. El paseo clásico de Santander.",tags:["paseo"],w:["Palacio de la Magdalena","Península de la Magdalena"],q:"Península de la Magdalena Santander"},
+  sardinero:{n:"El Sardinero",z:"santander",t:"En la ciudad",d:"Las playas y el paseo marítimo, con el Gran Casino y los jardines de Piquío.",tags:["playa","paseo"],w:["El Sardinero"],q:"Playa del Sardinero Santander"},
+  botin:{n:"Centro Botín",z:"santander",t:"Al lado de casa",d:"Arte y arquitectura de Renzo Piano sobre la bahía, con los Jardines de Pereda.",tags:["lluvia ok","cultura"],w:["Centro Botín"],q:"Centro Botín Santander"},
+  rabas:{n:"Rabas y vinos por el centro",z:"santander",t:"Al lado de casa",d:"Peña Herbosa, Cañadío y el Río de la Pila para la noche con los seis.",tags:["comer","noche"],w:["Rabas"],q:"bares Peña Herbosa Santander"},
+  lierganes:{n:"Liérganes",z:"interior",t:"25 min",d:"Pueblo de casonas y puente romano sobre el Miera, con la leyenda del Hombre Pez.",tags:["pueblo"],w:["Liérganes"],q:"Liérganes"},
+  somo:{n:"Somo",z:"santander",t:"30 min o lancha",d:"Playa enorme y surf. Se puede ir en la lancha que sale del centro de Santander.",tags:["playa","sol"],w:["Playa de Somo","Somo"],q:"Playa de Somo"},
+  fuentede:{n:"Teleférico de Fuente Dé",z:"liebana",t:"2 h",d:"Sube 750 m en pocos minutos hasta el mirador del Cable, en pleno macizo central.",tags:["monte","sol"],w:["Teleférico de Fuente Dé","Fuente Dé"],q:"Teleférico de Fuente Dé"},
+  horcados:{n:"Ruta a Horcados Rojos",z:"liebana",t:"Desde el teleférico",d:"Desde la estación superior, unas 4 horas ida y vuelta con subida moderada y vistas al Naranjo de Bulnes al final.",tags:["monte","ruta"],w:["Horcados Rojos","Picos de Europa"],q:"Horcados Rojos"},
+  potes:{n:"Potes",z:"liebana",t:"1 h 45 min",d:"Capital de Liébana: cocido lebaniego, orujo y la Torre del Infantado.",tags:["comer","pueblo"],w:["Potes"],q:"Potes Cantabria"},
+  toribio:{n:"Santo Toribio de Liébana",z:"liebana",t:"1 h 50 min",d:"Monasterio a 3 km de Potes, con buenas vistas del valle.",tags:["cultura"],w:["Monasterio de Santo Toribio de Liébana"],q:"Monasterio de Santo Toribio de Liébana"},
+  cares:{n:"Ruta del Cares",z:"liebana",t:"1 h 45 min a Poncebos",d:"La garganta más famosa de Picos. Llana pero larga: 22 km ida y vuelta, o solo un tramo.",tags:["monte","ruta"],w:["Ruta del Cares","Garganta del Cares"],q:"Ruta del Cares Poncebos"},
+  mogrovejo:{n:"Mogrovejo",z:"liebana",t:"1 h 55 min",d:"Aldea con torre medieval bajo las paredes de Picos, de camino a Fuente Dé.",tags:["pueblo"],w:["Mogrovejo (Camaleño)","Mogrovejo"],q:"Mogrovejo Cantabria"},
+  gaztelugatxe:{n:"San Juan de Gaztelugatxe",z:"euskadi",t:"1 h 20 min",d:"Ermita sobre un islote unido a tierra por una escalera de piedra.",tags:["paisaje"],w:["San Juan de Gaztelugatxe","Gaztelugatxe"],q:"San Juan de Gaztelugatxe"},
+  bermeo:{n:"Bermeo",z:"euskadi",t:"1 h 20 min",d:"Puerto pesquero a 10 minutos de Gaztelugatxe. Buen sitio para comer.",tags:["comer","pueblo"],w:["Bermeo"],q:"Puerto de Bermeo"},
+  mundaka:{n:"Mundaka",z:"euskadi",t:"1 h 20 min",d:"Pueblo pequeño junto a la ría de Urdaibai, famoso por su ola.",tags:["pueblo"],w:["Mundaca","Mundaka"],q:"Mundaka"},
+  sanmames:{n:"San Mamés",z:"euskadi",t:"1 h",d:"Museo y tour del estadio del Athletic. Esta semana no hay partido en casa.",tags:["fútbol","lluvia ok"],w:["Estadio de San Mamés","San Mamés Barria"],q:"Estadio San Mamés Bilbao"},
+  guggenheim:{n:"Museo Guggenheim",z:"euskadi",t:"1 h",d:"Por fuera ya merece la pena; dentro, para una mañana de lluvia.",tags:["lluvia ok","cultura"],w:["Museo Guggenheim Bilbao"],q:"Museo Guggenheim Bilbao"},
+  cascoviejo:{n:"Casco Viejo de Bilbao",z:"euskadi",t:"1 h",d:"Las Siete Calles y la Plaza Nueva, la zona de pintxos.",tags:["comer","noche"],w:["Casco Viejo (Bilbao)"],q:"Plaza Nueva Bilbao"},
+  soplao:{n:"Cueva El Soplao",z:"interior",t:"1 h",d:"Cueva con formaciones excéntricas espectaculares. Visita guiada, buen plan con lluvia.",tags:["lluvia ok"],w:["Cueva El Soplao","El Soplao"],q:"Cueva El Soplao"},
+  castillo:{n:"Cuevas de El Castillo",z:"interior",t:"30 min",d:"Pinturas rupestres en Puente Viesgo, a 15 minutos de Arenas de Iguña.",tags:["lluvia ok","cultura"],w:["Cueva de El Castillo","Cuevas del Monte Castillo"],q:"Cuevas de El Castillo Puente Viesgo"},
+  altamira:{n:"Museo de Altamira",z:"costa",t:"30 min",d:"Réplica de la cueva y museo, al lado de Santillana. Se combina bien con ella.",tags:["lluvia ok","cultura"],w:["Museo Nacional y Centro de Investigación de Altamira","Cueva de Altamira"],q:"Museo de Altamira"},
+  cabarceno:{n:"Cabárceno",z:"interior",t:"25 min",d:"Parque de la naturaleza en una antigua mina, con animales en semilibertad.",tags:["sol"],w:["Parque de la Naturaleza de Cabárceno"],q:"Parque de la Naturaleza de Cabárceno"},
+  arenas:{n:"Arenas de Iguña",z:"interior",t:"40 min",d:"La casa del valle. Base para el fin de semana y para moverse por el interior.",tags:["casa"],w:["Arenas de Iguña"],q:"Arenas de Iguña"},
+  cocido:{n:"Cocido montañés",z:"interior",t:"Por el valle",d:"Alubias, berza y compango. Comida larga para el día de lluvia.",tags:["comer","lluvia ok"],w:["Cocido montañés"],q:"restaurante cocido montañés Valle de Iguña"},
+  barcena:{n:"Bárcena Mayor",z:"interior",t:"1 h",d:"Pueblo de piedra en el Saja, de los más bonitos de Cantabria. Paseo corto por el bosque si escampa.",tags:["pueblo","comer"],w:["Bárcena Mayor"],q:"Bárcena Mayor"},
+  vegapas:{n:"Vega de Pas",z:"interior",t:"50 min",d:"Corazón de los Valles Pasiegos: cabañas, prados y sobaos y quesadas.",tags:["pueblo","comer"],w:["Vega de Pas","Sobao"],q:"Vega de Pas"},
+  faro:{n:"Faro del Caballo",z:"oriente",t:"40 min",d:"Ruta desde Santoña hasta un faro al pie del acantilado, con cientos de escalones. Anchoas después.",tags:["ruta","sol"],w:["Faro del Caballo","Santoña"],q:"Faro del Caballo Santoña"},
+  castro:{n:"Castro Urdiales",z:"oriente",t:"50 min",d:"Iglesia gótica, castillo-faro y puerto. Queda de camino a Bilbao.",tags:["pueblo","comer"],w:["Castro Urdiales"],q:"Castro Urdiales"},
+  laredo:{n:"Laredo",z:"oriente",t:"40 min",d:"Puebla vieja y playa larguísima de La Salvé.",tags:["playa","pueblo"],w:["Laredo"],q:"Laredo Cantabria"},
+  carmona:{n:"Carmona",z:"interior",t:"1 h",d:"Pueblo de casonas y balconadas en el valle del Nansa.",tags:["pueblo"],w:["Carmona (Cantabria)"],q:"Carmona Cantabria"},
+  tudanca:{n:"Tudanca",z:"interior",t:"1 h 15 min",d:"Pueblo de montaña aislado, con la casona de José María de Cossío.",tags:["pueblo","monte"],w:["Tudanca"],q:"Tudanca"},
+  reinosa:{n:"Reinosa",z:"campoo",t:"50 min",d:"Capital de Campoo, puerta a la meseta.",tags:["pueblo"],w:["Reinosa"],q:"Reinosa"},
+  ebro:{n:"Embalse del Ebro",z:"campoo",t:"1 h",d:"Un mar interior rodeado de pueblos y paisaje abierto.",tags:["paisaje"],w:["Embalse del Ebro"],q:"Embalse del Ebro"},
+  juliobriga:{n:"Julióbriga",z:"campoo",t:"55 min",d:"Ruinas de una ciudad romana cerca de Reinosa, con domus reconstruida.",tags:["cultura"],w:["Julióbriga"],q:"Julióbriga"}
+};
+
+// ---------- Votos ----------
+const KEY="viajeCantabria2026";
+let estado={nombre:"",votos:{}};
+try{const s=localStorage.getItem(KEY); if(s) estado=Object.assign(estado,JSON.parse(s));}catch(e){}
+function guardar(){try{localStorage.setItem(KEY,JSON.stringify(estado));}catch(e){} actualizarContador();}
+
+// ---------- Fotos (Wikipedia) ----------
+const fotoCache={};
+async function buscarFoto(id){
+  if(fotoCache[id]!==undefined) return fotoCache[id];
+  for(const t of S[id].w){
+    try{
+      const r=await fetch("https://es.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(t));
+      if(!r.ok) continue;
+      const j=await r.json();
+      if(j.thumbnail&&j.thumbnail.source){
+        const src=j.thumbnail.source.replace(/\/(\d+)px-/,"/800px-");
+        return fotoCache[id]={src, wiki:j.content_urls&&j.content_urls.desktop&&j.content_urls.desktop.page};
+      }
+    }catch(e){ break; }
+  }
+  return fotoCache[id]=null;
+}
+const io=("IntersectionObserver" in window)?new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ io.unobserve(e.target); cargarFoto(e.target);} });
+},{rootMargin:"300px"}):null;
+async function cargarFoto(el){
+  const f=await buscarFoto(el.dataset.id);
+  if(!f) return;
+  const img=new Image(); img.alt=S[el.dataset.id].n; img.loading="lazy";
+  img.onload=()=>{ el.innerHTML=""; el.appendChild(img); const c=document.createElement("span"); c.className="credito"; c.textContent="Wikipedia"; el.appendChild(c); };
+  img.src=f.src;
+  if(f.wiki){ const a=document.querySelector(`[data-wiki="${el.dataset.id}"]`); if(a){a.href=f.wiki; a.hidden=false;} }
+}
+
+// ---------- Render ----------
+const zonaClase=z=>z==="liebana"?"z-monte":z==="euskadi"?"z-euskadi":(z==="interior"||z==="campoo")?"z-interior":"";
+function tarjeta(id){
+  const s=S[id], v=estado.votos[id]||"";
+  const maps="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.q);
+  const fotos="https://www.google.com/search?tbm=isch&q="+encodeURIComponent(s.q);
+  return `<article class="sitio" id="s-${id}">
+    <div class="foto ${zonaClase(s.z)}" data-id="${id}"><div class="ph">${s.n}</div></div>
+    <div class="cuerpo">
+      <h3>${s.n}</h3>
+      <div class="meta">${ZONAS[s.z]}. ${s.t} desde Santander</div>
+      <p>${s.d}</p>
+      <div class="tags">${s.tags.map(t=>`<span class="tag ${t==="lluvia ok"?"lluvia":t==="sol"?"sol":""}">${t==="sol"?"mejor con sol":t}</span>`).join("")}</div>
+      <div class="enlaces">
+        <a href="${maps}" target="_blank" rel="noopener">Maps y reseñas</a>
+        <a href="${fotos}" target="_blank" rel="noopener">Fotos en Google</a>
+        <a href="#" data-wiki="${id}" target="_blank" rel="noopener" hidden>Wikipedia</a>
+      </div>
+      <div class="voto" role="group" aria-label="¿Te apetece ${s.n}?">
+        ${[["si","Me apetece"],["quiza","Quizá"],["no","Paso"]].map(([k,l])=>`<button type="button" data-id="${id}" data-v="${k}" aria-pressed="${v===k}">${l}</button>`).join("")}
+      </div>
+    </div>
+  </article>`;
+}
+function gente(g){
+  const n=typeof g==="number"?g:+String(g).split("→").pop();
+  const max=6; let h=""; for(let i=0;i<max;i++) h+=`<i class="${i<n?"":"fuera"}"></i>`; return h;
+}
+function render(){
+  document.getElementById("semana").innerHTML=DIAS.map(d=>`
+    <button class="dia-btn" data-ir="${d.k}">
+      <div class="d">${d.d}</div><div class="n">${d.n}</div>
+      <div class="wx" aria-hidden="true">${d.wx}</div><div class="p">${d.p}</div>
+      <div class="gente" aria-label="${d.gente} personas">${gente(d.gente)}</div>
+      <div class="t">${d.t}</div>
+    </button>`).join("");
+
+  document.getElementById("p-plan").innerHTML=DIAS.map(d=>`
+    <section class="dia" id="dia-${d.k}">
+      <div class="dia-cab"><div class="num">${d.n}</div><h2>${d.d}: ${d.t}</h2>
+        <div class="sub">${d.wx} ${d.p}. ${d.gente} personas</div></div>
+      <p class="nota ${d.sol?"sol":""}">${d.nota}</p>
+      ${d.items.length?`<div class="grid">${d.items.map(tarjeta).join("")}</div>`:""}
+      ${d.alt.length?`<div class="sub-h">Alternativas para este día</div><div class="grid">${d.alt.map(tarjeta).join("")}</div>`:""}
+    </section>`).join("");
+
+  const fil=document.getElementById("filtros");
+  fil.innerHTML=`<button class="chip" data-z="todas" aria-pressed="true">Todo</button>`+
+    Object.entries(ZONAS).map(([k,v])=>`<button class="chip" data-z="${k}" aria-pressed="false">${v}</button>`).join("")+
+    `<button class="chip" data-z="lluvia" aria-pressed="false">Con lluvia</button>`;
+  pintarIdeas("todas");
+  observarFotos(document);
+  renderMia(); actualizarContador();
+}
+function pintarIdeas(z){
+  const ids=Object.keys(S).filter(id=> z==="todas"||(z==="lluvia"?S[id].tags.includes("lluvia ok"):S[id].z===z));
+  const g=document.getElementById("ideas-grid");
+  g.innerHTML=ids.map(tarjeta).join("");
+  observarFotos(g);
+}
+function observarFotos(root){
+  root.querySelectorAll(".foto[data-id]").forEach(el=>{ io?io.observe(el):cargarFoto(el); });
+}
+function actualizarContador(){
+  document.getElementById("cnt").textContent=Object.values(estado.votos).filter(v=>v==="si").length;
+}
+function textoSeleccion(){
+  const nombre=estado.nombre||"Sin nombre";
+  const grupo=k=>Object.keys(S).filter(id=>estado.votos[id]===k).map(id=>S[id].n);
+  const si=grupo("si"), qz=grupo("quiza"), no=grupo("no");
+  let t=`🗺️ Cantabria 12–18 oct: elección de ${nombre}\n`;
+  if(si.length) t+=`\n✅ Me apetece:\n- ${si.join("\n- ")}\n`;
+  if(qz.length) t+=`\n🤔 Quizá:\n- ${qz.join("\n- ")}\n`;
+  if(no.length) t+=`\n❌ Paso:\n- ${no.join("\n- ")}\n`;
+  return t;
+}
+function renderMia(){
+  const el=document.getElementById("p-mia");
+  const lista=k=>{const ids=Object.keys(S).filter(id=>estado.votos[id]===k);
+    return ids.length?`<ul>${ids.map(id=>`<li><a href="#s-${id}" data-salta="${id}">${S[id].n}</a></li>`).join("")}</ul>`:`<p class="vacio">Nada todavía.</p>`;};
+  el.innerHTML=`
+    <label for="nombre">Tu nombre</label>
+    <input id="nombre" value="${(estado.nombre||"").replace(/"/g,"&quot;")}" placeholder="Por ejemplo, Caste" autocomplete="given-name">
+    <h2 class="sub-h">Me apetece</h2>${lista("si")}
+    <h2 class="sub-h">Quizá</h2>${lista("quiza")}
+    <h2 class="sub-h">Paso</h2>${lista("no")}
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" id="compartir">Compartir en el grupo</button>
+      <button class="btn sec" id="borrar">Borrar mis votos</button>
+    </div>
+    <textarea id="txt" readonly hidden aria-label="Texto para copiar"></textarea>`;
+  el.querySelector("#nombre").addEventListener("input",e=>{estado.nombre=e.target.value.trim(); guardar();});
+  el.querySelector("#compartir").addEventListener("click",compartir);
+  el.querySelector("#borrar").addEventListener("click",()=>{ if(confirm("¿Borrar todos tus votos?")){estado.votos={}; guardar(); render(); abrir("mia");} });
+}
+async function compartir(){
+  const t=textoSeleccion();
+  if(navigator.share){ try{ await navigator.share({text:t}); return; }catch(e){ if(e.name==="AbortError") return; } }
+  try{ await navigator.clipboard.writeText(t); const b=document.getElementById("compartir"); b.textContent="Copiado, pégalo en WhatsApp"; setTimeout(()=>b.textContent="Compartir en el grupo",2500); return; }catch(e){}
+  const ta=document.getElementById("txt"); ta.hidden=false; ta.value=t; ta.select();
+}
+
+// ---------- Interacción ----------
+function abrir(tab){
+  document.querySelectorAll("nav.tabs [role=tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
+  ["plan","ideas","mia","info"].forEach(t=>document.getElementById("p-"+t).hidden=(t!==tab));
+  if(tab==="mia") renderMia();
+}
+document.addEventListener("click",e=>{
+  const tb=e.target.closest("nav.tabs [role=tab]"); if(tb){ abrir(tb.dataset.tab); return; }
+  const db=e.target.closest(".dia-btn"); if(db){ abrir("plan"); document.getElementById("dia-"+db.dataset.ir).scrollIntoView(); return; }
+  const vb=e.target.closest(".voto button"); if(vb){
+    const id=vb.dataset.id, v=vb.dataset.v;
+    estado.votos[id]=estado.votos[id]===v?undefined:v; if(!estado.votos[id]) delete estado.votos[id];
+    guardar();
+    document.querySelectorAll(`.voto button[data-id="${id}"]`).forEach(b=>b.setAttribute("aria-pressed",estado.votos[id]===b.dataset.v));
+    return;
+  }
+  const ch=e.target.closest(".chip"); if(ch){
+    document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===ch)); pintarIdeas(ch.dataset.z); return;
+  }
+  const sl=e.target.closest("[data-salta]"); if(sl){ e.preventDefault(); abrir("ideas"); pintarIdeas("todas");
+    document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c.dataset.z==="todas"));
+    const t=document.getElementById("ideas-grid").querySelector("#s-"+sl.dataset.salta); if(t) t.scrollIntoView(); }
+});
+render();
+</script>
+</body>
+</html>
