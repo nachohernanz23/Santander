@@ -50,16 +50,18 @@ Hay una versión publicada como artifact de Claude en https://claude.ai/artifact
 ## Despliegue
 - **Repo:** GitHub `Santander`, vacío al empezar. Archivos: `index.html`, `README.md`, `CLAUDE.md` y `deploy/setup-vps.sh`.
 - **VPS:** Nacho tiene una a la que accede por SSH. El sistema no está confirmado; se asume Ubuntu o Debian.
+- **Web publicada:** https://santander.146-59-225-84.sslip.io (VPS OVH, Ubuntu, IP 146.59.225.84).
+- **Servidor web:** la VPS ya usa **Caddy** en los puertos 80 y 443 para otras webs (pokerbot, ocr-poker, lafamilia y panel, todas en `*.146-59-225-84.sslip.io`). No se usa nginx: chocaba con Caddy y se desinstaló.
 - **`deploy/setup-vps.sh`:**
-  - Instala nginx y git y clona el repo en `/var/www/santander`.
-  - Configura nginx como sitio por defecto en el puerto 80. Elimina el site `default`, así que hay que confirmar que la VPS no tiene otras webs. Bloquea el acceso a `.git` y a `/deploy/`.
-  - Crea `/etc/cron.d/santander-deploy`, que hace `git pull` cada minuto (auto-despliegue), abre el puerto 80 en ufw si está activo e imprime la URL `http://IP/`.
-- **Uso:** `git clone https://github.com/nachohernanz23/Santander.git /tmp/santander-setup && sudo bash /tmp/santander-setup/deploy/setup-vps.sh https://github.com/nachohernanz23/Santander.git`
+  - Clona el repo en `/var/www/santander`.
+  - Crea `/etc/caddy/sitios/santander.caddy` con un `file_server` y HTTPS automático, que oculta `.git`, `/deploy/`, `CLAUDE.md` y `README.md`, y recarga Caddy.
+  - Crea `/etc/cron.d/santander-deploy`, que hace `git pull` cada minuto (auto-despliegue).
+- **Uso:** `git clone https://github.com/nachohernanz23/Santander.git /tmp/santander-setup && sudo bash /tmp/santander-setup/deploy/setup-vps.sh https://github.com/nachohernanz23/Santander.git [dominio]`
 - **Repo privado:** si lo es, hace falta un deploy key o hacerlo público.
 
 ## Pendiente / ideas
-1. Subir los archivos al repo y hacer push a `main`.
-2. Ejecutar el script en la VPS y comprobar que la URL funciona.
+1. ~~Subir a `main`~~ hecho.
+2. ~~Desplegar en la VPS~~ hecho con Caddy (comprobar la URL).
 3. Opcional:
    - Votos compartidos entre todos con un backend pequeño (por ejemplo, un endpoint y un JSON o SQLite en la VPS).
    - Dominio y HTTPS (Caddy o certbot).
