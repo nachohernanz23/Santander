@@ -1,0 +1,14 @@
+# Web del viaje por Cantabria (deploy/setup-vps.sh del repo Santander)
+DOMINIO {
+	encode gzip
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8797
+	}
+	handle {
+		root * /var/www/santander
+		@oculto path /.git* /deploy/* /server/* /CLAUDE.md /README.md
+		respond @oculto 404
+		header /img/* Cache-Control "public, max-age=604800"
+		file_server
+	}
+}

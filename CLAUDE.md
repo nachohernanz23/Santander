@@ -1,7 +1,7 @@
 # Proyecto Santander: web del viaje por Cantabria
 
 ## Qué es
-Web estática (un solo `index.html`) para que un grupo de amigos decida qué hacer en un viaje por Cantabria del 12 al 18 de octubre de 2026. Muestra el plan día a día, un banco de ideas por zonas, fotos, enlaces a Google y un sistema de votación personal. El dueño es Nacho, que habla en español: responde siempre en español.
+Web para que un grupo de amigos decida qué hacer en un viaje por Cantabria del 12 al 18 de octubre de 2026. Tiene el plan día a día (horarios, mareas, avisos, ruta en Maps), todos los sitios con fotos, nota de Google, valoración propia, precios, reservas y mareas, votación y comentarios compartidos, mapa, lista de reservas compartida y página de mareas e info. El dueño es Nacho, que habla en español: responde siempre en español.
 
 ## Contexto del viaje
 - **Grupo:** 4 amigos del 11 (domingo noche) al 18 de octubre. Pedro y Fran solo de martes a viernes: llegan el martes a media tarde en coche desde Alicante (unas 8 h) y se van el viernes. Caste es uno de los 4.
@@ -15,55 +15,42 @@ Web estática (un solo `index.html`) para que un grupo de amigos decida qué hac
   - Esta semana no hay partido en San Mamés; el siguiente en casa es el 25 de octubre. Queda el tour del estadio.
 
 ## Itinerario actual
-- **Lun 12 (4, sol, festivo):** Costa Quebrada (playa de la Arnía, Urros de Liencres, dunas de Liencres), Santillana del Mar, Comillas y atardecer en Oyambre o San Vicente de la Barquera.
-- **Mar 13:** por la mañana, los 4 van al Faro del Caballo y a comer anchoas en Santoña. Por la tarde-noche, los 6 en Santander (Magdalena, Sardinero, Centro Botín, rabas por Peña Herbosa y Cañadío).
-- **Mié 14 (6, mejor día):** Picos. Teleférico de Fuente Dé, ruta a Horcados Rojos, comida en Potes y Santo Toribio. Alternativas: Ruta del Cares y Mogrovejo.
-- **Jue 15 (6):** Gaztelugatxe y Bermeo por la mañana; Bilbao por la tarde (tour de San Mamés, Guggenheim, Casco Viejo). Alternativas: Castro Urdiales, Mundaka y Zumaia.
-- **Vie 16 (lluvia, se van Pedro y Fran):** cueva El Soplao, cuevas de El Castillo o Museo de Altamira. Por la tarde, subida a Arenas de Iguña.
-- **Sáb 17 (4, lluvia):** Arenas de Iguña, cocido montañés, Bárcena Mayor y Vega de Pas.
+Está en `js/datos.js` (`DIAS`). Resumen:
+- **Lun 12 (festivo):** dunas de Liencres, Urros y la Arnía con la bajamar de las 12:08 (coef. 85), Santillana, Comillas y atardecer en San Vicente u Oyambre.
+- **Mar 13:** por la mañana, Monte Buciero y anchoas en Santoña. Las escaleras del Faro del Caballo están CERRADAS desde dic-2025. Por la tarde los 6 en Santander.
+- **Mié 14:** Fuente Dé, ruta a Horcados Rojos y Potes. Plan B si cierra el teleférico: Ruta del Cares.
+- **Jue 15:** Gaztelugatxe (sin reserva ese día), Bermeo y Bilbao (San Mamés, Guggenheim, pintxos).
+- **Vie 16:** El Soplao y El Castillo o Altamira; por la tarde, a Arenas de Iguña.
+- **Sáb 17:** Bárcena Mayor, cocido y Vega de Pas.
 - **Dom 18:** vuelta.
 
-## Previsión usada
-Es de AEMET vía Meteocantabria, consultada el 11 de octubre:
-- Lunes y miércoles: sol en casi toda Cantabria (0–5% de lluvia).
-- Martes: chubascos posibles por la tarde (50–60%).
-- Jueves: 30–60% de lluvia.
-- Viernes y sábado: lluvia (80%), unos 18 °C y cota de nieve a 1.800 m.
-- Domingo: sin datos.
+## Datos comprobados el 11-oct-2026
+- Precios, horarios y reservas: en `S[id].info` (webs oficiales). Lunes 12 cerrados: Altamira y El Castillo (abren El Soplao y el Guggenheim). Gaztelugatxe pide reserva el 12, 17 y 18.
+- Notas de Google: `js/notas.js`.
+- Mareas (Santander, Bermeo, Zumaia) y salida y puesta de sol: `MAREAS` en `js/generado.js`, de tablademareas.com.
+- Valoración (1–5 estrellas, `val`) y veredicto (`por`): opinión nuestra de cuánto merece la pena.
+- Tiempo: Open-Meteo en vivo desde el navegador (por día, en la zona de ese día, y a 1.850 m el miércoles para el viento del teleférico). Si falla, se usa la previsión de AEMET del 11-oct guardada en `DIAS`.
 
-Conviene actualizarla en la web cuando haya previsión nueva.
-
-## Estructura del código (`index.html`)
-- **Archivo único:** HTML, CSS y JS juntos, sin dependencias salvo Google Fonts (Archivo y Literata).
-- **Datos en el JS:**
-  - `DIAS`: el plan por día, con fecha, icono del tiempo, % de lluvia, nº de personas, nota, `items` y `alt`.
-  - `ZONAS`: las zonas del banco de ideas.
-  - `S`: los sitios, con nombre, zona, tiempo desde Santander, descripción, etiquetas, títulos de Wikipedia para la foto y búsqueda de Google Maps.
-- **Fotos:** se cargan en tiempo real desde la API REST de Wikipedia en español (`/api/rest_v1/page/summary/{título}`), probando los títulos en orden. Si fallan, se muestra un fondo de color con el nombre.
-- **Enlaces de cada sitio:** Google Maps (reseñas), Google Imágenes y Wikipedia.
-- **Votos:** "Me apetece", "Quizá" o "Paso", guardados en `localStorage` (clave `viajeCantabria2026`). La pestaña "Mi selección" comparte la lista por WhatsApp con `navigator.share`, con el portapapeles o con un textarea como último recurso.
-- **Pestañas:** Plan por días, Banco de ideas (filtros por zona y "Con lluvia"), Mi selección y A tener en cuenta.
-- **Diseño:** responsive, modo claro y oscuro, colores mar/monte con el rojo de la bandera de Cantabria como acento. La cabecera muestra la semana con el tiempo y cuántos son cada día.
-
-Hay una versión publicada como artifact de Claude en https://claude.ai/artifact/BunKwieBvX1wTUYyVF6i2P. Allí las fotos no cargan porque bloquea imágenes externas; en la VPS sí.
+## Estructura del código
+- `index.html`: HTML y CSS. Sin framework. Fuentes Archivo y Literata (Google Fonts). Leaflet (cdnjs) solo al abrir el mapa.
+- `js/datos.js`: `VIAJE`, `ZONAS`, `VALORACION`, `S` (sitios), `DIAS`, `TAREAS`, `COMER`, `PLATOS`. Es lo que se edita a mano.
+- `js/notas.js`: `NOTAS` (Google). `js/generado.js`: `MAREAS` y `FOTOS` (generado; las fotos están en `img/`, sacadas de Wikimedia Commons, con autor y licencia).
+- `js/app.js`: render, votos, comentarios, tareas, tiempo, mapa y galería.
+- `server/server.js`: API en Node sin dependencias. Guarda en `DATA_DIR/estado.json`. Rutas: `GET /api/estado?rev=N`, `POST /api/voto|comentario|borrarComentario|tarea|borrarVotos`. Sin autenticación: cada uno elige su nombre.
+- Sin conexión con la API, la web funciona con los votos en `localStorage` (clave `viajeCantabria2026`) y los sube al reconectar.
 
 ## Despliegue
 - **Repo:** GitHub `Santander`, vacío al empezar. Archivos: `index.html`, `README.md`, `CLAUDE.md` y `deploy/setup-vps.sh`.
 - **VPS:** Nacho tiene una a la que accede por SSH. El sistema no está confirmado; se asume Ubuntu o Debian.
 - **Web publicada:** https://santander.146-59-225-84.sslip.io (VPS OVH, Ubuntu, IP 146.59.225.84).
 - **Servidor web:** la VPS ya usa **Caddy** en los puertos 80 y 443 para otras webs (pokerbot, ocr-poker, lafamilia y panel, todas en `*.146-59-225-84.sslip.io`). No se usa nginx: chocaba con Caddy y se desinstaló.
-- **`deploy/setup-vps.sh`:**
-  - Clona el repo en `/var/www/santander`.
-  - Crea `/etc/caddy/sitios/santander.caddy` con un `file_server` y HTTPS automático, que oculta `.git`, `/deploy/`, `CLAUDE.md` y `README.md`, y recarga Caddy.
-  - Crea `/etc/cron.d/santander-deploy`, que hace `git pull` cada minuto (auto-despliegue).
-- **Uso:** `git clone https://github.com/nachohernanz23/Santander.git /tmp/santander-setup && sudo bash /tmp/santander-setup/deploy/setup-vps.sh https://github.com/nachohernanz23/Santander.git [dominio]`
-- **Repo privado:** si lo es, hace falta un deploy key o hacerlo público.
+- **`deploy/setup-vps.sh`** (se puede volver a ejecutar):
+  - Clona o actualiza el repo en `/var/www/santander`.
+  - Instala el servicio systemd `santander-api` (`deploy/santander-api.service`): `node --watch server/server.js` en 127.0.0.1:8797 con los datos en `/var/lib/santander`. Se reinicia solo cuando el `git pull` cambia el código.
+  - Escribe `/etc/caddy/sitios/santander.caddy` desde `deploy/santander.caddy`: `/api/*` va a la API y el resto a `file_server`, ocultando `.git`, `deploy/`, `server/`, `CLAUDE.md` y `README.md`.
+  - Crea `/etc/cron.d/santander-deploy`, que hace `git pull` cada minuto como `ubuntu`.
+- **Uso:** `cd /var/www/santander && git pull && sudo bash deploy/setup-vps.sh https://github.com/nachohernanz23/Santander.git`
 
 ## Pendiente / ideas
-1. ~~Subir a `main`~~ hecho.
-2. ~~Desplegar en la VPS~~ hecho con Caddy (comprobar la URL).
-3. Opcional:
-   - Votos compartidos entre todos con un backend pequeño (por ejemplo, un endpoint y un JSON o SQLite en la VPS).
-   - Dominio y HTTPS (Caddy o certbot).
-   - Actualizar la previsión.
-   - Ajustar el itinerario según lo que voten.
+- Ajustar el itinerario según lo que vote el grupo.
+- Si cambia algo importante (cierres, previsión), actualizar `avisos` y `info` en `js/datos.js`.
