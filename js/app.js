@@ -551,6 +551,9 @@ const nombreDe = id => { const x = S[id] || resto(id); return x ? x.n : id; };
 const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
 const precioNum = p => { const n = String(p || "").match(/\d+/g); return n ? +n[n.length - 1] : null; };
 let filtroR = { zona: "todas", dia: "", precio: 40, orden: "nota", q: "" };
+const DIA_NOMBRE = { lun: "lunes", mar: "martes", mie: "miércoles", jue: "jueves", vie: "viernes", sab: "sábado", dom: "domingo" };
+// true si el restaurante cierra ese día de la semana («Cierra los lunes…»; lo que va tras «;» son matices de horario)
+const cierraDia = (r, k) => { const c = norm((r.cierre || "").split(";")[0]); return c.includes("cierra") && c.includes(norm(DIA_NOMBRE[k])); };
 let firmaR = "";
 function tarjetaResto(id) {
   const r = resto(id), u = id.startsWith("u-");
@@ -572,7 +575,7 @@ function tarjetaResto(id) {
   </article>`;
 }
 function prepararRestos() {
-  $("#dia-r").innerHTML = `<option value="">Cualquier día</option>` + DIAS.map(d => `<option value="${d.k}">${d.d} ${d.n}: ${(DIA_ZONAS[d.k] || []).map(z => ZONAS_R[z]).join(" y ")}</option>`).join("");
+  $("#dia-r").innerHTML = `<option value="">Cualquier día</option>` + DIAS.map(d => `<option value="${d.k}">${d.d} ${d.n}: ${(DIA_ZONAS[d.k] || []).map(z => ZONAS_R[z]).join(" y ")} (abiertos)</option>`).join("");
   $("#buscar-r").addEventListener("input", e => { filtroR.q = e.target.value; pintarRestos(); });
   $("#dia-r").addEventListener("change", e => { filtroR.dia = e.target.value; pintarRestos(); });
   $("#precio-r").addEventListener("change", e => { filtroR.precio = +e.target.value; pintarRestos(); });
@@ -601,7 +604,7 @@ function pintarRestos() {
     const r = resto(id), u = id.startsWith("u-");
     if (filtroR.zona === "nuestros" && !u) return false;
     if (!["todas", "nuestros"].includes(filtroR.zona) && (u || r.zona !== filtroR.zona)) return false;
-    if (filtroR.dia && !u && !(DIA_ZONAS[filtroR.dia] || []).includes(r.zona)) return false;
+    if (filtroR.dia && !u && (!(DIA_ZONAS[filtroR.dia] || []).includes(r.zona) || cierraDia(r, filtroR.dia))) return false;
     const pm = u ? precioNum(r.precio) : r.pm;
     if (pm && pm > filtroR.precio) return false;
     return !q || norm([r.n, r.pueblo, r.barrio, r.lugar, r.tipo, r.pedir, r.texto].join(" ")).includes(q);
@@ -620,11 +623,11 @@ function pintarRestos() {
 }
 function comerDia(d) {
   const zonas = DIA_ZONAS[d.k] || [];
-  const ids = Object.keys(RESTAURANTES).filter(id => zonas.includes(RESTAURANTES[id].zona))
+  const ids = Object.keys(RESTAURANTES).filter(id => zonas.includes(RESTAURANTES[id].zona) && !cierraDia(RESTAURANTES[id], d.k))
     .sort((a, b) => resumen(b).score - resumen(a).score || (RESTAURANTES[b].nota - RESTAURANTES[a].nota) || (RESTAURANTES[b].resenas - RESTAURANTES[a].resenas)).slice(0, 4);
   if (!ids.length) return "";
   return `<div class="comer-dia"><h3>Dónde comer este día</h3><ul>${ids.map(id => { const r = RESTAURANTES[id];
-    return `<li>🍽 <a href="#" data-ir-resto="${id}"><b>${esc(r.n)}</b></a> <small>${esc(r.pueblo)} · ★ ${fmtNota(r.nota)} · ${esc(r.precio || "")}</small></li>`; }).join("")}</ul>
+    return `<li>🍽 <a href="#" data-ir-resto="${id}"><b>${esc(r.n)}</b></a> <small>${esc(r.pueblo)} · ★ ${fmtNota(r.nota)}${r.pm ? ` · unos ${r.pm} €` : ""}</small></li>`; }).join("")}</ul>
     <button class="btn peq sec" data-accion="restos-dia" data-dia="${d.k}">Ver todos los restaurantes de la zona</button></div>`;
 }
 function irAResto(id) {

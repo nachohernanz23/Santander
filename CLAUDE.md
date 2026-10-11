@@ -1,7 +1,7 @@
 # Proyecto Santander: web del viaje por Cantabria
 
 ## Qué es
-Web para que un grupo de amigos decida qué hacer en un viaje por Cantabria del 12 al 18 de octubre de 2026. Tiene el plan día a día (horarios, mareas, avisos, ruta en Maps), todos los sitios con fotos, nota de Google, valoración propia, precios, reservas y mareas, votación y comentarios compartidos, mapa, lista de reservas compartida y página de mareas e info. El dueño es Nacho, que habla en español: responde siempre en español.
+Web para que un grupo de amigos decida qué hacer en un viaje por Cantabria del 12 al 18 de octubre de 2026. Tiene el plan día a día (horarios, mareas, avisos, ruta en Maps), todos los sitios con fotos, nota de Google, valoración propia, precios, reservas y mareas, votación y comentarios compartidos, restaurantes calidad-precio (y los que añade el grupo), mapa, lista de reservas compartida y página de mareas e info. El dueño es Nacho, que habla en español: responde siempre en español.
 
 ## Contexto del viaje
 - **Grupo:** Rufe, Caste, Moreno y Niggi suben el domingo 11 por la noche. Pedre y Fran llegan el martes a media tarde en coche desde Alicante (unas 8 h). El viernes se vuelven juntos Pedre, Fran y Niggi; Rufe, Caste y Moreno se quedan hasta el domingo 18. Son 4 el lunes, 6 de martes a viernes y 3 el fin de semana.
@@ -31,12 +31,19 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - Valoración (1–5 estrellas, `val`) y veredicto (`por`): opinión nuestra de cuánto merece la pena.
 - Tiempo: Open-Meteo en vivo desde el navegador (por día, en la zona de ese día, y a 1.850 m el miércoles para el viento del teleférico). Si falla, se usa la previsión de AEMET del 11-oct guardada en `DIAS`.
 
+## Restaurantes
+- `js/restaurantes.js`: `RESTAURANTES` (63 buscados el 11-oct-2026, todos con nota de Google ≥ 4 y precio medio ≤ 40 €/persona), `ZONAS_R` y `DIA_ZONAS` (dónde se come cada día).
+- Criterio de Nacho: calidad-precio, que se coma bien, mucho y barato. Nada por debajo de 4 en Google salvo algo muy especial. Descartados por caros: Bodega del Riojano, Cañadío, Casa José, La Atalaya de Mayte, Hotel del Oso, Las Redes y Bermeoko Kafe Antzokia. El Machi, por nota (3,8).
+- Los que añade el grupo desde la web se guardan en el servidor (`restaurantes` del estado; ids `u-…`). Solo los puede borrar quien los añadió.
+- «Ya fuimos» usa las tareas compartidas con id `f-<id del restaurante>`.
+- `cierre` se interpreta solo («Cierra los lunes») para no proponer restaurantes cerrados en «Dónde comer este día» ni con el filtro por día.
+
 ## Estructura del código
 - `index.html`: HTML y CSS. Sin framework. Fuentes Archivo y Literata (Google Fonts). Leaflet (cdnjs) solo al abrir el mapa.
-- `js/datos.js`: `VIAJE`, `ZONAS`, `VALORACION`, `S` (sitios), `DIAS`, `TAREAS`, `COMER`, `PLATOS`. Es lo que se edita a mano.
+- `js/datos.js`: `VIAJE`, `ZONAS`, `VALORACION`, `S` (sitios), `DIAS`, `TAREAS`, `PLATOS`. Es lo que se edita a mano.
 - `js/notas.js`: `NOTAS` (Google). `js/generado.js`: `MAREAS` y `FOTOS` (generado; las fotos están en `img/`, sacadas de Wikimedia Commons, con autor y licencia).
 - `js/app.js`: render, votos, comentarios, tareas, tiempo, mapa y galería.
-- `server/server.js`: API en Node sin dependencias. Guarda en `DATA_DIR/estado.json`. Rutas: `GET /api/estado?rev=N`, `POST /api/voto|comentario|borrarComentario|tarea|borrarVotos`. Sin autenticación: cada uno elige su nombre.
+- `server/server.js`: API en Node sin dependencias. Guarda en `DATA_DIR/estado.json`. Rutas: `GET /api/estado?rev=N`, `POST /api/voto|comentario|borrarComentario|tarea|restaurante|borrarRestaurante|borrarVotos`. Sin autenticación: cada uno elige su nombre.
 - Sin conexión con la API, la web funciona con los votos en `localStorage` (clave `viajeCantabria2026`) y los sube al reconectar.
 
 ## Despliegue
