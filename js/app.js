@@ -82,6 +82,14 @@ function mareaSitio(id) {
   return `<div class="marea-sitio">🌊 <b>Depende de la marea.</b> ${esc(s.marea.txt)}<br>Bajamar de día: ${lista.join(" · ")}</div>`;
 }
 
+// ---------- Recomendaciones de la familia ----------
+const famDe = id => (typeof FAMILIA === "undefined" ? [] : FAMILIA).filter(f => f.id === id);
+const htmlFamilia = id => famDe(id).map(f => `<div class="familia">💬 <b>${esc(f.quien)}</b>: ${esc(f.txt)}</div>`).join("");
+function enlaceFamilia(f) {
+  if (f.id.startsWith("dia:")) { const d = DIAS.find(x => x.k === f.id.slice(4)); return `<a href="#" data-ir-dia="${d.k}">${d.d} ${d.n}</a>`; }
+  return `<a href="#" ${S[f.id] ? "data-ir-sitio" : "data-ir-resto"}="${f.id}">${esc(nombreDe(f.id))}</a>`;
+}
+
 // ---------- Tarjeta de sitio ----------
 function chipEntrada(t) {
   if (!t || t === "—") return "";
@@ -109,6 +117,7 @@ function tarjeta(id) {
       <div class="meta"><span>${ZONAS[s.z]}</span><span>🚗 ${esc(s.t)}</span><span>⏱ ${esc(s.dur)}</span></div>
       <p>${esc(s.d)}</p>
       <div class="veredicto"><span class="estrellas" aria-label="${s.val} de 5">${estrellas(s.val)}</span> <b>${VALORACION[s.val]}.</b> ${esc(s.por)}</div>
+      ${htmlFamilia(id)}
       ${filas.length ? `<ul class="practico-lista">${filas.join("")}</ul>` : ""}
       ${i.aviso ? `<div class="aviso-sitio">⚠ ${esc(i.aviso)}</div>` : ""}
       ${mareaSitio(id)}
@@ -346,6 +355,7 @@ function renderPlan() {
           ${d.marea ? `<div class="marea-linea">${lineaMarea(d.marea, d.n)}</div>` : ""}
           <p class="nota ${d.sol ? "sol" : ""}">${esc(d.nota)}</p>
           ${d.avisos && d.avisos.length ? `<ul class="avisos">${d.avisos.map(a => `<li>${esc(a)}</li>`).join("")}</ul>` : ""}
+          ${htmlFamilia("dia:" + d.k)}
         </div>
         <div class="agenda"><h3>Horario orientativo</h3>
           <ol>${d.horario.map(([h, t]) => `<li><b>${esc(h)}</b><span>${esc(t)}</span></li>`).join("")}</ol>
@@ -361,7 +371,7 @@ function renderPlan() {
 }
 
 // ---------- Todos los sitios ----------
-const FILTROS = [["todas", "Todo"], ["imp", "★ Imprescindibles"], ["sinvoto", "Me falta votar"], ["lluvia", "Con lluvia"], ["gratis", "Gratis"], ["reserva", "Necesita reserva"], ["marea", "Depende de la marea"],
+const FILTROS = [["todas", "Todo"], ["imp", "★ Imprescindibles"], ["familia", "💬 Recomienda la familia"], ["sinvoto", "Me falta votar"], ["lluvia", "Con lluvia"], ["gratis", "Gratis"], ["reserva", "Necesita reserva"], ["marea", "Depende de la marea"],
   ...Object.entries(ZONAS)];
 let filtro = "todas";
 function renderFiltros() {
@@ -377,6 +387,7 @@ function pintarIdeas() {
     switch (filtro) {
       case "todas": return true;
       case "imp": return s.val >= 5;
+      case "familia": return famDe(id).length > 0;
       case "sinvoto": return !miVoto(id);
       case "lluvia": return s.tags.includes("lluvia ok");
       case "gratis": return /gratis/i.test(i.entrada || "") && !/€/.test(i.entrada || "");
@@ -440,6 +451,10 @@ function renderGrupo() {
       <div>
         <h2 class="sec">Lo que más gusta cada día</h2>
         <ul style="font-family:Archivo,sans-serif;padding-left:18px;line-height:1.5">${porDia}</ul>
+        <h2 class="sec">Lo que nos recomienda la familia</h2>
+        ${(() => { const F = typeof FAMILIA === "undefined" ? [] : FAMILIA; const quienes = [...new Set(F.map(f => f.quien))];
+          return quienes.length ? quienes.map(q => `<div class="caja" style="margin-bottom:10px"><h3>💬 ${esc(q)}</h3><ul style="font-family:Archivo,sans-serif;font-size:14px">${F.filter(f => f.quien === q).map(f => `<li>${enlaceFamilia(f)}: ${esc(f.txt)}</li>`).join("")}</ul></div>`).join("")
+            : `<p style="color:var(--muted)">Todavía nada.</p>`; })()}
         <h2 class="sec">Restaurantes que más gustan</h2>
         ${(() => { const top = idsRestos().filter(id => resumen(id).score > 0).sort((a, b) => resumen(b).score - resumen(a).score).slice(0, 8);
           return top.length ? `<ol style="font-family:Archivo,sans-serif;padding-left:22px;line-height:1.6">${top.map(id => { const r = resumen(id), x = resto(id); return `<li><a href="#" data-ir-resto="${id}">${esc(x.n)}</a> <small style="color:var(--muted)">${esc(x.pueblo || x.lugar || "")} · 👍${r.si.length}${r.quiza.length ? " 🤔" + r.quiza.length : ""}</small></li>`; }).join("")}</ol>`
@@ -566,6 +581,7 @@ function tarjetaResto(id) {
     <span class="fav-r" data-fav="${id}" hidden></span>
     <div class="meta">${lugar ? `<span>📍 ${esc(lugar)}</span>` : ""}${r.tipo ? `<span>🍽 ${esc(r.tipo)}</span>` : ""}${precio ? `<span>💶 ${precio} por persona</span>` : ""}</div>
     ${u ? `<div class="r-quien">➕ Añadido por <b>${esc(r.autor)}</b>${r.recomienda ? ` · Lo recomienda <b>${esc(r.recomienda)}</b>` : ""}</div>` : ""}
+    ${htmlFamilia(id)}
     ${r.por ? `<p>${esc(r.por)}</p>` : ""}${u && r.texto ? `<p>${esc(r.texto)}</p>` : ""}
     ${r.pedir ? `<div class="r-pedir"><b>Qué pedir:</b> ${esc(r.pedir)}</div>` : ""}
     ${r.cierre || r.reserva ? `<ul class="practico-lista">${r.cierre ? `<li><span>🚪</span><span>${esc(r.cierre)}</span></li>` : ""}${r.reserva ? `<li><span>📅</span><span>${esc(r.reserva)}</span></li>` : ""}</ul>` : ""}
@@ -596,14 +612,15 @@ function prepararRestos() {
   });
 }
 function pintarRestos() {
-  const chips = [["todas", "Todos"], ...Object.entries(ZONAS_R), ["nuestros", "➕ Añadidos por nosotros"]];
+  const chips = [["todas", "Todos"], ["familia", "💬 Recomendados por la familia"], ...Object.entries(ZONAS_R), ["nuestros", "➕ Añadidos por nosotros"]];
   $("#filtros-r").innerHTML = chips.map(([k, v]) => `<button class="chip" data-zr="${k}" aria-pressed="${k === filtroR.zona}">${v}</button>`).join("");
   $("#dia-r").value = filtroR.dia;
   const q = norm(filtroR.q);
   const ids = idsRestos().filter(id => {
     const r = resto(id), u = id.startsWith("u-");
     if (filtroR.zona === "nuestros" && !u) return false;
-    if (!["todas", "nuestros"].includes(filtroR.zona) && (u || r.zona !== filtroR.zona)) return false;
+    if (filtroR.zona === "familia" && !(r.recomienda || famDe(id).length)) return false;
+    if (!["todas", "nuestros", "familia"].includes(filtroR.zona) && (u || r.zona !== filtroR.zona)) return false;
     if (filtroR.dia && !u && (!(DIA_ZONAS[filtroR.dia] || []).includes(r.zona) || cierraDia(r, filtroR.dia))) return false;
     const pm = u ? precioNum(r.precio) : r.pm;
     if (pm && pm > filtroR.precio) return false;
@@ -683,6 +700,7 @@ document.addEventListener("click", e => {
   const gb = e.target.closest("[data-galeria]"); if (gb) { abrirGaleria(gb.dataset.galeria); return; }
   const ch = e.target.closest(".chip[data-z]"); if (ch) { filtro = ch.dataset.z; renderFiltros(); pintarIdeas(); return; }
   const is = e.target.closest("[data-ir-sitio]"); if (is) { e.preventDefault(); if (mapa) mapa.closePopup(); irASitio(is.dataset.irSitio); return; }
+  const idia = e.target.closest("[data-ir-dia]"); if (idia) { e.preventDefault(); abrir("plan"); $("#dia-" + idia.dataset.irDia).scrollIntoView(); return; }
   const ir = e.target.closest("[data-ir-resto]"); if (ir) { e.preventDefault(); if (mapa) mapa.closePopup(); irAResto(ir.dataset.irResto); return; }
   const cz = e.target.closest(".chip[data-zr]"); if (cz) { filtroR.zona = cz.dataset.zr; pintarRestos(); return; }
   const fu = e.target.closest("[data-fuimos]"); if (fu) { marcarTarea("f-" + fu.dataset.fuimos, fu.getAttribute("aria-pressed") !== "true"); return; }

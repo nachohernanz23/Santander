@@ -32,7 +32,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - Tiempo: Open-Meteo en vivo desde el navegador (por día, en la zona de ese día, y a 1.850 m el miércoles para el viento del teleférico). Si falla, se usa la previsión de AEMET del 11-oct guardada en `DIAS`.
 
 ## Restaurantes
-- `js/restaurantes.js`: `RESTAURANTES` (63 buscados el 11-oct-2026, todos con nota de Google ≥ 4 y precio medio ≤ 40 €/persona), `ZONAS_R` y `DIA_ZONAS` (dónde se come cada día).
+- `js/restaurantes.js`: `RESTAURANTES` (64: 63 buscados el 11-oct-2026 más el Burdo, que recomienda María, todos con nota de Google ≥ 4 y precio medio ≤ 40 €/persona), `ZONAS_R` y `DIA_ZONAS` (dónde se come cada día).
 - Criterio de Nacho: calidad-precio, que se coma bien, mucho y barato. Nada por debajo de 4 en Google salvo algo muy especial. Descartados por caros: Bodega del Riojano, Cañadío, Casa José, La Atalaya de Mayte, Hotel del Oso, Las Redes y Bermeoko Kafe Antzokia. El Machi, por nota (3,8).
 - Los que añade el grupo desde la web se guardan en el servidor (`restaurantes` del estado; ids `u-…`). Solo los puede borrar quien los añadió.
 - «Ya fuimos» usa las tareas compartidas con id `f-<id del restaurante>`.
