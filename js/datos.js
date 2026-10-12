@@ -426,6 +426,34 @@ const PLANES = {
   ]
 };
 
+// Aparcar cerca de la casa de la calle Lealtad. Gratuitos y de pago según OpenStreetMap (12-oct-2026); comprobad siempre las señales.
+const APARCAR = [
+  { id: "pk-recadero", n: "Pasaje de Recadero (Cabildo de Arriba)", c: [43.46368, -3.81400], tipo: "gratis", cap: null,
+    txt: "El gratuito más cercano, a unos 600 m de casa (8–10 min andando, cuesta arriba). Es pequeño: id con suerte." },
+  { id: "pk-alta", n: "Explanada de la calle Alta (Castilla-Hermida)", c: [43.45807, -3.82019], tipo: "gratis", cap: 300,
+    txt: "Explanada grande y gratuita, unas 300 plazas, a 1,2 km (15 min andando por la calle Alta hacia el centro). Al lado hay otras dos explanadas gratis." },
+  { id: "pk-castros", n: "Avenida de los Castros (Las Llamas)", c: [43.47081, -3.80371], tipo: "gratis", cap: 98,
+    txt: "Explanada gratuita de unas 100 plazas junto al parque de Las Llamas, a 1 km (15 min andando). Entre semana por la mañana se llena por la universidad." },
+  { id: "pk-llamas", n: "Calle Marino Fernández Fontecha (Las Llamas)", c: [43.4718, -3.8024], tipo: "gratis", cap: 170,
+    txt: "Varias explanadas gratuitas seguidas (170 + 76 + 60 plazas) a lo largo del parque de Las Llamas, a 1–1,2 km de casa." },
+  { id: "pk-sardinero", n: "Campos de Sport de El Sardinero", c: [43.47675, -3.79165], tipo: "gratis", cap: 674,
+    txt: "El aparcamiento gratuito más grande (unas 670 plazas), a 2 km: 25 min andando o bus municipal (TUS) hasta el centro. Los días de partido del Racing se llena." },
+  { id: "pk-fleming", n: "Plaza del Doctor Fleming (El Sardinero)", c: [43.47508, -3.78827], tipo: "gratis", cap: 172,
+    txt: "Gratuito, unas 170 plazas, en El Sardinero. Bien si vais a la playa o a la Magdalena." },
+  { id: "pk-festivales", n: "Palacio de Festivales", c: [43.46259, -3.7888], tipo: "duda", cap: 170,
+    txt: "En el mapa figura como gratuito, pero en 2024 se anunció que se cerraba al público. Comprobadlo antes de contar con él." },
+  { id: "pk-porticada", n: "Parking subterráneo junto a casa", c: [43.46103, -3.80605], tipo: "pago", cap: null,
+    txt: "De pago, a unos 100 m de la calle Lealtad. Para cuando no haya otra opción." },
+  { id: "pk-cachavas", n: "Parking de la plaza de las Cachavas", c: [43.45943, -3.80698], tipo: "pago", cap: null,
+    txt: "De pago, junto al Ayuntamiento, a 300 m de casa." },
+  { id: "pk-castelar", n: "Parking Castelar (24 h)", c: [43.4629, -3.79495], tipo: "pago", cap: null,
+    txt: "De pago, abierto las 24 h, en Puertochico, a 1 km de casa." }
+];
+const OLA = {
+  resumen: "Zona azul (OLA): de pago de lunes a viernes de 10:00 a 14:00 y de 16:00 a 20:00, y el sábado de 10:00 a 14:00. Máximo 2 horas. Gratis por la noche (de 20:00 a 10:00), de 14:00 a 16:00 entre semana, el sábado por la tarde, los domingos y los festivos (el lunes 12 también).",
+  truco: "Truco: los días que salís de excursión pronto, aparcad en zona azul cerca de casa al volver por la noche (después de las 20:00) y no pagáis nada si el coche sale antes de las 10:00. Si el coche se queda todo el día en Santander, mejor una explanada gratuita (calle Alta o Las Llamas, a 15 min andando)."
+};
+
 // Tareas compartidas: cualquiera las marca y se ve quién lo hizo.
 const TAREAS = [
   { id: "r-fuentede", t: "Comprar el teleférico de Fuente Dé para el miércoles", cuando: "Como tarde el martes", url: "https://entradas.telefericofuentede.com/" },

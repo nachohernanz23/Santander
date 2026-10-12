@@ -513,7 +513,7 @@ function renderGrupo() {
 let mapa = null, marcadores = {}, capas = {}, yoPos = null, yoMarca = null, yoCirculo = null, yoWatch = null, centradoEnMi = false;
 const CAPAS_MAPA = {
   pueblo: ["🏘", "Pueblos y ciudades"], costa: ["🌊", "Costa y playas"], monte: ["⛰", "Monte, rutas y miradores"],
-  cultura: ["🏛", "Cuevas, museos y visitas"], salir: ["🍷", "Para tomar algo"], resto: ["🍽", "Restaurantes"], casa: ["🏠", "Casas"]
+  cultura: ["🏛", "Cuevas, museos y visitas"], salir: ["🍷", "Para tomar algo"], resto: ["🍽", "Restaurantes"], aparcar: ["🅿️", "Aparcar cerca de casa"], casa: ["🏠", "Casas"]
 };
 const CAT_SITIO = {
   arnia: "costa", urros: "costa", liencres: "costa", oyambre: "costa", sardinero: "costa", somo: "costa", gaztelugatxe: "costa",
@@ -593,6 +593,16 @@ async function abrirMapa() {
     if (r.lat == null || r.lon == null) continue;
     marcadores[id] = L.marker([r.lat, r.lon], { icon: iconoResto(id), title: r.n }).bindPopup(() => popupResto(id), { maxWidth: 260 });
   }
+  const casaSdr = VIAJE.casas[0].c;
+  APARCAR.forEach(pk => {
+    const d = distKm(casaSdr, pk.c), min = Math.round(d * 1.3 / 5 * 60);
+    const andando = `https://www.google.com/maps/dir/?api=1&origin=${pk.c[0]},${pk.c[1]}&destination=${encodeURIComponent(VIAJE.casas[0].q)}&travelmode=walking`;
+    const color = { gratis: "pk-gratis", pago: "pk-pago", duda: "pk-duda" }[pk.tipo];
+    marcadores[pk.id] = L.marker(pk.c, { title: pk.n, zIndexOffset: 500, icon: L.divIcon({ className: "", iconSize: [28, 28], iconAnchor: [14, 14], html: `<span class="pin-pk ${color}">P</span>` }) })
+      .bindPopup(() => `<div class="pp-cat">🅿️ ${pk.tipo === "gratis" ? "Gratis" : pk.tipo === "pago" ? "De pago" : "Gratis, sin confirmar"}${pk.cap ? ` · unas ${pk.cap} plazas` : ""}</div><b class="pp-t">${esc(pk.n)}</b>
+        <div class="pp-meta">🏠 A ${fmtKm(d)} de casa · unos ${min} min andando${yoPos ? ` · 📍 a ${fmtKm(distKm(yoPos, pk.c))} de ti` : ""}</div><div class="pp-meta">${esc(pk.txt)}</div>
+        <div class="pp-acc"><a class="btn peq" href="${irA(pk.c)}" target="_blank" rel="noopener">🚗 Ir en coche</a><a class="btn peq sec" href="${andando}" target="_blank" rel="noopener">🚶 Andando a casa</a></div>`, { maxWidth: 260 });
+  });
   VIAJE.casas.forEach((c, n) => {
     marcadores["casa" + n] = L.marker(c.c, { title: c.n, zIndexOffset: 1000, icon: L.divIcon({ className: "", iconSize: [36, 36], iconAnchor: [18, 18], html: `<span class="pin pin-casa">🏠</span>` }) })
       .bindPopup(() => `<b class="pp-t">🏠 ${esc(c.n)}</b><div class="pp-meta">${esc(c.d)}</div><div class="pp-acc"><a class="btn peq" href="${irA(c.c)}" target="_blank" rel="noopener">🚗 Cómo llegar</a></div>`);
@@ -603,6 +613,7 @@ async function abrirMapa() {
 function visibleEnMapa(id) {
   const f = filtroMapa, q = norm(f.q);
   if (id.startsWith("casa")) return f.capas.has("casa");
+  if (id.startsWith("pk-")) return f.capas.has("aparcar");
   if (S[id]) {
     if (!f.capas.has(catSitio(id))) return false;
     if (f.dia) { const d = DIAS.find(x => x.k === f.dia); if (!d.items.includes(id) && !d.alt.includes(id)) return false; }
@@ -621,29 +632,29 @@ function visibleEnMapa(id) {
 }
 function mapaFiltrar(ajustar) {
   if (!mapa) return;
-  let ns = 0, nr = 0; const vis = [];
+  let ns = 0, nr = 0, np = 0; const vis = [];
   for (const [id, m] of Object.entries(marcadores)) {
-    const capa = id.startsWith("casa") ? capas.casa : S[id] ? capas[catSitio(id)] : capas.resto;
+    const capa = id.startsWith("casa") ? capas.casa : id.startsWith("pk-") ? capas.aparcar : S[id] ? capas[catSitio(id)] : capas.resto;
     const ver = visibleEnMapa(id);
     if (ver && !capa.hasLayer(m)) capa.addLayer(m);
     if (!ver && capa.hasLayer(m)) capa.removeLayer(m);
-    if (ver) { vis.push(m.getLatLng()); if (S[id]) ns++; else if (RESTAURANTES[id]) nr++; }
+    if (ver) { vis.push(m.getLatLng()); if (S[id]) ns++; else if (RESTAURANTES[id]) nr++; else if (id.startsWith("pk-")) np++; }
   }
-  $("#mapa-info").textContent = `En el mapa: ${ns} sitios y ${nr} restaurantes${filtroMapa.dia ? ` (${DIAS.find(d => d.k === filtroMapa.dia).d})` : ""}.`;
+  $("#mapa-info").textContent = `En el mapa: ${ns} sitios, ${nr} restaurantes y ${np} aparcamientos${filtroMapa.dia ? ` (${DIAS.find(d => d.k === filtroMapa.dia).d})` : ""}.`;
   if (ajustar && vis.length) mapa.fitBounds(L.latLngBounds(vis), { padding: [30, 30], maxZoom: 14 });
   pintarCerca();
 }
 function pintarControlesMapa() {
   const f = filtroMapa;
   $("#mapa-capas").innerHTML = Object.entries(CAPAS_MAPA).map(([k, [e, t]]) => `<button class="chip" data-capa="${k}" aria-pressed="${f.capas.has(k)}">${e} ${t}</button>`).join("") +
-    `<button class="chip" data-capa="solo-resto" aria-pressed="false">Solo restaurantes</button><button class="chip" data-capa="todo" aria-pressed="false">Ver todo</button>`;
+    `<button class="chip" data-capa="solo-resto" aria-pressed="false">Solo restaurantes</button><button class="chip" data-capa="solo-aparcar" aria-pressed="false">Solo aparcar</button><button class="chip" data-capa="todo" aria-pressed="false">Ver todo</button>`;
   $("#mapa-restos").hidden = !f.capas.has("resto");
   $$("#mapa-restos [data-rf]").forEach(b => b.setAttribute("aria-pressed", !!f[b.dataset.rf]));
 }
 function pintarCerca() {
   const el = $("#cerca"); if (!el) return;
   if (!yoPos) { el.innerHTML = ""; return; }
-  const lista = Object.keys(marcadores).filter(id => !id.startsWith("casa") && visibleEnMapa(id))
+  const lista = Object.keys(marcadores).filter(id => !id.startsWith("casa") && !id.startsWith("pk-") && visibleEnMapa(id))
     .map(id => ({ id, c: S[id] ? S[id].c : [RESTAURANTES[id].lat, RESTAURANTES[id].lon] })).map(x => ({ ...x, d: distKm(yoPos, x.c) }))
     .sort((a, b) => a.d - b.d).slice(0, 12);
   el.innerHTML = `<h2 class="sec">Cerca de ti</h2><ol class="ranking">${lista.map(x => {
@@ -684,7 +695,9 @@ document.addEventListener("click", e => {
     const k = c.dataset.capa, f = filtroMapa;
     if (k === "todo") f.capas = new Set(Object.keys(CAPAS_MAPA));
     else if (k === "solo-resto") f.capas = new Set(["resto", "casa"]);
+    else if (k === "solo-aparcar") { f.capas = new Set(["aparcar", "casa"]); pintarControlesMapa(); mapaFiltrar(); mapa.setView([43.465, -3.805], 14); $("#mapa-ola").hidden = false; return; }
     else if (f.capas.has(k)) f.capas.delete(k); else f.capas.add(k);
+    $("#mapa-ola").hidden = !f.capas.has("aparcar") || f.capas.size > 4;
     pintarControlesMapa(); mapaFiltrar(k === "todo" || k === "solo-resto"); return;
   }
   const rf = e.target.closest("[data-rf]"); if (rf) { filtroMapa[rf.dataset.rf] = !filtroMapa[rf.dataset.rf]; pintarControlesMapa(); mapaFiltrar(); return; }
@@ -744,6 +757,11 @@ function renderInfo() {
     <p style="font-family:Archivo,sans-serif;font-size:13px;color:var(--muted)">Fuente: <a href="https://tablademareas.com/es/cantabria/santander" target="_blank" rel="noopener">tablademareas.com</a>, consultada el 11-oct-2026. Contraste oficial en <a href="https://portus.puertos.es/" target="_blank" rel="noopener">Puertos del Estado</a>.</p>
     <h2 class="sec">Qué depende de la marea</h2>
     <div class="cajas">${dependen.map(id => `<div class="caja"><h3><a href="#" data-ir-sitio="${id}">${esc(S[id].n)}</a></h3><p>${esc(S[id].marea.txt)}</p></div>`).join("")}</div>
+    <h2 class="sec">Aparcar cerca de casa (calle Lealtad)</h2>
+    <p class="intro">${esc(OLA.resumen)}</p>
+    <p class="nota sol">${esc(OLA.truco)}</p>
+    <div class="cajas">${APARCAR.map(pk => `<div class="caja"><h3>${pk.tipo === "gratis" ? "🟢 Gratis" : pk.tipo === "pago" ? "🔵 De pago" : "🟠 Sin confirmar"}${pk.cap ? ` · ${pk.cap} plazas` : ""}</h3>
+      <p><b>${esc(pk.n)}</b></p><p>${esc(pk.txt)}</p><p><a href="${irA(pk.c)}" target="_blank" rel="noopener">🚗 Cómo llegar</a> · <a href="#mapa" data-accion="mapa-aparcar">Ver en el mapa</a></p></div>`).join("")}</div>
     <h2 class="sec">Dónde comer</h2>
     <p class="intro">Está todo en la pestaña <a href="#restaurantes">Restaurantes</a>: los mejores calidad-precio de cada zona, con su nota de Google, y los que vayáis añadiendo.</p>
     <h2 class="sec">Qué probar</h2>
@@ -933,6 +951,7 @@ document.addEventListener("click", e => {
   const ac = e.target.closest("[data-accion]"); if (ac) {
     if (ac.dataset.accion === "faltan") { filtro = "sinvoto"; renderFiltros(); pintarIdeas(); abrir("ideas"); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
     if (ac.dataset.accion === "copiar") compartir(textoResumen());
+    if (ac.dataset.accion === "mapa-aparcar") { e.preventDefault(); abrir("mapa"); setTimeout(() => { const b = $('[data-capa="solo-aparcar"]'); if (b) b.click(); }, 900); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
     if (ac.dataset.accion === "restos-familia") { e.preventDefault(); Object.assign(filtroR, { zona: "familia", dia: "", q: "" }); $("#buscar-r").value = ""; pintarRestos(); abrir("restaurantes"); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
     if (ac.dataset.accion === "restos-dia") { Object.assign(filtroR, { zona: "todas", dia: ac.dataset.dia, q: "" }); $("#buscar-r").value = ""; pintarRestos(); abrir("restaurantes"); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
   }
@@ -971,6 +990,7 @@ $("#btn-tema").addEventListener("click", () => {
   }
   $("#pie").innerHTML = `Fotos de Wikimedia Commons (créditos en «Mareas e info»). Notas de Google Maps, precios y reservas consultados el 11-oct-2026. Mareas de tablademareas.com. Tiempo de Open-Meteo.`;
   $("#mapa-dia").innerHTML = `<option value="">Todos los días</option>` + DIAS.map(d => `<option value="${d.k}">${d.d} ${d.n}${d.f === hoyISO() ? " (hoy)" : ""}</option>`).join("");
+  $("#mapa-ola").innerHTML = `🅿️ <b>Aparcar:</b> ${esc(OLA.resumen)}<br>${esc(OLA.truco)}<br><span class="pin-pk pk-gratis" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> gratis · <span class="pin-pk pk-pago" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> de pago · <span class="pin-pk pk-duda" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> sin confirmar`;
   renderSemana(); renderFiltros(); prepararRestos(); renderPlan(); pintarIdeas(); pintarRestos(); renderInfo(); renderReservas(); renderGrupo(); pintarYo();
   abrir(location.hash.slice(1) || "plan", true);
   sync(); cargarMeteo();

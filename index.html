@@ -236,6 +236,8 @@ details.coms[open] summary{margin-bottom:8px}
 .mapa-restos select{font:14px "Archivo",sans-serif;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
 .mapa-restos .chip{padding:6px 11px;font-size:13.5px}
 .pin{display:grid;place-items:center;border-radius:50%;background:#fff;border:3px solid #7C8B93;box-shadow:0 2px 6px rgba(0,0,0,.35);line-height:1}
+.pin-pk{display:grid;place-items:center;width:28px;height:28px;border-radius:7px;font:800 16px "Archivo",sans-serif;color:#fff;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.pk-gratis{background:#1E8E3E}.pk-pago{background:#1A5FB4}.pk-duda{background:#D97706}
 .pin-casa{width:36px;height:36px;font-size:19px;background:#0F4C5C;border-color:#fff}
 .pin-r{display:inline-flex;align-items:center;gap:2px;white-space:nowrap;font:700 11.5px "Archivo",sans-serif;color:#3D1B4F;background:#F3E8FA;border:2px solid #8E44AD;border-radius:12px;padding:1px 6px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .pin-r.fam{background:#8E44AD;color:#fff;border-color:#5E2B75}
@@ -447,6 +449,7 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
         <button class="chip" data-rf="rVotos" aria-pressed="false">👍 Votados</button>
       </div>
     </div>
+    <p class="nota" id="mapa-ola" hidden></p>
     <div id="mapa"></div>
     <div class="leyenda-mapa">
       <span id="mapa-info"></span>
@@ -486,10 +489,10 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/generado.js?v=11"></script>
-<script src="js/datos.js?v=11"></script>
-<script src="js/notas.js?v=11"></script>
-<script src="js/restaurantes.js?v=11"></script>
-<script src="js/app.js?v=11"></script>
+<script src="js/generado.js?v=12"></script>
+<script src="js/datos.js?v=12"></script>
+<script src="js/notas.js?v=12"></script>
+<script src="js/restaurantes.js?v=12"></script>
+<script src="js/app.js?v=12"></script>
 </body>
 </html>
