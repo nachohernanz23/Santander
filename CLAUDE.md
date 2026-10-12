@@ -36,7 +36,8 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - Tiempo: Open-Meteo en vivo desde el navegador (por día, en la zona de ese día, y a 1.850 m el miércoles para el viento del teleférico). Si falla, se usa la previsión de AEMET del 11-oct guardada en `DIAS`.
 
 ## Restaurantes
-- `js/restaurantes.js`: `RESTAURANTES` (67: 63 buscados el 11-oct-2026 con nota de Google ≥ 4 y precio medio ≤ 40 €/persona, más los que recomienda la familia: Burdo (María), Mirador de Peñacolsa, Mesón La Florida y La Hérmida (tía José; este pasa de 40 € pero es especial)), `ZONAS_R` y `DIA_ZONAS` (dónde se come cada día).
+- `js/restaurantes.js`: `RESTAURANTES` (98 a 12-oct: 63 buscados el 11-oct-2026 con nota de Google ≥ 4 y precio medio ≤ 40 €/persona, más los que recomienda la familia: Burdo (María), Mirador de Peñacolsa, Mesón La Florida y La Hérmida (tía José; este pasa de 40 € pero es especial)), `ZONAS_R` y `DIA_ZONAS` (dónde se come cada día).
+- El 12-oct se añadieron 31 más con tope de 30 €/persona y la mejor nota posible (Santoña, Noja, Laredo, Castro, Gernika, Bilbao, Liébana, interior y Campoo). La pestaña filtra por defecto hasta 30 € y ordena por calidad-precio (nota, nº de reseñas y precio); 💎 = nota ≥ 4,5 y ≤ 20 €.
 - Criterio de Nacho: calidad-precio, que se coma bien, mucho y barato. Nada por debajo de 4 en Google salvo algo muy especial. Descartados por caros: Bodega del Riojano, Cañadío, Casa José, La Atalaya de Mayte, Hotel del Oso, Las Redes y Bermeoko Kafe Antzokia. El Machi, por nota (3,8).
 - Los que añade el grupo desde la web se guardan en el servidor (`restaurantes` del estado; ids `u-…`). Solo los puede borrar quien los añadió.
 - Recomendaciones de la familia: `FAMILIA` en `js/datos.js` (quién, id del sitio, restaurante o `dia:<k>`, y su frase). Se ven en cada ficha, en el día, con un filtro propio y en «Votación del grupo». Los restaurantes recomendados no se esconden con el filtro de precio. De momento: María (prima) y la tía José.
