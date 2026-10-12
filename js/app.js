@@ -760,6 +760,7 @@ function renderInfo() {
     <h2 class="sec">Aparcar cerca de casa (calle Lealtad)</h2>
     <p class="intro">${esc(OLA.resumen)}</p>
     <p class="nota sol">${esc(OLA.truco)}</p>
+    <p class="nota">📱 ${esc(OLA.app)} <a href="${OLA.appUrl.android}" target="_blank" rel="noopener">Android</a> · <a href="${OLA.appUrl.ios}" target="_blank" rel="noopener">iPhone</a></p>
     <div class="cajas">${APARCAR.map(pk => `<div class="caja"><h3>${pk.tipo === "gratis" ? "🟢 Gratis" : pk.tipo === "pago" ? "🔵 De pago" : "🟠 Sin confirmar"}${pk.cap ? ` · ${pk.cap} plazas` : ""}</h3>
       <p><b>${esc(pk.n)}</b></p><p>${esc(pk.txt)}</p><p><a href="${irA(pk.c)}" target="_blank" rel="noopener">🚗 Cómo llegar</a> · <a href="#mapa" data-accion="mapa-aparcar">Ver en el mapa</a></p></div>`).join("")}</div>
     <h2 class="sec">Dónde comer</h2>
@@ -990,7 +991,7 @@ $("#btn-tema").addEventListener("click", () => {
   }
   $("#pie").innerHTML = `Fotos de Wikimedia Commons (créditos en «Mareas e info»). Notas de Google Maps, precios y reservas consultados el 11-oct-2026. Mareas de tablademareas.com. Tiempo de Open-Meteo.`;
   $("#mapa-dia").innerHTML = `<option value="">Todos los días</option>` + DIAS.map(d => `<option value="${d.k}">${d.d} ${d.n}${d.f === hoyISO() ? " (hoy)" : ""}</option>`).join("");
-  $("#mapa-ola").innerHTML = `🅿️ <b>Aparcar:</b> ${esc(OLA.resumen)}<br>${esc(OLA.truco)}<br><span class="pin-pk pk-gratis" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> gratis · <span class="pin-pk pk-pago" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> de pago · <span class="pin-pk pk-duda" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> sin confirmar`;
+  $("#mapa-ola").innerHTML = `🅿️ <b>Aparcar:</b> ${esc(OLA.resumen)}<br>${esc(OLA.truco)}<br>📱 ${esc(OLA.app)} <a href="${OLA.appUrl.android}" target="_blank" rel="noopener">Android</a> · <a href="${OLA.appUrl.ios}" target="_blank" rel="noopener">iPhone</a><br><span class="pin-pk pk-gratis" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> gratis · <span class="pin-pk pk-pago" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> de pago · <span class="pin-pk pk-duda" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> sin confirmar`;
   renderSemana(); renderFiltros(); prepararRestos(); renderPlan(); pintarIdeas(); pintarRestos(); renderInfo(); renderReservas(); renderGrupo(); pintarYo();
   abrir(location.hash.slice(1) || "plan", true);
   sync(); cargarMeteo();

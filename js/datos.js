@@ -451,7 +451,9 @@ const APARCAR = [
 ];
 const OLA = {
   resumen: "Zona azul (OLA): de pago de lunes a viernes de 10:00 a 14:00 y de 16:00 a 20:00, y el sábado de 10:00 a 14:00. Máximo 2 horas. Gratis por la noche (de 20:00 a 10:00), de 14:00 a 16:00 entre semana, el sábado por la tarde, los domingos y los festivos (el lunes 12 también).",
-  truco: "Truco: los días que salís de excursión pronto, aparcad en zona azul cerca de casa al volver por la noche (después de las 20:00) y no pagáis nada si el coche sale antes de las 10:00. Si el coche se queda todo el día en Santander, mejor una explanada gratuita (calle Alta o Las Llamas, a 15 min andando)."
+  truco: "Truco: los días que salís de excursión pronto, aparcad en zona azul cerca de casa al volver por la noche (después de las 20:00) y no pagáis nada si el coche sale antes de las 10:00. Si el coche se queda todo el día en Santander, mejor una explanada gratuita (calle Alta o Las Llamas, a 15 min andando).",
+  app: "Se paga con la app oficial Telpark (también vale el parquímetro con monedas o tarjeta). Desde el móvil se puede ampliar o terminar el tiempo y solo se cobra lo usado, y no hace falta dejar tique en el coche. Si os multan por pasaros de la hora, se anula desde la app o el parquímetro en menos de 24 h por 2,70 €.",
+  appUrl: { android: "https://play.google.com/store/apps/details?id=com.delaware.empark", ios: "https://apps.apple.com/es/app/telpark/id658204860" }
 };
 
 // Tareas compartidas: cualquiera las marca y se ve quién lo hizo.
