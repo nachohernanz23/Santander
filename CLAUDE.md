@@ -49,7 +49,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - `index.html`: HTML y CSS. Sin framework. Fuentes Archivo y Literata (Google Fonts). Leaflet (cdnjs) solo al abrir el mapa.
 - `js/datos.js`: `VIAJE`, `ZONAS`, `VALORACION`, `S` (sitios), `DIAS`, `TAREAS`, `PLATOS`. Es lo que se edita a mano.
 - `js/notas.js`: `NOTAS` (Google). `js/generado.js`: `MAREAS` y `FOTOS` (generado; las fotos están en `img/`, sacadas de Wikimedia Commons, con autor y licencia).
-- `js/app.js`: render, votos, comentarios, tareas, tiempo, mapa y galería.
+- `js/app.js`: render, votos, comentarios, tareas, tiempo, mapa y galería. El mapa (Leaflet + markercluster de cdnjs) tiene capas por tipo (`CAT_SITIO`: pueblo, costa, monte, cultura, salir; restaurantes y casas), filtro por día y búsqueda, filtros de restaurantes (precio, nota, abiertos hoy, familia, chollos, votados), ubicación en vivo con `watchPosition` (no se envía a ningún sitio) y lista «Cerca de ti».
 - `server/server.js`: API en Node sin dependencias. Guarda en `DATA_DIR/estado.json`. Rutas: `GET /api/estado?rev=N`, `POST /api/voto|comentario|borrarComentario|tarea|restaurante|borrarRestaurante|borrarVotos`. Sin autenticación: cada uno elige su nombre.
 - Sin conexión con la API, la web funciona con los votos en `localStorage` (clave `viajeCantabria2026`) y los sube al reconectar.
 

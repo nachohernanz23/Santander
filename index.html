@@ -225,11 +225,36 @@ details.coms[open] summary{margin-bottom:8px}
 @media (max-width:900px){.dos-col{grid-template-columns:1fr}}
 
 /* ---------- Mapa ---------- */
-#mapa{height:min(72vh,640px);border-radius:12px;border:1px solid var(--line);background:var(--surface2);z-index:1}
+#mapa{height:clamp(420px,calc(100dvh - 210px),780px);border-radius:12px;border:1px solid var(--line);background:var(--surface2);z-index:1}
 .leaflet-popup-content{font-family:"Archivo",sans-serif;font-size:14px;margin:10px 12px}
 .leaflet-popup-content img{width:220px;height:130px;object-fit:cover;border-radius:6px;margin-bottom:6px}
+.mapa-ctrl{display:grid;gap:10px;margin-bottom:12px}
+.mapa-ctrl .filtros,.mapa-ctrl .herramientas{margin:0}
+.mapa-restos{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:"Archivo",sans-serif;font-size:14px;background:color-mix(in srgb,#8E44AD 7%,var(--surface));border:1px solid color-mix(in srgb,#8E44AD 25%,var(--line));border-radius:10px;padding:8px 10px}
+.mapa-restos[hidden]{display:none}
+.mapa-restos .etq{font-weight:700}
+.mapa-restos select{font:14px "Archivo",sans-serif;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.mapa-restos .chip{padding:6px 11px;font-size:13.5px}
+.pin{display:grid;place-items:center;border-radius:50%;background:#fff;border:3px solid #7C8B93;box-shadow:0 2px 6px rgba(0,0,0,.35);line-height:1}
+.pin-casa{width:36px;height:36px;font-size:19px;background:#0F4C5C;border-color:#fff}
+.pin-r{display:inline-flex;align-items:center;gap:2px;white-space:nowrap;font:700 11.5px "Archivo",sans-serif;color:#3D1B4F;background:#F3E8FA;border:2px solid #8E44AD;border-radius:12px;padding:1px 6px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.pin-r.fam{background:#8E44AD;color:#fff;border-color:#5E2B75}
+.pin-r.chollo{background:#E0F4F7;border-color:#0F4C5C;color:#0F4C5C}
+.yo-punto{display:block;width:22px;height:22px;border-radius:50%;background:#1A73E8;border:3px solid #fff;box-shadow:0 0 0 2px rgba(26,115,232,.35),0 2px 6px rgba(0,0,0,.4);animation:latido 2s infinite}
+@keyframes latido{0%{box-shadow:0 0 0 0 rgba(26,115,232,.5),0 2px 6px rgba(0,0,0,.4)}70%{box-shadow:0 0 0 14px rgba(26,115,232,0),0 2px 6px rgba(0,0,0,.4)}100%{box-shadow:0 0 0 0 rgba(26,115,232,0),0 2px 6px rgba(0,0,0,.4)}}
+@media (prefers-reduced-motion:reduce){.yo-punto{animation:none}}
+.leaflet-popup-content .pp-cat{font-size:12px;color:#5B6A73;margin-bottom:2px}
+.leaflet-popup-content .pp-t{display:block;font-size:15.5px;line-height:1.2;margin-bottom:3px}
+.leaflet-popup-content .pp-meta{font-size:13px;color:#4a5960;margin-top:3px}
+.leaflet-popup-content .pp-aviso{font-size:13px;color:#C8102E;font-weight:700;margin-top:3px}
+.leaflet-popup-content .pp-fam{font-size:12.5px;background:#F3E8FA;border-left:3px solid #8E44AD;padding:4px 7px;margin-top:5px;border-radius:0 6px 6px 0}
+.leaflet-popup-content .pp-acc{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.leaflet-popup-content .pp-acc .btn{color:#fff;text-decoration:none;font-size:12.5px;padding:6px 10px}
+.leaflet-popup-content .pp-acc .btn.sec{color:#1E2B34;background:#fff}
+.cerca-it{grid-template-columns:64px 1fr auto!important}
+.cerca-it .btn{text-decoration:none}
 .leyenda-mapa{display:flex;flex-wrap:wrap;gap:14px;font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted);margin:10px 0 0}
-.leyenda-mapa i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-1px;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.3)}
+.leyenda-mapa i{display:inline-block;width:12px;height:12px;border-radius:50%;margin:0 3px 0 6px;vertical-align:-1px;border:3px solid;background:#fff}
 
 /* ---------- Reservas e info ---------- */
 .tareas{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:8px}
@@ -404,12 +429,31 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
   </section>
   <section class="panel" id="p-grupo" hidden></section>
   <section class="panel" id="p-mapa" hidden>
-    <p class="intro">Todos los sitios y las dos casas. El color indica cuánto gusta al grupo; pulsa un punto para ver la ficha.</p>
+    <div class="mapa-ctrl">
+      <div class="filtros" id="mapa-capas" aria-label="Qué ver en el mapa"></div>
+      <div class="herramientas">
+        <button class="btn" id="btn-yo" type="button">📍 Dónde estoy</button>
+        <select id="mapa-dia" aria-label="Día del viaje"><option value="">Todos los días</option></select>
+        <input type="search" id="mapa-q" placeholder="Buscar en el mapa: rabas, Potes, cueva…" aria-label="Buscar en el mapa">
+        <button class="btn sec" id="btn-ajustar" type="button">🔍 Ajustar a lo visible</button>
+      </div>
+      <div class="mapa-restos" id="mapa-restos">
+        <span class="etq">🍽 Restaurantes:</span>
+        <select id="mapa-precio" aria-label="Precio máximo"><option value="99">Cualquier precio</option><option value="20">Hasta 20 €</option><option value="30">Hasta 30 €</option><option value="40">Hasta 40 €</option></select>
+        <select id="mapa-nota" aria-label="Nota mínima"><option value="0">Cualquier nota</option><option value="4.3">Nota 4,3 o más</option><option value="4.5">Nota 4,5 o más</option></select>
+        <button class="chip" data-rf="rHoy" aria-pressed="false">Abiertos hoy</button>
+        <button class="chip" data-rf="rFam" aria-pressed="false">💬 Familia</button>
+        <button class="chip" data-rf="rChollo" aria-pressed="false">💎 Chollos</button>
+        <button class="chip" data-rf="rVotos" aria-pressed="false">👍 Votados</button>
+      </div>
+    </div>
     <div id="mapa"></div>
     <div class="leyenda-mapa">
-      <span><i style="background:#2F6B3E"></i>Gusta al grupo</span><span><i style="background:#B7862B"></i>Dudas</span>
-      <span><i style="background:#C8102E"></i>No apetece</span><span><i style="background:#7C8B93"></i>Sin votos</span><span><i style="background:#0F4C5C"></i>Casas</span><span><i style="background:#8E44AD;width:9px;height:9px"></i>Restaurantes</span>
+      <span id="mapa-info"></span>
+      <span>Borde: <i style="border-color:#2F6B3E"></i>gusta <i style="border-color:#B7862B"></i>dudas <i style="border-color:#C8102E"></i>no apetece</span>
+      <span><span class="yo-punto" style="display:inline-block;width:12px;height:12px;vertical-align:-1px"></span> tú (tu ubicación no sale de tu móvil)</span>
     </div>
+    <div id="cerca"></div>
   </section>
   <section class="panel" id="p-reservas" hidden></section>
   <section class="panel" id="p-info" hidden></section>
@@ -442,10 +486,10 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/generado.js?v=10"></script>
-<script src="js/datos.js?v=10"></script>
-<script src="js/notas.js?v=10"></script>
-<script src="js/restaurantes.js?v=10"></script>
-<script src="js/app.js?v=10"></script>
+<script src="js/generado.js?v=11"></script>
+<script src="js/datos.js?v=11"></script>
+<script src="js/notas.js?v=11"></script>
+<script src="js/restaurantes.js?v=11"></script>
+<script src="js/app.js?v=11"></script>
 </body>
 </html>

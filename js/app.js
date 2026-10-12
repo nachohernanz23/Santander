@@ -510,7 +510,21 @@ function renderGrupo() {
 }
 
 // ---------- Mapa ----------
-let mapa = null, marcadores = {};
+let mapa = null, marcadores = {}, capas = {}, yoPos = null, yoMarca = null, yoCirculo = null, yoWatch = null, centradoEnMi = false;
+const CAPAS_MAPA = {
+  pueblo: ["🏘", "Pueblos y ciudades"], costa: ["🌊", "Costa y playas"], monte: ["⛰", "Monte, rutas y miradores"],
+  cultura: ["🏛", "Cuevas, museos y visitas"], salir: ["🍷", "Para tomar algo"], resto: ["🍽", "Restaurantes"], casa: ["🏠", "Casas"]
+};
+const CAT_SITIO = {
+  arnia: "costa", urros: "costa", liencres: "costa", oyambre: "costa", sardinero: "costa", somo: "costa", gaztelugatxe: "costa",
+  zumaia: "costa", zarautz: "costa", cabomayor: "costa", sonabia: "costa", faro: "monte", fuentede: "monte", horcados: "monte",
+  cares: "monte", santacatalina: "monte", iguedri: "monte", curenas: "monte", ebro: "monte", botin: "cultura", toribio: "cultura",
+  sanmames: "cultura", guggenheim: "cultura", soplao: "cultura", castillo: "cultura", altamira: "cultura", cabarceno: "cultura",
+  juliobriga: "cultura", magdalena: "cultura", rabas: "salir", cascoviejo: "salir", marzana: "salir"
+};
+const catSitio = id => CAT_SITIO[id] || "pueblo";
+let filtroMapa = { capas: new Set(Object.keys(CAPAS_MAPA)), dia: "", q: "", rPrecio: 99, rNota: 0, rHoy: false, rFam: false, rChollo: false, rVotos: false };
+const DIA_HOY = () => ["dom", "lun", "mar", "mie", "jue", "vie", "sab"][new Date().getDay()];
 function colorMapa(id) {
   const r = resumen(id);
   if (!r.total) return "#7C8B93";
@@ -518,29 +532,172 @@ function colorMapa(id) {
   if (r.no.length > r.si.length) return "#C8102E";
   return "#B7862B";
 }
+function distKm(a, b) {
+  const R = 6371, rad = x => x * Math.PI / 180, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+const fmtKm = d => d < 1 ? `${Math.round(d * 1000)} m` : `${d < 10 ? d.toFixed(1).replace(".", ",") : Math.round(d)} km`;
+const irA = c => `https://www.google.com/maps/dir/?api=1&destination=${c[0]},${c[1]}&travelmode=driving`;
 function cargarScript(src) { return new Promise((ok, mal) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = mal; document.head.appendChild(s); }); }
+function cargarCss(href) { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = href; document.head.appendChild(l); }
+function iconoSitio(id) {
+  const s = S[id], tam = 26 + s.val * 2;
+  return L.divIcon({ className: "", iconSize: [tam, tam], iconAnchor: [tam / 2, tam / 2], popupAnchor: [0, -tam / 2],
+    html: `<span class="pin" style="width:${tam}px;height:${tam}px;font-size:${tam * .5}px;border-color:${colorMapa(id)}">${CAPAS_MAPA[catSitio(id)][0]}</span>` });
+}
+function iconoResto(id) {
+  const r = RESTAURANTES[id], fam = r.recomienda || famDe(id).length, ch = esChollo(id);
+  return L.divIcon({ className: "", iconSize: [54, 22], iconAnchor: [27, 11], popupAnchor: [0, -10],
+    html: `<span class="pin-r${fam ? " fam" : ""}${ch ? " chollo" : ""}" style="border-color:${resumen(id).total ? colorMapa(id) : ""}">${ch ? "💎" : "🍽"} ${r.nota ? fmtNota(r.nota) : "?"}</span>` });
+}
+function popupSitio(id) {
+  const s = S[id], f = FOTOS[id], g = NOTAS[id], i = s.info || {}, d = yoPos ? distKm(yoPos, s.c) : null;
+  return `${f ? `<img src="img/${f[0].f}-m.webp" alt="">` : ""}<div class="pp-cat">${CAPAS_MAPA[catSitio(id)].join(" ")}</div>
+    <b class="pp-t">${esc(s.n)}</b><div><span style="color:#D9A21B">${"★".repeat(s.val)}</span> ${VALORACION[s.val]}${g ? ` · Google ${fmtNota(g.nota)}` : ""}</div>
+    <div class="pp-meta">⏱ ${esc(s.dur)}${i.entrada && i.entrada !== "—" ? ` · 🎟 ${esc(i.entrada)}` : ""}${d != null ? ` · 📍 a ${fmtKm(d)}` : ""}</div>
+    ${famDe(id).map(x => `<div class="pp-fam">💬 ${esc(x.quien)}: ${esc(x.txt)}</div>`).join("")}
+    <div class="pp-acc"><a class="btn peq" href="${irA(s.c)}" target="_blank" rel="noopener">🚗 Cómo llegar</a><a class="btn peq sec" href="#" data-ir-sitio="${id}">Ficha y votar</a></div>`;
+}
+function popupResto(id) {
+  const r = RESTAURANTES[id], c = [r.lat, r.lon], d = yoPos ? distKm(yoPos, c) : null, hoy = DIA_HOY(), cierra = cierraDia(r, hoy);
+  return `<div class="pp-cat">🍽 ${esc(r.tipo || "Restaurante")}</div><b class="pp-t">${esChollo(id) ? "💎 " : ""}${esc(r.n)}</b>
+    <div>${r.nota ? `★ ${fmtNota(r.nota)}${r.resenas ? ` (${fmtN(r.resenas)})` : ""}` : "Sin nota"}${r.precio ? ` · 💶 ${esc(r.precio)}` : ""}</div>
+    <div class="pp-meta">📍 ${esc(r.pueblo)}${d != null ? ` · a ${fmtKm(d)}` : ""}</div>
+    ${cierra ? `<div class="pp-aviso">⚠ Hoy (${DIA_NOMBRE[hoy]}) cierra</div>` : r.cierre ? `<div class="pp-meta">🚪 ${esc(r.cierre)}</div>` : ""}
+    ${r.pedir ? `<div class="pp-meta">Qué pedir: ${esc(r.pedir)}</div>` : ""}
+    ${r.recomienda ? `<div class="pp-fam">💬 Lo recomienda ${esc(r.recomienda)}${r.nf ? `: «${esc(r.nf)}»` : ""}</div>` : ""}
+    <div class="pp-acc"><a class="btn peq" href="${irA(c)}" target="_blank" rel="noopener">🚗 Cómo llegar</a><a class="btn peq sec" href="#" data-ir-resto="${id}">Ficha y votar</a></div>`;
+}
 async function abrirMapa() {
   if (mapa) { setTimeout(() => mapa.invalidateSize(), 50); return; }
-  const css = document.createElement("link"); css.rel = "stylesheet"; css.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"; document.head.appendChild(css);
+  cargarCss("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css");
+  cargarCss("https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css");
+  cargarCss("https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.min.css");
   try { await cargarScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"); }
   catch (e) { $("#mapa").innerHTML = "<p style='padding:20px'>No se ha podido cargar el mapa.</p>"; return; }
-  mapa = L.map("mapa", { scrollWheelZoom: false }).setView([43.3, -3.9], 8);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(mapa);
+  try { await cargarScript("https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"); } catch (e) {}
+  mapa = L.map("mapa", { scrollWheelZoom: true, tap: true }).setView([43.3, -3.9], 8);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap" }).addTo(mapa);
+  for (const k of Object.keys(CAPAS_MAPA)) {
+    capas[k] = k === "resto" && L.markerClusterGroup
+      ? L.markerClusterGroup({ disableClusteringAtZoom: 15, maxClusterRadius: 45, showCoverageOnHover: false })
+      : L.layerGroup();
+    capas[k].addTo(mapa);
+  }
   for (const [id, s] of Object.entries(S)) {
     if (!s.c || id === "cocido") continue;
-    const f = FOTOS[id], g = NOTAS[id];
-    marcadores[id] = L.circleMarker(s.c, { radius: 5 + s.val * 1.6, color: "#fff", weight: 2, fillColor: colorMapa(id), fillOpacity: .92 })
-      .addTo(mapa).bindPopup(() => `${f ? `<img src="img/${f[0].f}-m.webp" alt="">` : ""}<b>${esc(s.n)}</b><br><span style="color:#D9A21B">${"★".repeat(s.val)}</span> ${VALORACION[s.val]}${g ? ` · Google ${fmtNota(g.nota)}` : ""}<br>🚗 ${esc(s.t)} · ⏱ ${esc(s.dur)}<br><a href="#" data-ir-sitio="${id}">Ver ficha y votar</a>`);
+    marcadores[id] = L.marker(s.c, { icon: iconoSitio(id), title: s.n }).bindPopup(() => popupSitio(id), { maxWidth: 260 });
   }
   for (const [id, r] of Object.entries(RESTAURANTES)) {
     if (r.lat == null || r.lon == null) continue;
-    L.circleMarker([r.lat, r.lon], { radius: 6, color: "#fff", weight: 1.5, fillColor: "#8E44AD", fillOpacity: .9 })
-      .addTo(mapa).bindPopup(`<b>🍽 ${esc(r.n)}</b><br>${esc(r.pueblo)} · ${esc(r.tipo || "")}<br>${r.nota ? `★ ${fmtNota(r.nota)} (${fmtN(r.resenas || 0)}) · ` : ""}${esc(r.precio || "")}<br><a href="#" data-ir-resto="${id}">Ver restaurante y votar</a>`);
+    marcadores[id] = L.marker([r.lat, r.lon], { icon: iconoResto(id), title: r.n }).bindPopup(() => popupResto(id), { maxWidth: 260 });
   }
-  VIAJE.casas.forEach(c => L.circleMarker(c.c, { radius: 11, color: "#fff", weight: 3, fillColor: "#0F4C5C", fillOpacity: 1 }).addTo(mapa).bindPopup(`<b>🏠 ${esc(c.n)}</b><br>${esc(c.d)}`));
-  mapa.fitBounds(L.latLngBounds(Object.values(S).filter(s => s.c).map(s => s.c)), { padding: [20, 20] });
+  VIAJE.casas.forEach((c, n) => {
+    marcadores["casa" + n] = L.marker(c.c, { title: c.n, zIndexOffset: 1000, icon: L.divIcon({ className: "", iconSize: [36, 36], iconAnchor: [18, 18], html: `<span class="pin pin-casa">🏠</span>` }) })
+      .bindPopup(() => `<b class="pp-t">🏠 ${esc(c.n)}</b><div class="pp-meta">${esc(c.d)}</div><div class="pp-acc"><a class="btn peq" href="${irA(c.c)}" target="_blank" rel="noopener">🚗 Cómo llegar</a></div>`);
+  });
+  pintarControlesMapa();
+  mapaFiltrar(true);
 }
-function recolorearMapa() { for (const id in marcadores) marcadores[id].setStyle({ fillColor: colorMapa(id) }); }
+function visibleEnMapa(id) {
+  const f = filtroMapa, q = norm(f.q);
+  if (id.startsWith("casa")) return f.capas.has("casa");
+  if (S[id]) {
+    if (!f.capas.has(catSitio(id))) return false;
+    if (f.dia) { const d = DIAS.find(x => x.k === f.dia); if (!d.items.includes(id) && !d.alt.includes(id)) return false; }
+    return !q || norm(S[id].n + " " + S[id].d).includes(q);
+  }
+  const r = RESTAURANTES[id]; if (!r || !f.capas.has("resto")) return false;
+  const fam = r.recomienda || famDe(id).length;
+  if (f.dia && (!(DIA_ZONAS[f.dia] || []).includes(r.zona) || cierraDia(r, f.dia))) return false;
+  if (r.pm && r.pm > f.rPrecio) return false;
+  if (f.rNota && (r.nota || 0) < f.rNota) return false;
+  if (f.rHoy && cierraDia(r, DIA_HOY())) return false;
+  if (f.rFam && !fam) return false;
+  if (f.rChollo && !esChollo(id)) return false;
+  if (f.rVotos && !(resumen(id).si.length)) return false;
+  return !q || norm([r.n, r.pueblo, r.tipo, r.pedir].join(" ")).includes(q);
+}
+function mapaFiltrar(ajustar) {
+  if (!mapa) return;
+  let ns = 0, nr = 0; const vis = [];
+  for (const [id, m] of Object.entries(marcadores)) {
+    const capa = id.startsWith("casa") ? capas.casa : S[id] ? capas[catSitio(id)] : capas.resto;
+    const ver = visibleEnMapa(id);
+    if (ver && !capa.hasLayer(m)) capa.addLayer(m);
+    if (!ver && capa.hasLayer(m)) capa.removeLayer(m);
+    if (ver) { vis.push(m.getLatLng()); if (S[id]) ns++; else if (RESTAURANTES[id]) nr++; }
+  }
+  $("#mapa-info").textContent = `En el mapa: ${ns} sitios y ${nr} restaurantes${filtroMapa.dia ? ` (${DIAS.find(d => d.k === filtroMapa.dia).d})` : ""}.`;
+  if (ajustar && vis.length) mapa.fitBounds(L.latLngBounds(vis), { padding: [30, 30], maxZoom: 14 });
+  pintarCerca();
+}
+function pintarControlesMapa() {
+  const f = filtroMapa;
+  $("#mapa-capas").innerHTML = Object.entries(CAPAS_MAPA).map(([k, [e, t]]) => `<button class="chip" data-capa="${k}" aria-pressed="${f.capas.has(k)}">${e} ${t}</button>`).join("") +
+    `<button class="chip" data-capa="solo-resto" aria-pressed="false">Solo restaurantes</button><button class="chip" data-capa="todo" aria-pressed="false">Ver todo</button>`;
+  $("#mapa-restos").hidden = !f.capas.has("resto");
+  $$("#mapa-restos [data-rf]").forEach(b => b.setAttribute("aria-pressed", !!f[b.dataset.rf]));
+}
+function pintarCerca() {
+  const el = $("#cerca"); if (!el) return;
+  if (!yoPos) { el.innerHTML = ""; return; }
+  const lista = Object.keys(marcadores).filter(id => !id.startsWith("casa") && visibleEnMapa(id))
+    .map(id => ({ id, c: S[id] ? S[id].c : [RESTAURANTES[id].lat, RESTAURANTES[id].lon] })).map(x => ({ ...x, d: distKm(yoPos, x.c) }))
+    .sort((a, b) => a.d - b.d).slice(0, 12);
+  el.innerHTML = `<h2 class="sec">Cerca de ti</h2><ol class="ranking">${lista.map(x => {
+    const esS = !!S[x.id], o = esS ? S[x.id] : RESTAURANTES[x.id];
+    const det = esS ? `${CAPAS_MAPA[catSitio(x.id)][0]} ${"★".repeat(o.val)} ${VALORACION[o.val]}` : `🍽 ${o.nota ? "★ " + fmtNota(o.nota) : ""}${o.precio ? " · " + esc(o.precio) : ""}${cierraDia(o, DIA_HOY()) ? " · ⚠ hoy cierra" : ""}`;
+    return `<li class="rk cerca-it" data-ver="${x.id}" tabindex="0"><span class="pos" style="font-size:15px">${fmtKm(x.d)}</span>
+      <span style="grid-column:span 2"><span class="nom">${esc(o.n)}</span><br><span class="det">${det}</span></span>
+      <a class="btn peq" href="${irA(x.c)}" target="_blank" rel="noopener">Ir</a></li>`;
+  }).join("")}</ol>`;
+}
+function localizarme() {
+  if (!navigator.geolocation) return toast("Este navegador no permite ver tu ubicación");
+  if (yoWatch != null) { if (yoPos) mapa.setView(yoPos, Math.max(mapa.getZoom(), 13)); return; }
+  $("#btn-yo").textContent = "📍 Buscando…";
+  yoWatch = navigator.geolocation.watchPosition(p => {
+    yoPos = [p.coords.latitude, p.coords.longitude];
+    const icon = L.divIcon({ className: "", iconSize: [22, 22], iconAnchor: [11, 11], html: `<span class="yo-punto"></span>` });
+    if (!yoMarca) {
+      yoMarca = L.marker(yoPos, { icon, zIndexOffset: 2000, title: "Estás aquí" }).addTo(mapa).bindPopup("📍 Estás aquí");
+      yoCirculo = L.circle(yoPos, { radius: p.coords.accuracy, color: "#1A73E8", weight: 1, fillOpacity: .1 }).addTo(mapa);
+    } else { yoMarca.setLatLng(yoPos); yoCirculo.setLatLng(yoPos).setRadius(p.coords.accuracy); }
+    if (!centradoEnMi) { centradoEnMi = true; mapa.setView(yoPos, 13); }
+    $("#btn-yo").textContent = "📍 Centrar en mí";
+    pintarCerca();
+  }, e => {
+    yoWatch = null; $("#btn-yo").textContent = "📍 Dónde estoy";
+    toast(e.code === 1 ? "Has denegado el permiso de ubicación: actívalo en el navegador" : "No se ha podido obtener tu ubicación");
+  }, { enableHighAccuracy: true, maximumAge: 30000, timeout: 20000 });
+}
+function recolorearMapa() {
+  if (!mapa) return;
+  for (const id in marcadores) { if (S[id]) marcadores[id].setIcon(iconoSitio(id)); else if (RESTAURANTES[id]) marcadores[id].setIcon(iconoResto(id)); }
+}
+// Controles del mapa
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-capa]");
+  if (c) {
+    const k = c.dataset.capa, f = filtroMapa;
+    if (k === "todo") f.capas = new Set(Object.keys(CAPAS_MAPA));
+    else if (k === "solo-resto") f.capas = new Set(["resto", "casa"]);
+    else if (f.capas.has(k)) f.capas.delete(k); else f.capas.add(k);
+    pintarControlesMapa(); mapaFiltrar(k === "todo" || k === "solo-resto"); return;
+  }
+  const rf = e.target.closest("[data-rf]"); if (rf) { filtroMapa[rf.dataset.rf] = !filtroMapa[rf.dataset.rf]; pintarControlesMapa(); mapaFiltrar(); return; }
+  if (e.target.closest("#btn-yo")) { localizarme(); return; }
+  if (e.target.closest("#btn-ajustar")) { mapaFiltrar(true); return; }
+  const v = e.target.closest("[data-ver]"); if (v && !e.target.closest("a")) { const m = marcadores[v.dataset.ver]; if (m) { mapa.setView(m.getLatLng(), 15); setTimeout(() => m.openPopup(), 300); window.scrollTo({ top: $("#mapa").getBoundingClientRect().top + scrollY - 70 }); } }
+});
+document.addEventListener("change", e => {
+  if (e.target.id === "mapa-dia") { filtroMapa.dia = e.target.value; mapaFiltrar(true); }
+  if (e.target.id === "mapa-precio") { filtroMapa.rPrecio = +e.target.value; mapaFiltrar(); }
+  if (e.target.id === "mapa-nota") { filtroMapa.rNota = +e.target.value; mapaFiltrar(); }
+});
+document.addEventListener("input", e => { if (e.target.id === "mapa-q") { filtroMapa.q = e.target.value; mapaFiltrar(); } });
 
 // ---------- Reservas ----------
 function renderReservas() {
@@ -813,6 +970,7 @@ $("#btn-tema").addEventListener("click", () => {
     const c = $("#credito-hero"); c.href = hf.u; c.textContent = `Urros de Liencres · Foto: ${hf.a.slice(0, 30)}`;
   }
   $("#pie").innerHTML = `Fotos de Wikimedia Commons (créditos en «Mareas e info»). Notas de Google Maps, precios y reservas consultados el 11-oct-2026. Mareas de tablademareas.com. Tiempo de Open-Meteo.`;
+  $("#mapa-dia").innerHTML = `<option value="">Todos los días</option>` + DIAS.map(d => `<option value="${d.k}">${d.d} ${d.n}${d.f === hoyISO() ? " (hoy)" : ""}</option>`).join("");
   renderSemana(); renderFiltros(); prepararRestos(); renderPlan(); pintarIdeas(); pintarRestos(); renderInfo(); renderReservas(); renderGrupo(); pintarYo();
   abrir(location.hash.slice(1) || "plan", true);
   sync(); cargarMeteo();
