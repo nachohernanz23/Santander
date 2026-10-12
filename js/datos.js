@@ -456,7 +456,15 @@ const FAMILIA = [
   { quien: "Tía José", id: "curenas", txt: "«Si queréis algo más fácil y también bonito, en la reserva del Saja podéis hacer la Canal de Cureñas; es muy muy bonita y hasta os daría tiempo a comer por allí»." },
   { quien: "Tía José", id: "r-mirador-de-penacolsa", txt: "«En Colsa o en La Florida: comida tradicional, y no caro»." },
   { quien: "Tía José", id: "r-la-florida", txt: "«En Colsa o en La Florida: comida tradicional, y no caro»." },
-  { quien: "Tía José", id: "r-la-hermida", txt: "«Un lugar en mitad del monte que para mí tiene un encanto especial. Es un poco más caro, 40–45 €. Solo da comidas y abre jueves, viernes, sábado y domingo»." }
+  { quien: "Tía José", id: "r-la-hermida", txt: "«Un lugar en mitad del monte que para mí tiene un encanto especial. Es un poco más caro, 40–45 €. Solo da comidas y abre jueves, viernes, sábado y domingo»." },
+  { quien: "Clara", id: "dia:mar", txt: "«A Santoña, la verdad, yo no iría: no tiene nada. Si vais por esa zona sería solo por Sonabia, pero no me parece que merezca el viaje»." },
+  { quien: "Clara", id: "faro", txt: "«A Santoña, la verdad, yo no iría: no tiene nada»." },
+  { quien: "Clara", id: "sanvicente", txt: "«A San Vicente de la Barquera tampoco iría»." },
+  { quien: "Clara", id: "comillas", txt: "«A Comillas sí, pero en coche lo ves: lo puedes hacer en 15 minutos»." },
+  { quien: "Clara", id: "oyambre", txt: "«A Oyambre sí que iría»." },
+  { quien: "Clara", id: "barcena", txt: "«Iría a Bárcena Mayor, que debe de ser uno de los pueblos más antiguos de España»." },
+  { quien: "Clara", id: "dia:mie", txt: "«Yo haría el desfiladero, Potes y Fuente Dé»." },
+  { quien: "Clara", id: "santacatalina", txt: "«Yo haría el desfiladero, Potes y Fuente Dé»." }
 ];
 
 const PLATOS = [
