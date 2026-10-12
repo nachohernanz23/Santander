@@ -283,6 +283,7 @@ footer{font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted);paddin
 .resto .meta span{white-space:normal}
 .r-pedir{font-family:"Archivo",sans-serif;font-size:14px;background:var(--surface2);border-radius:8px;padding:7px 10px}
 .familia{font-family:"Archivo",sans-serif;font-size:13.5px;background:color-mix(in srgb,#8E44AD 9%,var(--surface));border-left:3px solid #8E44AD;padding:7px 10px;border-radius:0 8px 8px 0;margin-bottom:6px}
+.chollo{display:inline-block;font:700 12px "Archivo",sans-serif;background:color-mix(in srgb,var(--mar) 14%,var(--surface));color:var(--mar);padding:2px 8px;border-radius:5px;margin-right:6px}
 .r-quien{font-family:"Archivo",sans-serif;font-size:13px;color:#8E44AD}
 .resto .fav-r{font:700 12px "Archivo",sans-serif;color:#fff;background:var(--monte);padding:2px 8px;border-radius:5px;align-self:flex-start}
 .fuimos{appearance:none;border:1px dashed var(--line);background:none;border-radius:8px;padding:7px;font-size:13.5px;font-weight:650;color:var(--muted);cursor:pointer}
@@ -375,7 +376,7 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
     <div class="grid" id="ideas-grid"></div>
   </section>
   <section class="panel" id="p-restaurantes" hidden>
-    <p class="intro">Los mejores calidad-precio que hemos encontrado: nota de Google de 4 o más, con muchas reseñas y como mucho 40 € por persona. Votad los que os apetecen, comentad y añadid los vuestros o los que os recomienden.</p>
+    <p class="intro">Los mejores calidad-precio que hemos encontrado: nota de Google de 4 o más, con muchas reseñas, y por defecto como mucho 30 € por persona (se puede subir a 40). 💎 = chollo: nota de 4,5 o más por 20 € o menos. Votad los que os apetecen, comentad y añadid los vuestros o los que os recomienden.</p>
     <details class="caja anadir" id="anadir-resto">
       <summary>➕ Añadir un restaurante (vuestro o que os recomienden)</summary>
       <form id="form-resto" class="form-resto" autocomplete="off">
@@ -394,8 +395,8 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
     <div class="herramientas">
       <input type="search" id="buscar-r" placeholder="Buscar: rabas, cocido, Potes…" aria-label="Buscar restaurante">
       <select id="dia-r" aria-label="Día"></select>
-      <select id="precio-r" aria-label="Precio máximo"><option value="40">Hasta 40 €</option><option value="30">Hasta 30 €</option><option value="20">Hasta 20 €</option></select>
-      <select id="orden-r" aria-label="Ordenar"><option value="nota">Ordenar: mejor nota</option><option value="grupo">Ordenar: votos del grupo</option><option value="barato">Ordenar: más baratos</option><option value="resenas">Ordenar: más reseñas</option></select>
+      <select id="precio-r" aria-label="Precio máximo"><option value="30">Hasta 30 €</option><option value="40">Hasta 40 €</option><option value="20">Hasta 20 €</option></select>
+      <select id="orden-r" aria-label="Ordenar"><option value="cp">Ordenar: mejor calidad-precio</option><option value="nota">Ordenar: mejor nota</option><option value="grupo">Ordenar: votos del grupo</option><option value="barato">Ordenar: más baratos</option><option value="resenas">Ordenar: más reseñas</option></select>
       <span class="resultado-n" id="resultado-r"></span>
     </div>
     <div class="filtros" id="filtros-r"></div>
@@ -441,10 +442,10 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/generado.js?v=8"></script>
-<script src="js/datos.js?v=8"></script>
-<script src="js/notas.js?v=8"></script>
-<script src="js/restaurantes.js?v=8"></script>
-<script src="js/app.js?v=8"></script>
+<script src="js/generado.js?v=9"></script>
+<script src="js/datos.js?v=9"></script>
+<script src="js/notas.js?v=9"></script>
+<script src="js/restaurantes.js?v=9"></script>
+<script src="js/app.js?v=9"></script>
 </body>
 </html>

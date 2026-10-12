@@ -608,7 +608,11 @@ const idsRestos = () => [...Object.keys(RESTAURANTES), ...restosUsuario().map(r 
 const nombreDe = id => { const x = S[id] || resto(id); return x ? x.n : id; };
 const norm = t => String(t || "").toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
 const precioNum = p => { const n = String(p || "").match(/\d+/g); return n ? +n[n.length - 1] : null; };
-let filtroR = { zona: "todas", dia: "", precio: 40, orden: "nota", q: "" };
+let filtroR = { zona: "todas", dia: "", precio: 30, orden: "cp", q: "" };
+const pmDe = id => id.startsWith("u-") ? precioNum(resto(id).precio) : resto(id).pm;
+// Calidad-precio: pesa la nota (y su fiabilidad por nº de reseñas) contra el precio por persona
+const calidadPrecio = id => { const r = resto(id), pm = pmDe(id) || 25; return (r.nota || 4) * 10 + Math.log10((r.resenas || 50) + 1) * 2 - pm / 4; };
+const esChollo = id => { const r = resto(id); return (r.nota || 0) >= 4.5 && (pmDe(id) || 99) <= 20; };
 const DIA_NOMBRE = { lun: "lunes", mar: "martes", mie: "miércoles", jue: "jueves", vie: "viernes", sab: "sábado", dom: "domingo" };
 // true si el restaurante cierra ese día de la semana («Cierra los lunes…»; lo que va tras «;» son matices de horario)
 const cierraDia = (r, k) => { const c = norm((r.cierre || "").split(";")[0]); return c.includes("cierra") && c.includes(norm(DIA_NOMBRE[k])); };
@@ -620,7 +624,7 @@ function tarjetaResto(id) {
   const nota = r.nota ? `<span class="ins g" title="Nota de Google${r.resenas ? " con " + r.resenas + " reseñas" : ""}"><span class="est">★</span> ${fmtNota(r.nota)}${r.resenas ? ` <small>· ${fmtN(r.resenas)}</small>` : ""}</span>` : "";
   const precio = r.precio ? `${esc(r.precio)}${/€/.test(r.precio) ? "" : " €"}` : "";
   return `<article class="resto${u ? " propio" : ""}" data-card="${id}">
-    <div class="r-cab"><h3>${esc(r.n)}</h3>${nota}</div>
+    <div class="r-cab"><h3>${esChollo(id) ? `<span class="chollo">💎 Chollo</span>` : ""}${esc(r.n)}</h3>${nota}</div>
     <span class="fav-r" data-fav="${id}" hidden></span>
     <div class="meta">${lugar ? `<span>📍 ${esc(lugar)}</span>` : ""}${r.tipo ? `<span>🍽 ${esc(r.tipo)}</span>` : ""}${precio ? `<span>💶 ${precio} por persona</span>` : ""}</div>
     ${u ? `<div class="r-quien">➕ Añadido por <b>${esc(r.autor)}</b>${r.recomienda ? ` · Lo recomienda <b>${esc(r.recomienda)}</b>` : ""}</div>` : ""}
@@ -670,6 +674,7 @@ function pintarRestos() {
     return !q || norm([r.n, r.pueblo, r.barrio, r.lugar, r.tipo, r.pedir, r.texto].join(" ")).includes(q);
   });
   const clave = {
+    cp: id => -calidadPrecio(id),
     nota: id => -((resto(id).nota || 0) * 1e7 + (resto(id).resenas || 0)),
     grupo: id => -(resumen(id).score * 1e8 + (resto(id).nota || 0) * 1e6),
     barato: id => (id.startsWith("u-") ? precioNum(resto(id).precio) : resto(id).pm) || 99,
