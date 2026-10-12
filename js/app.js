@@ -496,7 +496,8 @@ function renderGrupo() {
         <ul style="font-family:Archivo,sans-serif;padding-left:18px;line-height:1.5">${porDia}</ul>
         <h2 class="sec">Lo que nos recomienda la familia</h2>
         ${(() => { const F = typeof FAMILIA === "undefined" ? [] : FAMILIA; const quienes = [...new Set(F.map(f => f.quien))];
-          return quienes.length ? quienes.map(q => `<div class="caja" style="margin-bottom:10px"><h3>💬 ${esc(q)}</h3><ul style="font-family:Archivo,sans-serif;font-size:14px">${F.filter(f => f.quien === q).map(f => `<li>${enlaceFamilia(f)}: ${esc(f.txt)}</li>`).join("")}</ul></div>`).join("")
+          const deLista = q => Object.keys(RESTAURANTES).filter(id => RESTAURANTES[id].recomienda === q && !famDe(id).length).length;
+          return quienes.length ? quienes.map(q => `<div class="caja" style="margin-bottom:10px"><h3>💬 ${esc(q)}</h3><ul style="font-family:Archivo,sans-serif;font-size:14px">${F.filter(f => f.quien === q).map(f => `<li>${enlaceFamilia(f)}: ${esc(f.txt)}</li>`).join("")}${deLista(q) ? `<li>🍽 <a href="#" data-accion="restos-familia">${deLista(q)} restaurantes de su lista</a></li>` : ""}</ul></div>`).join("")
             : `<p style="color:var(--muted)">Todavía nada.</p>`; })()}
         <h2 class="sec">Restaurantes que más gustan</h2>
         ${(() => { const top = idsRestos().filter(id => resumen(id).score > 0).sort((a, b) => resumen(b).score - resumen(a).score).slice(0, 8);
@@ -640,7 +641,7 @@ function tarjetaResto(id) {
     <span class="fav-r" data-fav="${id}" hidden></span>
     <div class="meta">${lugar ? `<span>📍 ${esc(lugar)}</span>` : ""}${r.tipo ? `<span>🍽 ${esc(r.tipo)}</span>` : ""}${precio ? `<span>💶 ${precio} por persona</span>` : ""}</div>
     ${u ? `<div class="r-quien">➕ Añadido por <b>${esc(r.autor)}</b>${r.recomienda ? ` · Lo recomienda <b>${esc(r.recomienda)}</b>` : ""}</div>` : ""}
-    ${htmlFamilia(id)}
+    ${famDe(id).length ? htmlFamilia(id) : !u && r.recomienda ? `<div class="familia">💬 Lo recomienda <b>${esc(r.recomienda)}</b>${r.nf ? `: «${esc(r.nf)}»` : ""}</div>` : ""}
     ${r.por ? `<p>${esc(r.por)}</p>` : ""}${u && r.texto ? `<p>${esc(r.texto)}</p>` : ""}
     ${r.pedir ? `<div class="r-pedir"><b>Qué pedir:</b> ${esc(r.pedir)}</div>` : ""}
     ${r.cierre || r.reserva ? `<ul class="practico-lista">${r.cierre ? `<li><span>🚪</span><span>${esc(r.cierre)}</span></li>` : ""}${r.reserva ? `<li><span>📅</span><span>${esc(r.reserva)}</span></li>` : ""}</ul>` : ""}
@@ -775,6 +776,7 @@ document.addEventListener("click", e => {
   const ac = e.target.closest("[data-accion]"); if (ac) {
     if (ac.dataset.accion === "faltan") { filtro = "sinvoto"; renderFiltros(); pintarIdeas(); abrir("ideas"); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
     if (ac.dataset.accion === "copiar") compartir(textoResumen());
+    if (ac.dataset.accion === "restos-familia") { e.preventDefault(); Object.assign(filtroR, { zona: "familia", dia: "", q: "" }); $("#buscar-r").value = ""; pintarRestos(); abrir("restaurantes"); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
     if (ac.dataset.accion === "restos-dia") { Object.assign(filtroR, { zona: "todas", dia: ac.dataset.dia, q: "" }); $("#buscar-r").value = ""; pintarRestos(); abrir("restaurantes"); window.scrollTo({ top: $("nav.tabs").offsetTop + 1 }); }
   }
 });
