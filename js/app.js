@@ -615,7 +615,19 @@ const calidadPrecio = id => { const r = resto(id), pm = pmDe(id) || 25; return (
 const esChollo = id => { const r = resto(id); return (r.nota || 0) >= 4.5 && (pmDe(id) || 99) <= 20; };
 const DIA_NOMBRE = { lun: "lunes", mar: "martes", mie: "miércoles", jue: "jueves", vie: "viernes", sab: "sábado", dom: "domingo" };
 // true si el restaurante cierra ese día de la semana («Cierra los lunes…»; lo que va tras «;» son matices de horario)
-const cierraDia = (r, k) => { const c = norm((r.cierre || "").split(";")[0]); return c.includes("cierra") && c.includes(norm(DIA_NOMBRE[k])); };
+const ORDEN_DIAS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
+const cierraDia = (r, k) => {
+  const c = norm((r.cierre || "").split(";")[0]);
+  if (!c.includes("cierra")) return false;
+  // Rangos del tipo «de lunes a jueves»
+  const nombres = ORDEN_DIAS.map(d => norm(DIA_NOMBRE[d]).replace(/s$/, ""));
+  const m = c.match(/de (\w+) a (\w+)/);
+  if (m) {
+    const i0 = nombres.findIndex(n => m[1].startsWith(n)), i1 = nombres.findIndex(n => m[2].startsWith(n));
+    if (i0 >= 0 && i1 >= 0) { const i = ORDEN_DIAS.indexOf(k); if (i0 <= i1 ? i >= i0 && i <= i1 : i >= i0 || i <= i1) return true; }
+  }
+  return c.includes(norm(DIA_NOMBRE[k]));
+};
 let firmaR = "";
 function tarjetaResto(id) {
   const r = resto(id), u = id.startsWith("u-");
