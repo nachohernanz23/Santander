@@ -18,7 +18,7 @@ Web para que un grupo de amigos decida qué hacer en un viaje por Cantabria del 
 Está en `js/datos.js` (`DIAS`). Resumen:
 - **Lun 12 (festivo):** dunas de Liencres, Urros y la Arnía con la bajamar de las 12:08 (coef. 85), Santillana, Comillas y atardecer en San Vicente u Oyambre.
 - **Mar 13:** por la mañana, los 4, Monte Buciero y anchoas en Santoña. Las escaleras del Faro del Caballo están CERRADAS desde dic-2025. Por la tarde los 6 en Santander.
-- **Mié 14:** Fuente Dé, ruta a Horcados Rojos y Potes. Plan B si cierra el teleférico: Ruta del Cares.
+- **Mié 14:** Picos sin ruta larga y sin entrada del teleférico comprada (la taquilla vende las del día si quedan plazas). Tres planes para votar en `PLANES.mie`: A (recomendado: Fuente Dé, paseo por Áliva y Potes), B (Lagos de Covadonga en bus desde Cangas: hasta el 18-oct no se sube en coche) y C (Bulnes desde Poncebos y Cabrales). Previsión: sol y poco viento arriba.
 - **Jue 15:** Gaztelugatxe (sin reserva ese día), Bermeo y Bilbao (San Mamés, Guggenheim, pintxos).
 - **Vie 16:** se van Pedre, Fran y Niggi. El Soplao y El Castillo o Altamira; por la tarde, a Arenas de Iguña.
 - **Sáb 17 (3):** Bárcena Mayor, cocido y Vega de Pas.
@@ -26,6 +26,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 
 ## Planes alternativos por día
 - `PLANES` en `js/datos.js`: para un día, varios planes completos (letra, horario, ritmo, coche, pros, contras, sitios y restaurantes). El grupo los vota con ids `p-<día>-<letra>` y la web muestra cuál va ganando. `rec: true` marca nuestra recomendación.
+- Miércoles 14: A (recomendado: Fuente Dé con entrada en taquilla, paseo al Hotel Áliva y Potes), B (Lagos de Covadonga en bus, Covadonga y Cangas) y C (Bulnes andando o en funicular y Cabrales). Sitios nuevos: `aliva`, `lagos`, `covadonga`, `cangas` y `bulnes` (zona `asturias`, «Picos de Asturias»).
 - Lunes 12: B (recomendado: Costa Quebrada sin prisa, comida en Liencres, Santillana por la tarde y atardecer en Cabo Mayor), A (ruta completa original) y C (Costa Quebrada y tarde de playa).
 
 ## Datos comprobados el 11-oct-2026

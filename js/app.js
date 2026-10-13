@@ -354,7 +354,7 @@ function htmlPlanes(d) {
       <ul class="pros">${p.pros.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
       <ul class="contras">${p.contras.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
       <div class="plan-links">📍 ${p.sitios.map(id => `<a href="#" data-ir-sitio="${id}">${esc(S[id].n)}</a>`).join(" · ")}</div>
-      <div class="plan-links">🍽 ${p.comer.map(id => `<a href="#" data-ir-resto="${id}">${esc(RESTAURANTES[id].n)}</a>`).join(" · ")}</div>
+      ${p.comer.length ? `<div class="plan-links">🍽 ${p.comer.filter(id => RESTAURANTES[id]).map(id => `<a href="#" data-ir-resto="${id}">${esc(RESTAURANTES[id].n)}</a>`).join(" · ")}</div>` : ""}
       <a class="btn peq sec" style="align-self:flex-start" href="${rutaDia(d, p.sitios)}" target="_blank" rel="noopener">🗺 Ruta de este plan en Maps</a>
       ${htmlVotoComs(p.id, "el plan " + p.letra)}
     </article>`).join("")}</div>`;
@@ -518,7 +518,7 @@ const CAPAS_MAPA = {
 const CAT_SITIO = {
   arnia: "costa", urros: "costa", liencres: "costa", oyambre: "costa", sardinero: "costa", somo: "costa", gaztelugatxe: "costa",
   zumaia: "costa", zarautz: "costa", cabomayor: "costa", sonabia: "costa", faro: "monte", fuentede: "monte", horcados: "monte",
-  cares: "monte", santacatalina: "monte", iguedri: "monte", curenas: "monte", ebro: "monte", botin: "cultura", toribio: "cultura",
+  cares: "monte", aliva: "monte", lagos: "monte", bulnes: "monte", covadonga: "cultura", santacatalina: "monte", iguedri: "monte", curenas: "monte", ebro: "monte", botin: "cultura", toribio: "cultura",
   sanmames: "cultura", guggenheim: "cultura", soplao: "cultura", castillo: "cultura", altamira: "cultura", cabarceno: "cultura",
   juliobriga: "cultura", magdalena: "cultura", rabas: "salir", cascoviejo: "salir", marzana: "salir"
 };
