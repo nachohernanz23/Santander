@@ -26,7 +26,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 
 ## Planes alternativos por día
 - `PLANES` en `js/datos.js`: para un día, varios planes completos (letra, horario, ritmo, coche, pros, contras, sitios y restaurantes). El grupo los vota con ids `p-<día>-<letra>` y la web muestra cuál va ganando. `rec: true` marca nuestra recomendación.
-- Miércoles 14: A (recomendado: Fuente Dé con entrada en taquilla, paseo al Hotel Áliva y Potes), B (Lagos de Covadonga en bus, Covadonga y Cangas) y C (Bulnes andando o en funicular y Cabrales). Sitios nuevos: `aliva`, `lagos`, `covadonga`, `cangas` y `bulnes` (zona `asturias`, «Picos de Asturias»).
+- Miércoles 14: A (recomendado: Fuente Dé, paseo al Hotel Áliva y Potes; el martes a las 22:45 aún quedaban entradas online para todas las franjas), B (Lagos de Covadonga en bus, Covadonga y Cangas) y C (Bulnes andando o en funicular y Cabrales). Sitios nuevos: `aliva`, `lagos`, `covadonga`, `cangas` y `bulnes` (zona `asturias`, «Picos de Asturias»).
 - Lunes 12: B (recomendado: Costa Quebrada sin prisa, comida en Liencres, Santillana por la tarde y atardecer en Cabo Mayor), A (ruta completa original) y C (Costa Quebrada y tarde de playa).
 
 ## Datos comprobados el 11-oct-2026
