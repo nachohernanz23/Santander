@@ -19,7 +19,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - **Lun 12 (festivo):** dunas de Liencres, Urros y la Arnía con la bajamar de las 12:08 (coef. 85), Santillana, Comillas y atardecer en San Vicente u Oyambre.
 - **Mar 13:** por la mañana, los 4, Monte Buciero y anchoas en Santoña. Las escaleras del Faro del Caballo están CERRADAS desde dic-2025. Por la tarde los 6 en Santander.
 - **Mié 14:** Fuente Dé (teleférico a las 12:00). Tres rutas para votar en `PLANES.mie` (con fotos, mapa topográfico y GPX de `rutas/`): 1) solo la bajada por Áliva e Igüedri, 2) hasta el cruce de Peña Vieja y bajada (recomendada) y 3) Horcados Rojos ida y vuelta con bajada en teleférico.
-- **Jue 15:** Gaztelugatxe (sin reserva ese día), Bermeo y Bilbao (San Mamés, Guggenheim, pintxos).
+- **Jue 15:** salida a las 10:45; pintxos en el Casco Viejo de Bilbao y por la tarde la vuelta que recomienda Nacho (amigo): Bakio, Gaztelugatxe (acceso libre ese día), Bermeo, Mundaka y Gernika. Dos planes en `PLANES.jue`: A (recomendado: con parada en Castro Urdiales) y B (Bilbao con calma y Gernika de día).
 - **Vie 16:** se van Pedre, Fran y Niggi. El Soplao y El Castillo o Altamira; por la tarde, a Arenas de Iguña.
 - **Sáb 17 (3):** Bárcena Mayor, cocido y Vega de Pas.
 - **Dom 18:** vuelta.
@@ -42,7 +42,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 ## Restaurantes
 - `js/restaurantes.js`: `RESTAURANTES` (162 a 12-oct: 63 buscados el 11-oct-2026 con nota de Google ≥ 4 y precio medio ≤ 40 €/persona, más los que recomienda la familia: Burdo (María), Mirador de Peñacolsa, Mesón La Florida y La Hérmida (tía José; este pasa de 40 € pero es especial)), `ZONAS_R` y `DIA_ZONAS` (dónde se come cada día).
 - El 12-oct se añadieron 47 más con tope de 30 €/persona y la mejor nota posible (Santander y bahía, Torrelavega, Suances, Valdáliga, Unquera, Tudanca, Santoña, Noja, Laredo, Castro, Gernika, Bilbao, Liébana, interior y Campoo). La pestaña filtra por defecto hasta 30 € y ordena por calidad-precio (nota, nº de reseñas y precio); 💎 = nota ≥ 4,5 y ≤ 20 €.
-- El 13-oct se añadieron 13 en Asturias (zona `asturias`: Cangas de Onís y Cabrales) para los planes B y C del miércoles, comprobados abiertos ese día (175 en total). El Hotel Áliva está cerrado por reforma hasta el verano de 2027; arriba solo abre la cafetería del Cable (10:00–17:30).
+- El 13-oct se añadieron 13 en Asturias (zona `asturias`: Cangas de Onís y Cabrales) para los planes B y C del miércoles, comprobados abiertos ese día (175 en total; el 14-oct, 4 bares de pintxos más del Casco Viejo de Bilbao: 179). El Hotel Áliva está cerrado por reforma hasta el verano de 2027; arriba solo abre la cafetería del Cable (10:00–17:30).
 - Clara opina que Santoña no merece la pena (solo Sonabia, y tampoco tanto), que San Vicente no, Comillas de pasada, Oyambre sí y Bárcena Mayor sí. Para el miércoles: desfiladero, Potes y Fuente Dé.
 - Criterio de Nacho: calidad-precio, que se coma bien, mucho y barato. Nada por debajo de 4 en Google salvo algo muy especial. Descartados por caros: Bodega del Riojano, Cañadío, Casa José, La Atalaya de Mayte, Hotel del Oso, Las Redes y Bermeoko Kafe Antzokia. El Machi, por nota (3,8).
 - Los que añade el grupo desde la web se guardan en el servidor (`restaurantes` del estado; ids `u-…`). Solo los puede borrar quien los añadió.
