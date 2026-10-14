@@ -29,6 +29,9 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - Miércoles 14: A (recomendado: Fuente Dé, paseo al Hotel Áliva y Potes; el martes a las 22:45 aún quedaban entradas online para todas las franjas), B (Lagos de Covadonga en bus, Covadonga y Cangas) y C (Bulnes andando o en funicular y Cabrales). Sitios nuevos: `aliva`, `lagos`, `covadonga`, `cangas` y `bulnes` (zona `asturias`, «Picos de Asturias»).
 - Lunes 12: B (recomendado: Costa Quebrada sin prisa, comida en Liencres, Santillana por la tarde y atardecer en Cabo Mayor), A (ruta completa original) y C (Costa Quebrada y tarde de playa).
 
+## Rutas GPX
+- `rutas/`: tracks GPX del 14-oct para Fuente Dé, sacados de las sendas de OpenStreetMap (PR-PNPE 24 y 23) con elevación EU-DEM: 1) bajada del Cable a Fuente Dé por Áliva e Igüedri, 2) subida hasta el cruce de Peña Vieja y bajada, 3) Horcados Rojos ida y vuelta desde el Cable. Se abren con Organic Maps (sin cobertura) o Wikiloc.
+
 ## Datos comprobados el 11-oct-2026
 - Precios, horarios y reservas: en `S[id].info` (webs oficiales). Lunes 12 cerrados: Altamira y El Castillo (abren El Soplao y el Guggenheim). Gaztelugatxe pide reserva el 12, 17 y 18.
 - Notas de Google: `js/notas.js`.
