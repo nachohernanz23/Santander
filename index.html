@@ -297,6 +297,14 @@ footer{font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted);paddin
 .pros li::before{content:"✔ ";color:var(--monte);font-weight:800}
 .contras li::before{content:"✖ ";color:var(--rojo);font-weight:800}
 .plan-links{font:13.5px/1.5 "Archivo",sans-serif}
+.plan-fotos{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -4px;padding:0 4px 4px}
+.plan-fotos figure{margin:0;flex:0 0 auto;width:170px;scroll-snap-align:start}
+.plan-fotos img{width:170px;height:118px;object-fit:cover;border-radius:8px;display:block;background:var(--line)}
+.plan-fotos figcaption{font:12px/1.3 "Archivo",sans-serif;color:var(--muted);margin-top:3px}
+.plan-mapa img{width:100%;border-radius:8px;border:1px solid var(--line);display:block}
+.plan-mapa small{font:12px "Archivo",sans-serif;color:var(--muted)}
+.plan-datos{display:flex;flex-wrap:wrap;gap:6px;font:600 13px "Archivo",sans-serif}
+.plan-datos span{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
 .ganador{font:15px/1.4 "Archivo",sans-serif;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
 
 /* ---------- Restaurantes ---------- */
@@ -489,10 +497,10 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/generado.js?v=17"></script>
-<script src="js/datos.js?v=17"></script>
-<script src="js/notas.js?v=17"></script>
-<script src="js/restaurantes.js?v=17"></script>
-<script src="js/app.js?v=17"></script>
+<script src="js/generado.js?v=18"></script>
+<script src="js/datos.js?v=18"></script>
+<script src="js/notas.js?v=18"></script>
+<script src="js/restaurantes.js?v=18"></script>
+<script src="js/app.js?v=18"></script>
 </body>
 </html>

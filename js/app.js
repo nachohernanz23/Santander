@@ -346,16 +346,19 @@ function htmlPlanes(d) {
   return `<div class="sub-h">¿Qué plan hacemos? Votad 👍 el que os apetece</div>
     <div class="planes">${P.map(p => `<article class="plan${p.rec ? " rec" : ""}" data-card="${p.id}">
       <div class="plan-cab"><span class="letra">${esc(p.letra)}</span><div><h3>${esc(p.n)}</h3>
-        <div class="meta"><span>⚡ Ritmo ${esc(p.ritmo.toLowerCase())}</span><span>🚗 ${esc(p.coche)}</span></div></div></div>
+        <div class="meta"><span>⚡ Ritmo ${esc(p.ritmo.toLowerCase())}</span>${p.coche ? `<span>🚗 ${esc(p.coche)}</span>` : ""}</div></div></div>
       ${p.rec ? `<span class="rec-badge">⭐ Nuestra recomendación</span>` : ""}
       <span class="fav-r" data-fav="${p.id}" hidden></span>
       <p>${esc(p.lema)}</p>
+      ${p.datos ? `<div class="plan-datos">${p.datos.map(x => `<span>${esc(x)}</span>`).join("")}</div>` : ""}
+      ${p.fotos ? `<div class="plan-fotos">${p.fotos.map(([f, t]) => `<figure><a href="${esc(f)}" target="_blank" rel="noopener"><img src="${esc(f)}" alt="${esc(t)}" loading="lazy" decoding="async"></a><figcaption>${esc(t)}</figcaption></figure>`).join("")}</div>` : ""}
+      ${p.mapa ? `<a class="plan-mapa" href="${esc(p.mapa)}" target="_blank" rel="noopener"><img src="${esc(p.mapa)}" alt="Mapa de la ruta" loading="lazy" decoding="async"><small>Toca para ver el mapa grande</small></a>` : ""}
       <ol class="plan-horario">${p.horario.map(([h, t]) => `<li><b>${esc(h)}</b><span>${esc(t)}</span></li>`).join("")}</ol>
       <ul class="pros">${p.pros.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
       <ul class="contras">${p.contras.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
       <div class="plan-links">📍 ${p.sitios.map(id => `<a href="#" data-ir-sitio="${id}">${esc(S[id].n)}</a>`).join(" · ")}</div>
       ${p.comer.length ? `<div class="plan-links">🍽 ${p.comer.filter(id => RESTAURANTES[id]).map(id => `<a href="#" data-ir-resto="${id}">${esc(RESTAURANTES[id].n)}</a>`).join(" · ")}</div>` : ""}
-      <a class="btn peq sec" style="align-self:flex-start" href="${rutaDia(d, p.sitios)}" target="_blank" rel="noopener">🗺 Ruta de este plan en Maps</a>
+      ${p.gpx ? `<a class="btn peq" style="align-self:flex-start" href="${esc(p.gpx)}" download>⬇ Descargar la ruta (GPX)</a>` : `<a class="btn peq sec" style="align-self:flex-start" href="${rutaDia(d, p.sitios)}" target="_blank" rel="noopener">🗺 Ruta de este plan en Maps</a>`}
       ${htmlVotoComs(p.id, "el plan " + p.letra)}
     </article>`).join("")}</div>`;
 }
