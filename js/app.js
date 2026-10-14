@@ -929,7 +929,7 @@ function renderEspecial() {
   const i = DIAS.findIndex(d => d.k === E.k), d = DIAS[i];
   if (!planEsp) {
     const P = planesDe(E.k).map(p => ({ p, r: resumen(p.id) })).sort((a, b) => b.r.score - a.r.score);
-    planEsp = P.length && P[0].r.total ? P[0].p.letra.toLowerCase() : "a";
+    planEsp = P.length && P[0].r.total ? P[0].p.letra.toLowerCase() : (E.def || "a");
     if (!E.planes[planEsp]) planEsp = Object.keys(E.planes)[0];
   }
   const pl = E.planes[planEsp], mm = MAREAS[d.marea || "santander"][d.n];
@@ -958,7 +958,7 @@ function renderEspecial() {
     </div>
     <a class="esp-mapa" href="${esc(E.mapa)}" target="_blank" rel="noopener"><img src="${esc(E.mapa)}" alt="Mapa del recorrido del día" loading="lazy"></a>
     <div class="esp-sec">🗓 El día paso a paso</div>
-    <div class="esp-sel" role="group" aria-label="Plan">${Object.entries(E.planes).map(([k, p]) => `<button type="button" data-esp-plan="${k}" aria-pressed="${k === planEsp}">${esc(p.n)}</button>`).join("")}</div>
+    <div class="esp-sel" role="group" aria-label="Plan">${(E.orden || Object.keys(E.planes)).map(k => [k, E.planes[k]]).map(([k, p]) => `<button type="button" data-esp-plan="${k}" aria-pressed="${k === planEsp}">${esc(p.n)}</button>`).join("")}</div>
     <p class="nota" style="margin:0 0 8px">Vuelta a casa sobre las ${esc(pl.vuelta)}. <a href="#" data-ir-dia="${d.k}">Votad el plan aquí</a>.</p>
     <ol class="esp-pasos">${pl.paradas.map(paso).join("")}</ol>
     <div class="esp-sec" id="esp-pintxos">🍢 Ruta de pintxos por el Casco Viejo</div>
