@@ -305,6 +305,36 @@ footer{font-family:"Archivo",sans-serif;font-size:13px;color:var(--muted);paddin
 .plan-mapa small{font:12px "Archivo",sans-serif;color:var(--muted)}
 .plan-datos{display:flex;flex-wrap:wrap;gap:6px;font:600 13px "Archivo",sans-serif}
 .plan-datos span{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+#tab-especial{color:var(--rojo);font-weight:800}
+.esp-cab{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--sombra);margin-bottom:16px}
+.esp-cab h2{margin:0 0 6px;font-size:clamp(22px,5vw,30px);line-height:1.1;font-stretch:88%}
+.esp-cab p{margin:6px 0}
+.esp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;font:600 13px "Archivo",sans-serif}
+.esp-chips span{background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.esp-sec{margin:22px 0 10px;font:800 19px "Archivo",sans-serif;font-stretch:88%;display:flex;align-items:center;gap:8px;scroll-margin-top:70px}
+.esp-mapa{display:block;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.esp-mapa img{width:100%;display:block}
+.esp-sel{display:flex;gap:6px;margin:6px 0 12px}
+.esp-sel button{flex:1;font:700 14px "Archivo",sans-serif;padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.esp-sel button[aria-pressed=true]{background:var(--mar);color:var(--btn-ink);border-color:var(--mar)}
+.esp-pasos{list-style:none;margin:0;padding:0;position:relative}
+.esp-pasos:before{content:"";position:absolute;left:27px;top:8px;bottom:8px;width:3px;background:var(--line);border-radius:2px}
+.esp-paso{position:relative;display:grid;grid-template-columns:56px 1fr;gap:10px;padding:8px 0}
+.esp-hora{position:relative;z-index:1;align-self:start;background:var(--mar);color:var(--btn-ink);font:800 13px "Archivo",sans-serif;border-radius:999px;text-align:center;padding:5px 0;font-variant-numeric:tabular-nums}
+.esp-caja{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:10px;box-shadow:var(--sombra)}
+.esp-caja h3{margin:0 0 4px;font:800 16.5px "Archivo",sans-serif}
+.esp-caja p{margin:0;font-size:14.5px}
+.esp-caja img{width:92px;height:92px;object-fit:cover;border-radius:9px}
+.esp-acc{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.esp-pintxo{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:34px 1fr;gap:10px;margin-bottom:10px;box-shadow:var(--sombra)}
+.esp-num{width:30px;height:30px;border-radius:50%;background:var(--rojo);color:#fff;display:grid;place-items:center;font:800 15px "Archivo",sans-serif}
+.esp-pintxo h3{margin:0;font:800 16px "Archivo",sans-serif}
+.esp-pintxo .meta{font:13px "Archivo",sans-serif;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px;margin:3px 0}
+.esp-lista{font:14px/1.5 "Archivo",sans-serif;padding-left:20px;margin:6px 0}
+.esp-extra{display:flex;flex-wrap:wrap;gap:6px;font:13px "Archivo",sans-serif}
+.esp-extra a{border:1px solid var(--line);border-radius:999px;padding:4px 10px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.esp-dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.esp-dos .caja{margin:0}
 .ganador{font:15px/1.4 "Archivo",sans-serif;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
 
 /* ---------- Restaurantes ---------- */
@@ -383,6 +413,7 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 
 <nav class="tabs" aria-label="Secciones">
   <div class="wrap" role="tablist">
+    <button role="tab" aria-selected="false" data-tab="especial" id="tab-especial" hidden>⭐ Especial</button>
     <button role="tab" aria-selected="true" data-tab="plan">Plan por días</button>
     <button role="tab" aria-selected="false" data-tab="ideas">Todos los sitios</button>
     <button role="tab" aria-selected="false" data-tab="restaurantes">Restaurantes</button>
@@ -394,6 +425,7 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 </nav>
 
 <main class="wrap">
+  <section class="panel" id="p-especial" hidden></section>
   <section class="panel" id="p-plan"></section>
   <section class="panel" id="p-ideas" hidden>
     <p class="intro">Todos los sitios que hemos mirado, con nuestra valoración de cuánto merece la pena, la nota de Google y lo que hay que saber antes de ir. Votad todo lo que podáis: así sabremos qué priorizar si no da tiempo a todo.</p>
@@ -497,10 +529,10 @@ dialog.galeria{max-width:none;width:100vw;height:100dvh;max-height:none;margin:0
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="js/generado.js?v=19"></script>
-<script src="js/datos.js?v=19"></script>
-<script src="js/notas.js?v=19"></script>
-<script src="js/restaurantes.js?v=19"></script>
-<script src="js/app.js?v=19"></script>
+<script src="js/generado.js?v=21"></script>
+<script src="js/datos.js?v=21"></script>
+<script src="js/notas.js?v=21"></script>
+<script src="js/restaurantes.js?v=21"></script>
+<script src="js/app.js?v=21"></script>
 </body>
 </html>

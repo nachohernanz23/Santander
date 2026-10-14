@@ -24,6 +24,10 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - **Sáb 17 (3):** Bárcena Mayor, cocido y Vega de Pas.
 - **Dom 18:** vuelta.
 
+## Apartado especial
+- `ESPECIAL` en `js/datos.js` crea una pestaña propia (ahora «⭐ Jueves», `#especial`) que se abre por defecto hasta ese día: el día paso a paso con los dos planes (botón «Llévame» de Google Maps en cada parada), mapa del recorrido (`rutas/jueves-mapa.webp`), ruta de pintxos con su mapa (`rutas/jueves-pintxos.webp`), Gaztelugatxe, qué llevar y las fichas del día. Para otro día, basta con cambiar `ESPECIAL`.
+- En `DIAS`, `fuente` indica de dónde sale la previsión guardada si falla Open-Meteo.
+
 ## Planes alternativos por día
 - `PLANES` en `js/datos.js`: para un día, varios planes completos (letra, horario, ritmo, coche, pros, contras, sitios y restaurantes). El grupo los vota con ids `p-<día>-<letra>` y la web muestra cuál va ganando. `rec: true` marca nuestra recomendación.
 - Miércoles 14: rutas `p-mie-1`, `p-mie-2` (recomendada) y `p-mie-3`. Los planes admiten `datos`, `fotos` (`FOTOS_RUTA`), `mapa` y `gpx`. Sitios nuevos del 13-oct: `aliva`, `lagos`, `covadonga`, `cangas` y `bulnes` (zona `asturias`).

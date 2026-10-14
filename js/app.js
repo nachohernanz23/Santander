@@ -299,14 +299,14 @@ function renderSemana() {
       <div class="t">${esc(d.t)}</div></button>`;
   }).join("");
   if (METEO) $("#fuente-meteo").textContent = `Previsión de Open-Meteo actualizada ${hace(METEO.ts)}. Cada día, en la zona donde estaréis`;
-  DIAS.forEach((d, i) => { const el = $(`[data-meteo="${d.k}"]`); if (el) el.innerHTML = lineaMeteo(d, i); });
+  DIAS.forEach((d, i) => { $$(`[data-meteo="${d.k}"]`).forEach(el => { el.innerHTML = lineaMeteo(d, i); }); });
 }
 function lineaMeteo(d, i) {
   const m = meteoDia(i);
   const cielo = n => n == null ? "" : n < 30 ? "☀️ sol" : n < 70 ? "⛅ nubes y claros" : "☁️ nublado";
   let t = m ? `${WX(m.code)[0]} <b>${WX(m.code)[1]}</b> · ${Math.round(m.max)}° / ${Math.round(m.min)}° · lluvia ${m.lluvia}% · viento ${Math.round(m.viento)} km/h (rachas ${Math.round(m.rachas)})` +
       (m.nm != null ? `<br>Por la mañana ${cielo(m.nm)} · por la tarde ${cielo(m.nt)}` : "")
-    : `${d.wx} ${esc(d.p)} <span style="color:var(--muted)">(AEMET, 11-oct)</span>`;
+    : `${d.wx} ${esc(d.p)} <span style="color:var(--muted)">(${esc(d.fuente || "AEMET, 11-oct")})</span>`;
   if (d.monte && METEO && METEO.monte && METEO.monte[i]) {
     const a = METEO.monte[i];
     t += `<br>⛰ En la montaña (1.850 m): ${Math.round(a.max)}° / ${Math.round(a.min)}°, rachas de ${Math.round(a.rachas)} km/h` +
@@ -919,8 +919,73 @@ $("#dlg-galeria").addEventListener("keydown", e => { if (e.key === "ArrowLeft") 
   d.addEventListener("pointerup", e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) { gal.i += dx < 0 ? 1 : -1; pintarGaleria(); } });
 })();
 
+// ---------- Apartado especial de un día (ESPECIAL en datos.js) ----------
+let planEsp = null;
+const navUrl = (c, modo = "driving") => `https://www.google.com/maps/dir/?api=1&destination=${c[0]},${c[1]}&travelmode=${modo}`;
+function renderEspecial() {
+  const E = typeof ESPECIAL === "undefined" ? null : ESPECIAL;
+  if (!E) return;
+  const t = $("#tab-especial"); t.hidden = false; t.textContent = E.tab;
+  const i = DIAS.findIndex(d => d.k === E.k), d = DIAS[i];
+  if (!planEsp) {
+    const P = planesDe(E.k).map(p => ({ p, r: resumen(p.id) })).sort((a, b) => b.r.score - a.r.score);
+    planEsp = P.length && P[0].r.total ? P[0].p.letra.toLowerCase() : "a";
+    if (!E.planes[planEsp]) planEsp = Object.keys(E.planes)[0];
+  }
+  const pl = E.planes[planEsp], mm = MAREAS[d.marea || "santander"][d.n];
+  const paso = x => {
+    const s = x.s && S[x.s], f = s && FOTOS[x.s] && FOTOS[x.s][0];
+    const acc = [x.c ? `<a class="btn peq" href="${navUrl(x.c, x.modo)}" target="_blank" rel="noopener">${x.modo === "walking" ? "🚶" : "🧭"} Llévame</a>` : "",
+      x.ancla ? `<a class="btn peq sec" href="#${x.ancla}" data-esp-ancla="${x.ancla}">Ver detalles</a>` : "",
+      s ? `<a class="btn peq sec" href="#" data-ir-sitio="${x.s}">Ficha</a>` : "",
+      x.r ? `<a class="btn peq sec" href="#" data-ir-resto="${x.r}">${esc(RESTAURANTES[x.r].n)}</a>` : ""].join("");
+    return `<li class="esp-paso"><div class="esp-hora">${esc(x.h)}</div><div class="esp-caja"><div><h3>${esc(x.t)}</h3><p>${esc(x.d || "")}</p>${acc ? `<div class="esp-acc">${acc}</div>` : ""}</div>${f ? `<img src="img/${f.f}-m.webp" alt="${esc(s.n)}" loading="lazy" decoding="async">` : ""}</div></li>`;
+  };
+  const pintxo = ([id, h, nota], n) => { const r = RESTAURANTES[id];
+    return `<article class="esp-pintxo"><div class="esp-num">${n}</div><div><h3>${esc(r.n)}</h3>
+      <div class="meta"><span>★ ${fmtNota(r.nota)} · ${fmtN(r.resenas)}</span><span>💶 ${esc(r.precio)}</span><span>🕒 jueves ${esc(h)}</span></div>
+      ${r.pedir ? `<p style="margin:2px 0;font-size:14.5px"><b>Qué pedir:</b> ${esc(r.pedir)}</p>` : ""}${nota ? `<p style="margin:2px 0;font-size:14px;color:var(--muted)">${esc(nota)}</p>` : ""}
+      <div class="esp-acc"><a class="btn peq" href="${navUrl([r.lat, r.lon], "walking")}" target="_blank" rel="noopener">🚶 Llévame</a><a class="btn peq sec" href="#" data-ir-resto="${id}">Ficha</a></div></div></article>`; };
+  const G = E.gaztelugatxe, X = E.pintxos;
+  $("#p-especial").innerHTML = `
+    <div class="esp-cab">
+      <h2>${esc(E.titulo)}</h2>
+      <p>${esc(E.intro)}</p>
+      <div class="meteo-linea" data-meteo="${d.k}">${lineaMeteo(d, i)}</div>
+      <div class="esp-chips"><span>${esc(E.tiempo)}</span><span>☀ Sale a las ${mm.sol[0]}, se pone a las ${mm.sol[1]}</span><span>👥 ${esc(d.quien)}</span></div>
+      <div class="ganador" data-ganador="${d.k}" style="margin-top:10px"></div>
+      ${htmlFamilia("dia:" + d.k)}
+    </div>
+    <a class="esp-mapa" href="${esc(E.mapa)}" target="_blank" rel="noopener"><img src="${esc(E.mapa)}" alt="Mapa del recorrido del día" loading="lazy"></a>
+    <div class="esp-sec">🗓 El día paso a paso</div>
+    <div class="esp-sel" role="group" aria-label="Plan">${Object.entries(E.planes).map(([k, p]) => `<button type="button" data-esp-plan="${k}" aria-pressed="${k === planEsp}">${esc(p.n)}</button>`).join("")}</div>
+    <p class="nota" style="margin:0 0 8px">Vuelta a casa sobre las ${esc(pl.vuelta)}. <a href="#" data-ir-dia="${d.k}">Votad el plan aquí</a>.</p>
+    <ol class="esp-pasos">${pl.paradas.map(paso).join("")}</ol>
+    <div class="esp-sec" id="esp-pintxos">🍢 Ruta de pintxos por el Casco Viejo</div>
+    <a class="esp-mapa" href="${esc(X.mapa)}" target="_blank" rel="noopener"><img src="${esc(X.mapa)}" alt="Mapa de la ruta de pintxos" loading="lazy"></a>
+    <p style="margin:10px 0"><a class="btn" href="${esc(X.maps)}" target="_blank" rel="noopener">🚶 Ruta de pintxos en Google Maps (1 km)</a></p>
+    ${X.ruta.map((x, n) => pintxo(x, n + 1)).join("")}
+    <div class="caja" style="margin:10px 0"><h3>Si os quedáis con hambre</h3><div class="esp-extra">${X.extra.map(([id, h]) => `<a href="#" data-ir-resto="${id}">${esc(RESTAURANTES[id].n)} · ★ ${fmtNota(RESTAURANTES[id].nota)} · ${esc(h)}</a>`).join("")}</div></div>
+    <div class="caja"><h3>Cómo va lo de los pintxos</h3><ul class="esp-lista">${X.consejos.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>
+    <div class="esp-sec" id="esp-gaztelugatxe">⛪ San Juan de Gaztelugatxe</div>
+    <div class="esp-dos">
+      <div class="caja"><h3>Lo que hay que saber</h3><ul class="esp-lista">${G.avisos.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>
+      <div class="caja"><h3>Dónde aparcar</h3><ul class="esp-lista">${G.parkings.map(([n, la, lo]) => `<li>${esc(n)} · <a href="${navUrl([la, lo])}" target="_blank" rel="noopener">Llévame</a></li>`).join("")}</ul>
+        <p class="nota" style="margin:6px 0 0">Se llenan de 10 a 16 h; por la tarde suele haber sitio.</p></div>
+    </div>
+    <div class="esp-sec">🎒 Qué llevar</div>
+    <div class="caja"><ul class="esp-lista">${E.llevar.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>
+    <div class="esp-sec">📍 Los sitios del día</div>
+    <div class="grid">${d.items.map(tarjeta).join("")}</div>`;
+  $$("#p-especial [data-ganador]").forEach(pintarGanador);
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-esp-plan]"); if (b) { planEsp = b.dataset.espPlan; renderEspecial(); actualizar(); return; }
+  const a = e.target.closest("[data-esp-ancla]"); if (a) { e.preventDefault(); const el = document.getElementById(a.dataset.espAncla); if (el) el.scrollIntoView({ behavior: "smooth" }); }
+});
+
 // ---------- Pestañas y navegación ----------
-const TABS = ["plan", "ideas", "restaurantes", "grupo", "mapa", "reservas", "info"];
+const TABS = ["especial", "plan", "ideas", "restaurantes", "grupo", "mapa", "reservas", "info"];
 function abrir(tab, sinHash) {
   if (!TABS.includes(tab)) tab = "plan";
   $$("nav.tabs [role=tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === tab));
@@ -996,6 +1061,8 @@ $("#btn-tema").addEventListener("click", () => {
   $("#mapa-dia").innerHTML = `<option value="">Todos los días</option>` + DIAS.map(d => `<option value="${d.k}">${d.d} ${d.n}${d.f === hoyISO() ? " (hoy)" : ""}</option>`).join("");
   $("#mapa-ola").innerHTML = `🅿️ <b>Aparcar:</b> ${esc(OLA.resumen)}<br>${esc(OLA.truco)}<br>📱 ${esc(OLA.app)} <a href="${OLA.appUrl.android}" target="_blank" rel="noopener">Android</a> · <a href="${OLA.appUrl.ios}" target="_blank" rel="noopener">iPhone</a><br><span class="pin-pk pk-gratis" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> gratis · <span class="pin-pk pk-pago" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> de pago · <span class="pin-pk pk-duda" style="display:inline-grid;width:18px;height:18px;font-size:11px">P</span> sin confirmar`;
   renderSemana(); renderFiltros(); prepararRestos(); renderPlan(); pintarIdeas(); pintarRestos(); renderInfo(); renderReservas(); renderGrupo(); pintarYo();
-  abrir(location.hash.slice(1) || "plan", true);
+  renderEspecial();
+  const especialHoy = typeof ESPECIAL !== "undefined" && hoyISO() <= ESPECIAL.fecha;
+  abrir(location.hash.slice(1) || (especialHoy ? "especial" : "plan"), true);
   sync(); cargarMeteo();
 })();
