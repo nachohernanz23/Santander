@@ -956,7 +956,7 @@ function renderEspecial() {
       <div class="ganador" data-ganador="${d.k}" style="margin-top:10px"></div>
       ${htmlFamilia("dia:" + d.k)}
     </div>
-    <a class="esp-mapa" href="${esc(E.mapa)}" target="_blank" rel="noopener"><img src="${esc(E.mapa)}" alt="Mapa del recorrido del día" loading="lazy"></a>
+    <a class="esp-mapa" href="${esc(pl.mapa || E.mapa)}" target="_blank" rel="noopener"><img src="${esc(pl.mapa || E.mapa)}" alt="Mapa del recorrido del día" loading="lazy"></a>
     <div class="esp-sec">🗓 El día paso a paso</div>
     <div class="esp-sel" role="group" aria-label="Plan">${(E.orden || Object.keys(E.planes)).map(k => [k, E.planes[k]]).map(([k, p]) => `<button type="button" data-esp-plan="${k}" aria-pressed="${k === planEsp}">${esc(p.n)}</button>`).join("")}</div>
     <p class="nota" style="margin:0 0 8px">Vuelta a casa sobre las ${esc(pl.vuelta)}. <a href="#" data-ir-dia="${d.k}">Votad el plan aquí</a>.</p>

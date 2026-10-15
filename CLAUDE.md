@@ -19,7 +19,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - **Lun 12 (festivo):** dunas de Liencres, Urros y la Arnía con la bajamar de las 12:08 (coef. 85), Santillana, Comillas y atardecer en San Vicente u Oyambre.
 - **Mar 13:** por la mañana, los 4, Monte Buciero y anchoas en Santoña. Las escaleras del Faro del Caballo están CERRADAS desde dic-2025. Por la tarde los 6 en Santander.
 - **Mié 14:** Fuente Dé (teleférico a las 12:00). Tres rutas para votar en `PLANES.mie` (con fotos, mapa topográfico y GPX de `rutas/`): 1) solo la bajada por Áliva e Igüedri, 2) hasta el cruce de Peña Vieja y bajada (recomendada) y 3) Horcados Rojos ida y vuelta con bajada en teleférico.
-- **Jue 15:** tres planes en `PLANES.jue`: C (recomendado con el sol: Gaztelugatxe a las 11:45, baño en la playa de Bakio, pintxos tardíos en el Casco Viejo de Bilbao, tour de San Mamés y tarde-noche de pintxos; vuelta a las 22:00), A (Castro, pintxos en Bilbao y la vuelta que recomienda Nacho, amigo: Bakio, Gaztelugatxe, Bermeo, Mundaka y Gernika) y B (como el A sin Castro). Pestaña especial «⭐ Jueves» (`ESPECIAL`, plan por defecto C).
+- **Jue 15:** tres planes en `PLANES.jue`: C (`p-jue-d`, recomendado: primero los pueblos, Gernika, Mundaka, comida en Bermeo y Gaztelugatxe a las 15:30, y Bilbao al atardecer con cena de pintxos; vuelta a las 22:45), A (Castro, pintxos de comida en Bilbao y la vuelta que recomienda Nacho, amigo, por la tarde) y B (como el A sin Castro). El plan del baño en Bakio se descartó el 15-oct. Pestaña especial «⭐ Jueves» (`ESPECIAL`, plan por defecto C, con un mapa por plan).
 - **Vie 16:** se van Pedre, Fran y Niggi. El Soplao y El Castillo o Altamira; por la tarde, a Arenas de Iguña.
 - **Sáb 17 (3):** Bárcena Mayor, cocido y Vega de Pas.
 - **Dom 18:** vuelta.

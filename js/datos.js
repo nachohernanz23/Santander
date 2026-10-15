@@ -379,7 +379,7 @@ const DIAS = [
     items: ["fuentede", "aliva", "iguedri", "horcados", "mogrovejo", "potes"], alt: ["santacatalina", "toribio"] },
   { k: "jue", d: "Jueves", n: 15, f: "2026-10-15", wx: "☀️", p: "0% lluvia", gente: 6, quien: "Los seis", t: "Pintxos en Bilbao y la vuelta de Gaztelugatxe", fuente: "met.no, 14-oct",
     meteo: [43.26, -2.93], marea: "bermeo",
-    nota: "Previsión del miércoles por la noche (met.no): sol todo el día, 24–26 °C en Bilbao y 21–23 °C en la costa, sin lluvia. Salida sobre las 10:45. Con este sol hay plan de baño: el C hace Gaztelugatxe y la playa de Bakio por la mañana y deja toda la tarde para Bilbao. El A y el B siguen la vuelta que recomienda Nacho. Abajo, tres planes para votar.",
+    nota: "Previsión del miércoles por la noche (met.no): sol todo el día, 24–26 °C en Bilbao y 21–23 °C en la costa, sin lluvia. Salida sobre las 10:45. Tres planes para votar: el C hace primero los pueblos (Gernika, Mundaka, Bermeo y Gaztelugatxe) y deja Bilbao para el atardecer y la cena de pintxos; el A y el B comen de pintxos en Bilbao y hacen la vuelta que recomienda Nacho por la tarde.",
     avisos: ["Gaztelugatxe: el jueves el acceso es libre, sin reserva. Aparcamientos: uno público de 22 plazas en Urizarreta, otro privado de pago al lado (Eneperi, unos 3,5 €) y el de Lurgorri (57 plazas), junto al acceso de Ermu. Se llenan de 10 a 16 h.",
       "La bajada a la ermita por Urizarreta son 1,2 km muy empinados y luego 241 escalones; la vuelta por Ermu, 1,6 km más suaves. Calzado cómodo y agua.",
       "Para salir de Bilbao hacia Bakio: puente de La Salve, junto al Guggenheim, y los túneles de Artxanda (de peaje) en dirección al aeropuerto y Mungia.",
@@ -415,7 +415,7 @@ const DIAS = [
 // Fotos de los puntos de cada ruta del miércoles (rutas/fotos/, de Wikimedia Commons; los créditos están en FOTOS)
 const FOTOS_RUTA = {
   ja: [["rutas/fotos/castro-1.webp", "Castro Urdiales"], ["rutas/fotos/cascoviejo-1.webp", "Plaza Nueva: aquí empiezan los pintxos"], ["rutas/fotos/guggenheim-3.webp", "Puppy, en el Guggenheim"], ["rutas/fotos/gaztelugatxe-1.webp", "San Juan de Gaztelugatxe"], ["rutas/fotos/gaztelugatxe-2.webp", "Los 241 escalones"], ["rutas/fotos/bermeo-1.webp", "Bermeo"], ["rutas/fotos/mundaka-1.webp", "Mundaka"]],
-  jc: [["rutas/fotos/gaztelugatxe-1.webp", "San Juan de Gaztelugatxe por la mañana"], ["rutas/fotos/gaztelugatxe-2.webp", "Los 241 escalones"], ["rutas/fotos/cascoviejo-1.webp", "Pintxos en la Plaza Nueva"], ["rutas/fotos/guggenheim-3.webp", "Puppy, en el Guggenheim"], ["rutas/fotos/guggenheim-1.webp", "La ría y el Guggenheim"]],
+  jc: [["rutas/fotos/mundaka-1.webp", "Mundaka"], ["rutas/fotos/bermeo-1.webp", "Bermeo, para comer"], ["rutas/fotos/gaztelugatxe-1.webp", "San Juan de Gaztelugatxe"], ["rutas/fotos/gaztelugatxe-2.webp", "Los 241 escalones"], ["rutas/fotos/guggenheim-1.webp", "Bilbao al atardecer"], ["rutas/fotos/cascoviejo-1.webp", "Cena de pintxos en la Plaza Nueva"]],
   jb: [["rutas/fotos/guggenheim-1.webp", "El Guggenheim y la ría"], ["rutas/fotos/cascoviejo-1.webp", "Plaza Nueva y pintxos"], ["rutas/fotos/gaztelugatxe-1.webp", "San Juan de Gaztelugatxe"], ["rutas/fotos/bermeo-1.webp", "Bermeo"], ["rutas/fotos/mundaka-3.webp", "Mundaka y la ría de Urdaibai"]],
   r1: [["rutas/fotos/fuentede-1.webp", "El teleférico: 753 m en 4 minutos"], ["rutas/fotos/fuentede-2.webp", "La pista desde el Cable"], ["rutas/fotos/aliva-4.webp", "Las praderas de Áliva"], ["rutas/fotos/iguedri-4.webp", "Puertos de Áliva"], ["rutas/fotos/aliva-1.webp", "Bajando por Áliva"], ["rutas/fotos/iguedri-3.webp", "Áliva, entre los macizos central y oriental"], ["rutas/fotos/mogrovejo-1.webp", "Mogrovejo, de vuelta"]],
   r2: [["rutas/fotos/fuentede-1.webp", "El teleférico: 753 m en 4 minutos"], ["rutas/fotos/lloroza-1.webp", "Lagos de Lloroza"], ["rutas/fotos/horcados-4.webp", "La subida hacia Horcados Rojos"], ["rutas/fotos/aliva-4.webp", "Las praderas de Áliva"], ["rutas/fotos/iguedri-4.webp", "Puertos de Áliva"], ["rutas/fotos/aliva-1.webp", "Bajando por Áliva"], ["rutas/fotos/potes-1.webp", "Potes, para cenar"]],
@@ -501,23 +501,23 @@ const PLANES = {
       contras: ["No paráis en ningún pueblo antes de Bilbao", "Gaztelugatxe a media tarde, con algo más de gente"],
       sitios: ["guggenheim", "cascoviejo", "gaztelugatxe", "bermeo", "mundaka"],
       comer: ["r-gure-toki", "r-sorginzulo", "r-santa-maria", "r-txiriboga", "r-motrikes", "r-bacaicoa", "r-el-globo", "r-taberna-auzokoa"] },
-    { id: "p-jue-c", letra: "C", n: "Gaztelugatxe y baño en Bakio por la mañana, y toda la tarde en Bilbao", rec: true,
-      lema: "Aprovechando el sol: Gaztelugatxe a primera hora, baño en la playa de Bakio y luego Bilbao sin prisa, con pintxos, San Mamés para Caste y la tarde-noche por el Casco Viejo.",
-      ritmo: "Medio", coche: "≈ 2 h 45 en total", datos: ["☀️ Sol y 24–26 °C", "🏖 Baño en Bakio", "⚽ Tour de San Mamés", "🏠 Vuelta sobre las 22:00"],
+    { id: "p-jue-d", letra: "C", n: "Primero los pueblos (Gernika, Mundaka, Bermeo y Gaztelugatxe) y Bilbao por la tarde", rec: true,
+      lema: "La vuelta de Nacho al revés: los pueblos de Urdaibai de día, comida junto al mar en Bermeo, Gaztelugatxe por la tarde y Bilbao al atardecer para cenar de pintxos.",
+      ritmo: "Intenso", coche: "≈ 4 h en total", datos: ["☀️ Sol y 24–26 °C", "🍽 Comida en Bermeo", "🍢 Pintxos de cena en Bilbao", "🏠 Vuelta sobre las 22:45"],
       fotos: FOTOS_RUTA.jc,
-      horario: [["10:30", "Salida hacia Gaztelugatxe (1 h 15): A-8 hasta Bilbao, túneles de Artxanda (de peaje), Mungia y Bakio. Cuanto antes salgáis, más fácil aparcar"],
-        ["11:45", "San Juan de Gaztelugatxe: bajada, los 241 escalones, la ermita y la campana (unas 2 h). A esta hora los aparcamientos van llenos: el de pago de Eneperi es el que más sitio tiene"],
-        ["13:55", "Playa de Bakio, a 10 min: baño con la marea baja (bajamar a las 13:51). En octubre el agua suele rondar los 19–20 °C y ya no hay socorristas: sin pasar de donde se hace pie. Si apretáis el hambre, algo rápido en el Txoberne (4,5)"],
-        ["15:00", "A Bilbao (35 min). Aparcad junto al Guggenheim (plaza Euskadi o Palacio Euskalduna)"],
-        ["15:45", "Pintxos en el Casco Viejo (en tranvía a Arriaga): Gure Toki, Bar Santamaría, Txiriboga y Bakaikoa abren toda la tarde. El Motrikes cierra de 16:00 a 19:00"],
-        ["17:15", "Paseo por la ría hasta el Guggenheim por fuera (Puppy y la araña Mamá)"],
-        ["17:45", "San Mamés, a 15 min andando: tour del estadio y museo (1 h 30; último acceso recomendado a las 18:30)"],
-        ["19:30", "Tarde-noche de pintxos y vinos: El Globo o La Viña del Ensanche, cerca de San Mamés, o vuelta a la Plaza Nueva, que a esa hora tiene más ambiente"],
-        ["21:00", "Vuelta a Santander (1 h)"]],
-      pros: ["Os bañáis con el mejor día de la semana", "Gaztelugatxe por la mañana, sin la prisa de la luz", "Toda la tarde en Bilbao y da tiempo al tour de San Mamés, que quería Caste", "Volvéis a una hora razonable"],
-      contras: ["Sin Castro, Bermeo, Mundaka ni Gernika (Bermeo está a 10 min de Gaztelugatxe si queréis meterlo antes del baño)", "A mediodía es cuando más cuesta aparcar en Gaztelugatxe", "Se come tarde, sobre las 15:45"],
-      sitios: ["gaztelugatxe", "sanmames", "guggenheim", "cascoviejo"],
-      comer: ["r-txoberne", "r-gure-toki", "r-santa-maria", "r-txiriboga", "r-bacaicoa", "r-el-globo"] }
+      horario: [["10:45", "Salida hacia Gernika (1 h 30 por la A-8, saliendo en Amorebieta)"],
+        ["12:15", "Gernika: el Árbol y la Casa de Juntas (abre de 10:00 a 14:00)"],
+        ["13:20", "Mundaka (20 min): el puerto y la vista de la ría de Urdaibai"],
+        ["14:00", "Bermeo (10 min): comida en el puerto. Pintxos en el Batun Batun (4,5) o menú en el Artza (4,2). El Toki Alai cierra los jueves"],
+        ["15:30", "San Juan de Gaztelugatxe (15 min): bajada, los 241 escalones, la ermita y la campana (unas 2 h). Desde Bermeo, el primer aparcamiento es el de Lurgorri"],
+        ["17:40", "Bakio de pasada y a Bilbao por Mungia y los túneles de Artxanda (40 min). Aparcad junto al Guggenheim"],
+        ["18:30", "El Guggenheim por fuera y la ría al atardecer (19:28): Puppy, la araña Mamá, el Zubizuri y el Arenal"],
+        ["19:30", "Cena de pintxos por el Casco Viejo: a esa hora hay más ambiente y el Motrikes ya ha vuelto a abrir"],
+        ["21:45", "Vuelta a Santander (1 h)"]],
+      pros: ["Veis los pueblos de día y con la Casa de Juntas de Gernika abierta", "Coméis junto al mar en Bermeo", "Bilbao a la mejor hora para los pintxos, y la vuelta desde Bilbao es más corta (1 h)"],
+      contras: ["Gaztelugatxe a media tarde, con los aparcamientos aún llenos hasta las 16:00", "Sin Castro ni tour de San Mamés (llegáis a Bilbao después del último acceso)", "Los pintxos son de cena, no de comida"],
+      sitios: ["mundaka", "bermeo", "gaztelugatxe", "guggenheim", "cascoviejo"],
+      comer: ["r-batun-batun", "r-artza", "r-gure-toki", "r-santa-maria", "r-txiriboga", "r-motrikes", "r-bacaicoa"] }
   ],
   mie: [
     { id: "p-mie-1", letra: "1", n: "Solo la bajada: del Cable a Fuente Dé por Áliva e Igüedri",
@@ -665,11 +665,11 @@ const PLATOS = [
 const ESPECIAL = {
   k: "jue", fecha: "2026-10-15", tab: "⭐ Jueves", def: "c", orden: ["c", "a", "b"],
   titulo: "Jueves 15: pintxos en Bilbao y la vuelta de Gaztelugatxe",
-  intro: "Tres planes: el C (Gaztelugatxe y baño en Bakio por la mañana y toda la tarde en Bilbao, con San Mamés), el A (Castro, pintxos en Bilbao y la vuelta que recomienda Nacho por Bakio, Gaztelugatxe, Bermeo, Mundaka y Gernika) y el B (como el A, sin Castro). Cada parada tiene su botón para abrirla en Google Maps.",
+  intro: "Tres planes: el C (primero los pueblos de Urdaibai y Gaztelugatxe, y Bilbao al atardecer para cenar de pintxos), el A (Castro, pintxos de comida en Bilbao y por la tarde la vuelta que recomienda Nacho) y el B (como el A, sin Castro). Cada parada tiene su botón para abrirla en Google Maps.",
   tiempo: "☀️ Sol todo el día · 24–26 °C en Bilbao y 21–23 °C en la costa · sin lluvia",
   mapa: "rutas/jueves-mapa.webp",
   planes: {
-    a: { n: "Plan A · con Castro Urdiales", vuelta: "22:45", paradas: [
+    a: { n: "Plan A · con Castro Urdiales", vuelta: "22:45", mapa: "rutas/jueves-mapa.webp", paradas: [
       { h: "10:45", t: "Salida hacia Castro Urdiales", d: "50 min por la A-8. Se aparca en el parking subterráneo Amestoy, junto al paseo marítimo.", c: [43.3804468, -3.2167861], modo: "driving" },
       { h: "11:35", t: "Castro Urdiales", s: "castro", d: "El puerto, la iglesia gótica de Santa María, el castillo-faro de Santa Ana y el puente medieval. Café en el puerto.", c: [43.3829, -3.2151], modo: "walking" },
       { h: "12:30", t: "Bilbao: aparcar junto al Guggenheim", d: "35 min. Parking de la plaza Euskadi (Mazarredo 68) o el del Palacio Euskalduna (24 h). Luego se sale de Bilbao por aquí.", c: [43.2671467, -2.93606], modo: "driving" },
@@ -682,17 +682,17 @@ const ESPECIAL = {
       { h: "19:10", t: "Bermeo", s: "bermeo", d: "El puerto viejo con la puesta de sol (19:28).", c: [43.4207962, -2.7197421], modo: "driving" },
       { h: "19:45", t: "Mundaka y Gernika", s: "mundaka", d: "La ría de Urdaibai desde Mundaka y, ya de noche, Gernika. Cena de pintxos en la Taberna Auzokoa (Gernika) o en el Batun Batun (Bermeo).", c: [43.3142186, -2.6774263], modo: "driving", r: "r-taberna-auzokoa" },
       { h: "21:00", t: "Vuelta a casa", d: "1 h 30–1 h 45 por la A-8. Conduce quien no haya bebido.", c: [43.4619, -3.8066], modo: "driving" }] },
-    c: { n: "Plan C · baño y Bilbao", vuelta: "22:00", paradas: [
-      { h: "10:30", t: "Salida hacia Gaztelugatxe", d: "1 h 15: A-8 hasta Bilbao, túneles de Artxanda (de peaje), Mungia y Bakio. Cuanto antes, más fácil aparcar.", c: [43.4412268, -2.7840206], modo: "driving" },
-      { h: "11:45", t: "San Juan de Gaztelugatxe", s: "gaztelugatxe", d: "Bajada, los 241 escalones, la ermita y la campana. Unas 2 h. A esta hora, el aparcamiento con más sitio es el de pago de Eneperi.", ancla: "esp-gaztelugatxe" },
-      { h: "13:55", t: "Baño en la playa de Bakio", d: "A 10 min, con la marea baja (13:51). En octubre el agua suele rondar los 19–20 °C y ya no hay socorristas: sin pasar de donde se hace pie. Toallas y bañador en el coche.", c: [43.4300629, -2.8068161], modo: "driving", r: "r-txoberne" },
-      { h: "15:00", t: "A Bilbao: aparcar junto al Guggenheim", d: "35 min. Parking de la plaza Euskadi (Mazarredo 68) o el del Palacio Euskalduna.", c: [43.2671467, -2.93606], modo: "driving" },
-      { h: "15:45", t: "Pintxos en el Casco Viejo", d: "En tranvía a Arriaga. Gure Toki, Bar Santamaría, Txiriboga y Bakaikoa abren toda la tarde; el Motrikes cierra de 16:00 a 19:00.", ancla: "esp-pintxos" },
-      { h: "17:15", t: "La ría y el Guggenheim por fuera", s: "guggenheim", d: "Del Arenal al Zubizuri y el Guggenheim: Puppy y la araña Mamá.", c: [43.267678, -2.9345], modo: "walking" },
-      { h: "17:45", t: "Tour de San Mamés", s: "sanmames", d: "A 15 min andando del Guggenheim. Estadio y museo del Athletic, 1 h 30. Abre hasta las 20:00 y el último acceso recomendado es a las 18:30.", c: [43.2642, -2.9494], modo: "walking" },
-      { h: "19:30", t: "Pintxos y vinos de tarde-noche", d: "El Globo o La Viña del Ensanche, cerca de San Mamés, o vuelta a la Plaza Nueva, que a esa hora tiene más ambiente.", r: "r-el-globo", c: [43.26198, -2.932696], modo: "walking" },
-      { h: "21:00", t: "Vuelta a casa", d: "1 h por la A-8. Conduce quien no haya bebido.", c: [43.4619, -3.8066], modo: "driving" }] },
-    b: { n: "Plan B · Bilbao con calma", vuelta: "21:45", paradas: [
+    c: { n: "Plan C · pueblos y Bilbao de noche", vuelta: "22:45", mapa: "rutas/jueves-mapa-c.webp", paradas: [
+      { h: "10:45", t: "Salida hacia Gernika", d: "1 h 30 por la A-8, saliendo en Amorebieta.", c: [43.3132097, -2.6796198], modo: "driving" },
+      { h: "12:15", t: "Gernika", d: "El Árbol y la Casa de Juntas, que abre de 10:00 a 14:00. Unos 45 min.", c: [43.3132097, -2.6796198], modo: "walking" },
+      { h: "13:20", t: "Mundaka", s: "mundaka", d: "El puerto y la vista de la ría de Urdaibai. Media hora.", c: [43.4072, -2.6983], modo: "driving" },
+      { h: "14:00", t: "Comer en Bermeo", s: "bermeo", d: "En el puerto viejo: pintxos en el Batun Batun (4,5) o menú del día en el Artza (4,2). El Toki Alai cierra los jueves.", c: [43.4207962, -2.7197421], modo: "driving", r: "r-batun-batun" },
+      { h: "15:30", t: "San Juan de Gaztelugatxe", s: "gaztelugatxe", d: "Bajada, los 241 escalones, la ermita y la campana. Unas 2 h. Viniendo de Bermeo, el primer aparcamiento es el de Lurgorri; si está lleno, el de pago de Eneperi.", c: [43.4407664, -2.7707756], modo: "driving", ancla: "esp-gaztelugatxe" },
+      { h: "17:40", t: "A Bilbao", d: "Bakio de pasada, Mungia y los túneles de Artxanda (de peaje). 40 min. Aparcad junto al Guggenheim: plaza Euskadi o Palacio Euskalduna.", c: [43.2671467, -2.93606], modo: "driving" },
+      { h: "18:30", t: "El Guggenheim y la ría al atardecer", s: "guggenheim", d: "Puppy, la araña Mamá, el Zubizuri y el Arenal. El sol se pone a las 19:28.", c: [43.267678, -2.9345], modo: "walking" },
+      { h: "19:30", t: "Cena de pintxos por el Casco Viejo", d: "A esa hora hay más ambiente, y el Motrikes y la Taberna Basaras ya han vuelto a abrir.", ancla: "esp-pintxos" },
+      { h: "21:45", t: "Vuelta a casa", d: "1 h por la A-8. Conduce quien no haya bebido.", c: [43.4619, -3.8066], modo: "driving" }] },
+    b: { n: "Plan B · Bilbao con calma", vuelta: "21:45", mapa: "rutas/jueves-mapa-b.webp", paradas: [
       { h: "10:45", t: "Salida directa a Bilbao", d: "1 h por la A-8. Aparcad junto al Guggenheim: parking de la plaza Euskadi (Mazarredo 68) o el del Palacio Euskalduna.", c: [43.2671467, -2.93606], modo: "driving" },
       { h: "11:50", t: "El Guggenheim y la ría hasta el Casco Viejo", s: "guggenheim", d: "Puppy y la araña Mamá, el puente Zubizuri, el Arenal y las Siete Calles, con la catedral y el mercado de la Ribera.", c: [43.267678, -2.9345], modo: "walking" },
       { h: "13:00", t: "Ruta de pintxos", d: "Cinco bares a 5 min unos de otros, unos 15–20 € por persona. Mirad el mapa de los pintxos.", ancla: "esp-pintxos" },
@@ -715,5 +715,5 @@ const ESPECIAL = {
     avisos: ["El jueves el acceso es libre: no hace falta reserva.", "Bajada por Urizarreta: 1,2 km muy empinados y luego los 241 escalones hasta la ermita. Vuelta por Ermu: 1,6 km más suaves. Unas 2 h en total.", "Arriba se tocan tres veces la campana y se pide un deseo.", "Calzado cómodo y agua. Abajo no hay bar: el restaurante Eneperi está arriba, junto al aparcamiento."],
     parkings: [["Aparcamiento de Eneperi (privado, unos 3,5 €)", 43.4412268, -2.7840206], ["Aparcamiento público de Urizarreta (22 plazas, al lado)", 43.4412268, -2.7840206], ["Aparcamiento de Lurgorri (57 plazas, junto al acceso de Ermu)", 43.4407664, -2.7707756]]
   },
-  llevar: ["Bañador y toalla (plan C, playa de Bakio)", "Agua y crema solar: hace sol todo el día", "Calzado cómodo para Gaztelugatxe", "Algo de efectivo para los bares pequeños", "Tarjeta para el peaje de los túneles de Artxanda", "Una chaqueta fina para la noche en la costa", "Móviles cargados"]
+  llevar: ["Agua y crema solar: hace sol todo el día", "Calzado cómodo para Gaztelugatxe", "Algo de efectivo para los bares pequeños", "Tarjeta para el peaje de los túneles de Artxanda", "Una chaqueta fina para la noche en la costa", "Móviles cargados"]
 };
