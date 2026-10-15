@@ -671,7 +671,7 @@ const ESPECIAL = {
   tiempo: "☀️ Sol todo el día · 24–26 °C en Bilbao y 21–23 °C en la costa · sin lluvia",
   mapa: "rutas/jueves-mapa.webp",
   planes: {
-    a: { n: "Plan A · con Castro Urdiales", vuelta: "22:45", mapa: "rutas/jueves-mapa.webp", paradas: [
+    a: { n: "Plan A · con Castro Urdiales", vuelta: "22:45", mapa: "rutas/jueves-mapa.webp", ruta: [[43.4619, -3.8066], [43.3804468, -3.2167861], [43.2671467, -2.93606], [43.4300629, -2.8068161], [43.4412268, -2.7840206], [43.4207962, -2.7197421], [43.4072, -2.6983], [43.3132097, -2.6796198], [43.4619, -3.8066]], paradas: [
       { h: "10:45", t: "Salida hacia Castro Urdiales", d: "50 min por la A-8. Se aparca en el parking subterráneo Amestoy, junto al paseo marítimo.", c: [43.3804468, -3.2167861], modo: "driving" },
       { h: "11:35", t: "Castro Urdiales", s: "castro", d: "El puerto, la iglesia gótica de Santa María, el castillo-faro de Santa Ana y el puente medieval. Café en el puerto.", c: [43.3829, -3.2151], modo: "walking" },
       { h: "12:30", t: "Bilbao: aparcar junto al Guggenheim", d: "35 min. Parking de la plaza Euskadi (Mazarredo 68) o el del Palacio Euskalduna (24 h). Luego se sale de Bilbao por aquí.", c: [43.2671467, -2.93606], modo: "driving" },
@@ -684,7 +684,7 @@ const ESPECIAL = {
       { h: "19:10", t: "Bermeo", s: "bermeo", d: "El puerto viejo con la puesta de sol (19:28).", c: [43.4207962, -2.7197421], modo: "driving" },
       { h: "19:45", t: "Mundaka y Gernika", s: "mundaka", d: "La ría de Urdaibai desde Mundaka y, ya de noche, Gernika. Cena de pintxos en la Taberna Auzokoa (Gernika) o en el Batun Batun (Bermeo).", c: [43.3142186, -2.6774263], modo: "driving", r: "r-taberna-auzokoa" },
       { h: "21:00", t: "Vuelta a casa", d: "1 h 30–1 h 45 por la A-8. Conduce quien no haya bebido.", c: [43.4619, -3.8066], modo: "driving" }] },
-    c: { n: "Plan C · Castro, pueblos y Bilbao de noche", vuelta: "23:00", mapa: "rutas/jueves-mapa-c.webp", paradas: [
+    c: { n: "Plan C · Castro, pueblos y Bilbao de noche", vuelta: "23:00", mapa: "rutas/jueves-mapa-c.webp", ruta: [[43.4619, -3.8066], [43.3804468, -3.2167861], [43.3132097, -2.6796198], [43.4072, -2.6983], [43.4207962, -2.7197421], [43.4407664, -2.7707756], [43.2671467, -2.93606], [43.4619, -3.8066]], paradas: [
       { h: "10:45", t: "Salida hacia Castro Urdiales", d: "50 min por la A-8. Se aparca en el parking subterráneo Amestoy, junto al paseo.", c: [43.3804468, -3.2167861], modo: "driving" },
       { h: "11:35", t: "Castro Urdiales", s: "castro", d: "El puerto, la iglesia gótica de Santa María, el castillo-faro de Santa Ana y el puente medieval. 45 min.", c: [43.3829, -3.2151], modo: "walking" },
       { h: "12:20", t: "A Gernika", d: "1 h por la A-8, saliendo en Amorebieta.", c: [43.3132097, -2.6796198], modo: "driving" },
@@ -696,7 +696,7 @@ const ESPECIAL = {
       { h: "19:00", t: "El Guggenheim y la ría con la última luz", s: "guggenheim", d: "Puppy, la araña Mamá y el Zubizuri. El sol se pone a las 19:28.", c: [43.267678, -2.9345], modo: "walking" },
       { h: "19:45", t: "Cena de pintxos por el Casco Viejo", d: "A esa hora hay más ambiente, y el Motrikes y la Taberna Basaras ya han vuelto a abrir.", ancla: "esp-pintxos" },
       { h: "21:45", t: "Vuelta a casa", d: "1 h por la A-8. Conduce quien no haya bebido.", c: [43.4619, -3.8066], modo: "driving" }] },
-    b: { n: "Plan B · Bilbao con calma", vuelta: "21:45", mapa: "rutas/jueves-mapa-b.webp", paradas: [
+    b: { n: "Plan B · Bilbao con calma", vuelta: "21:45", mapa: "rutas/jueves-mapa-b.webp", ruta: [[43.4619, -3.8066], [43.2671467, -2.93606], [43.4300629, -2.8068161], [43.4412268, -2.7840206], [43.4207962, -2.7197421], [43.3132097, -2.6796198], [43.4072, -2.6983], [43.4619, -3.8066]], paradas: [
       { h: "10:45", t: "Salida directa a Bilbao", d: "1 h por la A-8. Aparcad junto al Guggenheim: parking de la plaza Euskadi (Mazarredo 68) o el del Palacio Euskalduna.", c: [43.2671467, -2.93606], modo: "driving" },
       { h: "11:50", t: "El Guggenheim y la ría hasta el Casco Viejo", s: "guggenheim", d: "Puppy y la araña Mamá, el puente Zubizuri, el Arenal y las Siete Calles, con la catedral y el mercado de la Ribera.", c: [43.267678, -2.9345], modo: "walking" },
       { h: "13:00", t: "Ruta de pintxos", d: "Cinco bares a 5 min unos de otros, unos 15–20 € por persona. Mirad el mapa de los pintxos.", ancla: "esp-pintxos" },

@@ -960,6 +960,7 @@ function renderEspecial() {
     <div class="esp-sec">🗓 El día paso a paso</div>
     <div class="esp-sel" role="group" aria-label="Plan">${(E.orden || Object.keys(E.planes)).map(k => [k, E.planes[k]]).map(([k, p]) => `<button type="button" data-esp-plan="${k}" aria-pressed="${k === planEsp}">${esc(p.n)}</button>`).join("")}</div>
     <p class="nota" style="margin:0 0 8px">Vuelta a casa sobre las ${esc(pl.vuelta)}. <a href="#" data-ir-dia="${d.k}">Votad el plan aquí</a>.</p>
+    ${pl.ruta ? `<p style="margin:0 0 12px"><a class="btn" href="https://www.google.com/maps/dir/${pl.ruta.map(c => c.join(",")).join("/")}" target="_blank" rel="noopener">🗺 Ruta completa en Google Maps</a></p>` : ""}
     <ol class="esp-pasos">${pl.paradas.map(paso).join("")}</ol>
     <div class="esp-sec" id="esp-pintxos">🍢 Ruta de pintxos por el Casco Viejo</div>
     <a class="esp-mapa" href="${esc(X.mapa)}" target="_blank" rel="noopener"><img src="${esc(X.mapa)}" alt="Mapa de la ruta de pintxos" loading="lazy"></a>
