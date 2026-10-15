@@ -41,6 +41,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - Notas de Google: `js/notas.js`.
 - Mareas (Santander, Bermeo, Zumaia) y salida y puesta de sol: `MAREAS` en `js/generado.js`, de tablademareas.com.
 - Valoración (1–5 estrellas, `val`) y veredicto (`por`): opinión nuestra de cuánto merece la pena.
+- Previsión guardada actualizada el 15-oct a las 10:50 (Open-Meteo): jueves de sol (hasta 28 °C en Bilbao), viernes nublado con llovizna débil por la tarde, sábado muy lluvioso por la mañana (13–23 mm) y fresco, domingo con lloviznas.
 - Tiempo: Open-Meteo en vivo desde el navegador (por día, en la zona de ese día, y a 1.850 m el miércoles para el viento del teleférico). Si falla, se usa la previsión de AEMET del 11-oct guardada en `DIAS`.
 
 ## Restaurantes
