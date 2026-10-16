@@ -21,7 +21,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - **Mié 14:** Fuente Dé (teleférico a las 12:00). Tres rutas para votar en `PLANES.mie` (con fotos, mapa topográfico y GPX de `rutas/`): 1) solo la bajada por Áliva e Igüedri, 2) hasta el cruce de Peña Vieja y bajada (recomendada) y 3) Horcados Rojos ida y vuelta con bajada en teleférico.
 - **Jue 15:** tres planes en `PLANES.jue`: C (`p-jue-d`, recomendado: Castro, Gernika, Mundaka, comida en Bermeo, Gaztelugatxe a las 16:00 y Bilbao al atardecer con cena de pintxos; vuelta a las 23:00), A (Castro, pintxos de comida en Bilbao y la vuelta que recomienda Nacho, amigo, por la tarde) y B (como el A sin Castro). El plan del baño en Bakio se descartó el 15-oct. Pestaña especial «⭐ Jueves» (`ESPECIAL`, plan por defecto C, con un mapa por plan).
 - **Vie 16:** se van Pedre, Fran y Niggi. El Soplao y El Castillo o Altamira; por la tarde, a Arenas de Iguña.
-- **Sáb 17 (3):** Bárcena Mayor, cocido y Vega de Pas.
+- **Sáb 17 (3):** día de lluvia: El Soplao por la mañana (comprobadas las plazas a la 1:40 del sábado; 15,70 € con gastos), comida de cuchara (El Tropezón, La Portilla, Casa Jandro o La Hérmida) y Altamira por la tarde (gratis desde las 14:00). Bárcena Mayor y Vega de Pas pasan a alternativas.
 - **Dom 18:** vuelta.
 
 ## Apartado especial
