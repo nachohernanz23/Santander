@@ -9,7 +9,7 @@ const ZONAS_R = {
 // Zonas donde se come cada día según el plan
 const DIA_ZONAS = {
   lun: ["costa"], mar: ["oriente", "santander"], mie: ["liebana", "asturias"], jue: ["euskadi"],
-  vie: ["soplao", "interior"], sab: ["interior"], dom: ["interior", "santander"]
+  vie: ["soplao", "interior"], sab: ["interior", "costa", "santander"], dom: ["interior", "santander"]
 };
 
 const RESTAURANTES = {

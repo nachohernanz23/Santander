@@ -21,7 +21,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - **Mié 14:** Fuente Dé (teleférico a las 12:00). Tres rutas para votar en `PLANES.mie` (con fotos, mapa topográfico y GPX de `rutas/`): 1) solo la bajada por Áliva e Igüedri, 2) hasta el cruce de Peña Vieja y bajada (recomendada) y 3) Horcados Rojos ida y vuelta con bajada en teleférico.
 - **Jue 15:** tres planes en `PLANES.jue`: C (`p-jue-d`, recomendado: Castro, Gernika, Mundaka, comida en Bermeo, Gaztelugatxe a las 16:00 y Bilbao al atardecer con cena de pintxos; vuelta a las 23:00), A (Castro, pintxos de comida en Bilbao y la vuelta que recomienda Nacho, amigo, por la tarde) y B (como el A sin Castro). El plan del baño en Bakio se descartó el 15-oct. Pestaña especial «⭐ Jueves» (`ESPECIAL`, plan por defecto C, con un mapa por plan).
 - **Vie 16:** se van Pedre, Fran y Niggi. El Soplao y El Castillo o Altamira; por la tarde, a Arenas de Iguña.
-- **Sáb 17 (3):** día de lluvia: El Soplao por la mañana (comprobadas las plazas a la 1:40 del sábado; 15,70 € con gastos), comida de cuchara (El Tropezón, La Portilla, Casa Jandro o La Hérmida) y Altamira por la tarde (gratis desde las 14:00). Bárcena Mayor y Vega de Pas pasan a alternativas.
+- **Sáb 17 (3):** día de lluvia sin cuevas (el grupo no quiere El Soplao). Tres planes en `PLANES.sab`: A (`p-sab-a`, recomendado: Templo del Agua del balneario de Puente Viesgo por la mañana, 40 €, reserva por teléfono; cocido en La Unión o Mores; Sobrellano y El Capricho en Comillas por la tarde), B (balneario y tarde en Santander) y C (Santander sin coche: Mercado de la Esperanza, Museo Marítimo y paseo cuando escampa). Palacio de la Magdalena agotado el sábado (el domingo quedan plazas).
 - **Dom 18:** vuelta.
 
 ## Apartado especial
@@ -31,6 +31,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 ## Planes alternativos por día
 - `PLANES` en `js/datos.js`: para un día, varios planes completos (letra, horario, ritmo, coche, pros, contras, sitios y restaurantes). El grupo los vota con ids `p-<día>-<letra>` y la web muestra cuál va ganando. `rec: true` marca nuestra recomendación.
 - Miércoles 14: rutas `p-mie-1`, `p-mie-2` (recomendada) y `p-mie-3`. Los planes admiten `datos`, `fotos` (`FOTOS_RUTA`), `mapa` y `gpx`. Sitios nuevos del 13-oct: `aliva`, `lagos`, `covadonga`, `cangas` y `bulnes` (zona `asturias`).
+- Sábado 17: A (recomendado: balneario, cocido y Comillas), B (balneario y tarde en Santander) y C (Santander a cubierto, sin coche). Sitios nuevos del 17-oct: `balneario` y `maritimo`.
 - Lunes 12: B (recomendado: Costa Quebrada sin prisa, comida en Liencres, Santillana por la tarde y atardecer en Cabo Mayor), A (ruta completa original) y C (Costa Quebrada y tarde de playa).
 
 ## Rutas GPX
@@ -41,7 +42,7 @@ Está en `js/datos.js` (`DIAS`). Resumen:
 - Notas de Google: `js/notas.js`.
 - Mareas (Santander, Bermeo, Zumaia) y salida y puesta de sol: `MAREAS` en `js/generado.js`, de tablademareas.com.
 - Valoración (1–5 estrellas, `val`) y veredicto (`por`): opinión nuestra de cuánto merece la pena.
-- Previsión guardada actualizada el 15-oct a las 10:50 (Open-Meteo): jueves de sol (hasta 28 °C en Bilbao), viernes nublado con llovizna débil por la tarde, sábado muy lluvioso por la mañana (13–23 mm) y fresco, domingo con lloviznas.
+- Previsión guardada actualizada el 17-oct a las 2:40 (Open-Meteo): sábado con lluvia fuerte a primera hora y llovizna después (en Santander, seco desde las 18:00), domingo nublado y casi seco.
 - Tiempo: Open-Meteo en vivo desde el navegador (por día, en la zona de ese día, y a 1.850 m el miércoles para el viento del teleférico). Si falla, se usa la previsión de AEMET del 11-oct guardada en `DIAS`.
 
 ## Restaurantes

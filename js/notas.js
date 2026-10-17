@@ -42,5 +42,7 @@ const NOTAS = {
   carmona: { nota: 4.6, resenas: 752, fuente: "Google", ficha: "Conjunto histórico de Carmona" },
   tudanca: { nota: 4.5, resenas: 325, fuente: "Google", ficha: "Casona de Tudanca" },
   ebro: { nota: 4.6, resenas: 334, fuente: "Google", ficha: "Embalse del Ebro" },
-  juliobriga: { nota: 4.4, resenas: 97, fuente: "Google", ficha: "Ciudad romana de Julióbriga" }
+  juliobriga: { nota: 4.4, resenas: 97, fuente: "Google", ficha: "Ciudad romana de Julióbriga" },
+  balneario: { nota: 4.4, resenas: 7493, fuente: "Google", ficha: "Gran Hotel Balneario de Puente Viesgo" },
+  maritimo: { nota: 4.5, resenas: 9649, fuente: "Google", ficha: "Museo Marítimo del Cantábrico" }
 };

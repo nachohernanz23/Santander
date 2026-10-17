@@ -523,7 +523,7 @@ const CAT_SITIO = {
   zumaia: "costa", zarautz: "costa", cabomayor: "costa", sonabia: "costa", faro: "monte", fuentede: "monte", horcados: "monte",
   cares: "monte", aliva: "monte", lagos: "monte", bulnes: "monte", covadonga: "cultura", santacatalina: "monte", iguedri: "monte", curenas: "monte", ebro: "monte", botin: "cultura", toribio: "cultura",
   sanmames: "cultura", guggenheim: "cultura", soplao: "cultura", castillo: "cultura", altamira: "cultura", cabarceno: "cultura",
-  juliobriga: "cultura", magdalena: "cultura", rabas: "salir", cascoviejo: "salir", marzana: "salir"
+  juliobriga: "cultura", magdalena: "cultura", balneario: "cultura", maritimo: "cultura", rabas: "salir", cascoviejo: "salir", marzana: "salir"
 };
 const catSitio = id => CAT_SITIO[id] || "pueblo";
 let filtroMapa = { capas: new Set(Object.keys(CAPAS_MAPA)), dia: "", q: "", rPrecio: 99, rNota: 0, rHoy: false, rFam: false, rChollo: false, rVotos: false };
